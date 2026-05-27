@@ -1,0 +1,47 @@
+@misc{sa_infl,
+    author = {National Treasury},
+    title = {Announcement of the New Inflation Target for South Africa},
+    year = {2025},
+    month = {November}
+}
+
+@unpublished{steenkamp_sobyah,
+    authors = {Steenkamp, Daan and Soobyah, Luchelle},
+    title = {The Role of the Rand as a Shock Absorber},
+    year = {2019},
+    note = {South African Reserve Bank Working Paper WP/19/02}
+}
+
+@article{obstfeld1995exchange,
+        author={Obstfeld,Maurice and Rogoff,Kenneth},
+        title={Exchange Rate Dynamics Redux},
+        journal={Journal of Political Economy},
+        volume={103},
+        number={3},
+        pages={624-660},
+        abstract={We develop an analytically tractable two-country model that marries a full account of global macroeconomic dynamics to a supply framework based on monopolistic competition and sticky nominal prices. The model offers simple and intuitive predictions about exchange rates and current accounts that sometimes differ sharply from those of either modern flexible-price intertemporal models or traditional sticky-price Keynesian models. Our analysis leads to a novel perspective on the international welfare spillovers due to monetary and fiscal policies.},
+        isbn={00223808, 1537534X},
+       year={1995},
+        url={http://www.jstor.org/stable/2138701},
+}
+
+@unpublished{stern_ramkolowan,
+    authors = {Stern, Matthew and Ramkolowan, Yash},
+    title = {Understanding South Africa's Trade Policy and Performance},
+    year = {2021},
+    note = {South African Reserve Bank Working Paper WP/20/17}
+}
+
+@techreport{NBERw11632,
+ title = "Exchange-Rate Pass-Through to Import Prices in the Euro Area",
+ author = "Campa, José Manuel and Goldberg, Linda S and González-Mínguez, José M",
+ institution = "National Bureau of Economic Research",
+ type = "Working Paper",
+ series = "Working Paper Series",
+ number = "11632",
+ year = "2005",
+ month = "September",
+ doi = {10.3386/w11632},
+ URL = "http://www.nber.org/papers/w11632",
+ abstract = {This paper presents an empirical analysis of transmission rates from exchange rate movements to import prices, across countries and product categories, in the euro area over the last fifteen years. Our results show that the transmission of exchange rate changes to import prices in the short run is high, although incomplete, and that it differs across industries and countries; in the long run, exchange rate pass-through is higher and close to one. We find no strong statistical evidence that the introduction of the euro caused a structural change in this transmission. Although estimated point elasticities seem to have declined since the introduction of the euro, we find little evidence of a structural break in the transmission of exchange rate movements except in the case of some manufacturing industries. And since the euro was introduced, industries producing differentiated goods have been more likely to experience reduced rates of exchange rate pass-through to import prices. Exchange rate changes continue to lead to large changes in import prices across euro-area countries.},
+}

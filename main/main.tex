@@ -1,0 +1,133 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage{graphicx, xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[style=apa, backend=biber, uniquename=false]{biblatex}
+\usepackage{threeparttable}
+\usepackage{times}
+\usepackage{amsmath}
+
+\addbibresource{citations.bib}
+\AtBeginBibliography{\footnotesize}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\baselineskip}
+
+\title{Impact of Exchange Rate Fluctuations on the South African Prices}
+
+\author{Jan Smuts (759358)}
+
+
+\begin{document}
+
+\maketitle
+
+\vspace{-2.2em}
+\section*{Introduction}
+After over two decades of continuous depreciation, the South African Rand (ZAR) was buoyed by a weaker dollar, higher prices for commodities like gold and platinum-group metals and improved investors sentiment towards the end of 2025. 
+At around the same time, the National Treasury and the South African Reserve Bank (SARB) announced the move from the target range of 3\%-6\% to a 3\% target with a 1\% tolerance band. This change in monetary policy is aimed at bringing down expected and actual inflation as well as borrowing costs \parencite{sa_infl}.
+In order to maintain credibility, the Reserve Bank will need to be be vigilant of potential drivers of inflation, both in the domestic as well as the global economy. A rebound in the value of the dollar, cooling global demand for commodities and fickle investor sentiment could all trigger further depreciation of the Rand at the expense of price stability. 
+Indeed, while South African exports have benefitted from a weaker exchange rate, deindustrialization and the associated decline in export volume and complexity means that gains have been limited to the agricultural and commodities sector \parencite{stern_ramkolowan}.
+In addition, the continued deindustrialisation and disappearance of key upstream inputs may lead to an increasing reliance on imports for inputs and final goods. Given these facts, determining the extent to which domestic prices are influenced by the exchange rate is of concern to policymakers aiming for low inflation. \\ 
+
+While the floating exchange rate may act as a shock absorber through responding to real shocks, structural factors like market imperfections and price rigidities may render the absorption incomplete. 
+Such a shock to the exchange rate may improve a country's terms of trade through bolstering exports and dampening imports, however this outcome depends on the elasticity of subsititution between domestic and foreign goods. This, in turn, depends on the degree to which a country depends on foreign goods and vice versa - 
+if a country is unable to substitute its imports of foreign goods while at the same time not enjoying foreign demand for its domestic products, an exchange rate depreciation will lead to a deterioration in a country's trade balance and higher domestic prices \parencite{obstfeld1995exchange}. 
+This indirectly relates to the degree of local currency pricing (LCP) and producer currency pricing (PCP), refering to goods priced in destination and origin country currencies respectively. 
+Concretely, if goods are priced in the domestic currency, nominal rigidity means there would be no impact of exchange rate fluctuations on domestic prices, while conversely goods being priced in the currency of the foreign country means that fluctuations lead to corresponding changes in domestic prices. According to \textcite{devereux2004endogenous}, producers' pricing  decisions are made according to the variance of the exchange  rate and its covariance with marginal costs: if firms face higher exchange rate volatility, they have a stronger incentive to price according to their own currency, while a higher covariance between marginal costs and exchange rate. As a result, currencies with lower variability are more likely to be chosen as the pricing medium. 
+
+While exchange rate stability may explain differences in pass-through across countries, industry-level features are also likely to determine currency pricing and thus pass-through. If an exporting firm has little market share in a given industry in the foreign market, their optimal strategy would be to follow LCP in order to avoid swings in demand owing to higher degrees of elasticity \parencite{NBERw9039}. To the extent that there is variation in trade patterns across different industries, there is likely to be heterogeneity in pass-through among different parts of the economy. 
+
+Exchange rate pass-through has previously been quantified in a variety of papers. \textcite{campa2005exchange} investigate the elasticity of import prices with respect to exchange rates across 23 countries using ordinary least squares, finding estimates between 0.19 and 0.79 in the short run (1 quarter after) and higher values in the long-run (4 quarters). In addition to the crosss-country analysis, the authors observe the evolution of pass-through across time, finding changes in pass-through for their sample of countries to be tied closer to changes in the composition of import bundles than changes in macroeconomic variables, although in the cross-country analysis, they find inflation to explain level differences in pass-through. In \textcite{choudhri2015exchange}, the authors develop a DSGE model with Calvo pricing and a proportion of firms using PCP ranging between 0 and 1 to estimate the effect of an exchange rate shock on import prices. The authors find this model to be coherent with real-world data estimated using a vector autoregression, with pass-through estimates varying positively with the degree of PCP. Despite being able to estimate the effect of exogenous shocks on the exchange rate, this approach is not able to identify the sources of shocks and how prices respond to different shocks. An earlier study by \textcite{shambaugh2008new} makes use of long-run restrictions to identify the effect of different types of shocks on the exchange rate and prices respectively before computing pass-through as the ratio of the change in price to the change in the exchange rate. 
+
+While past studies have investigated pass-through differences across countries and industries internationally, there is limited evidence on pass-through differences within specific countries. This is surprising given the policy relevance and the aforementioned literature evincing the likelihood of different pass-through rates based on industry characteristics. Through exploring the response of various domestic prices to shocks in the exchange rate, this paper will elucidate the relationship between the exchange rate and different parts of the economy, allowing for a more nuanced understanding of pass-through. 
+
+\section*{Methodology}
+
+The identification framework employed in this paper is based on the methodology developed by \textcite{mccarthy1999} and subsequently used by \textcite{choudhri2015exchange}. In this model, a distribution chain of price shocks from import prices to producer prices to consumer prices is used. The prices at each stage are in turn determined by the expected prices based on information available at the end of period $t-1$, contemporaneous supply, demand  and exchange shocks, as well as the inflation shocks at preceding points in the distribution chain. This implies a recursive structure where supply conditions affect demand, both of which influence the exchange rate, which together impact the domestic prices along the distributional chain. For each stage in the recursive sequence, there is no contemporaneous feedback from subsequent variables in the model. In economic terms, this means we assume prices do not immediately affect the exchange rate and is based off the fact that while exchange rates can be observed at any given moment, data on prices are published at discrete frequencies and thus are reported with a lag \cite{choudhri2005explaining}. The primacy of oil shocks as an upstream disturbance is supported by \cite{kilian2009} and \cite{Kanzig}, who argue that oil supply does not respond to demand within the same month, and that supply decisions taken by OPEC countries are to a large extent exogenous. Formally, this model can be represented by the following  system of equations:
+
+
+\begin{equation} \label{eq:supply}
+    \pi^{oil}_{t} = E_{t-1}\left(\pi^{oil}_{it}\right) + \varepsilon^{oil}_{t}
+\end{equation}
+\begin{equation} \label{eq:demand}
+    \tilde{y}_{t} = E_{t-1}\left(\tilde{y}_{t}\right) + a_{1i}\varepsilon^{s}_{t} + \varepsilon^{d}_{t}
+\end{equation}
+\begin{equation} \label{eq:exrate}
+    \Delta e_{t} = E_{t-1}\left(\Delta e_{t}\right) + b_{1}\varepsilon^{s}_{t} + b_{2}\varepsilon^{d}_{t} + \varepsilon^{e}_{t}
+\end{equation}
+\begin{equation}\label{eq:importprices}
+\pi_t^m = E_{t-1}(\pi_t^m) + \alpha_{1}\varepsilon_t^s + \alpha_{2}\varepsilon_t^d + \alpha_{3}\varepsilon_t^e + \varepsilon_t^m
+\end{equation}
+\begin{equation}\label{eq:ppi}
+\pi_t^w = E_{t-1}(\pi_t^w) + \alpha_{1}\beta_t^s + \alpha_{2}\beta_t^d + \alpha_{3}\beta_t^e + \alpha_{4}\beta_t^m + \varepsilon_t^w
+\end{equation}
+\begin{equation}\label{eq:cpi}
+\pi_t^c = E_{t-1}(\pi_t^c) + \alpha_{1}\gamma_t^s + \alpha_{2}\gamma_t^d + \alpha_{3}\gamma_t^e + \alpha_{4}\gamma_t^m + \alpha_{5}\gamma_t^w +\varepsilon_t^c
+\end{equation}
+
+Where ($\varepsilon_t^j$) represents an orthogonalized shocks in variable $j$ during period $t$. 
+
+The main quantitative estimation of the impact of exchange rate shocks on domestic prices applies a vector autoregressive model introduced by \textcite{sims1980} and used extensively in subsequent macroeconomic literature. Combining this with the recursive identification framework set out by \cite{mccarthy1999} means that we impose restrictions on the relationships between variables, allowing for  estimation using a structured VAR analogous to that developed in \textcite{BlanchardWatson1986}, in which estimate disturbances in variables from previous equations are used as instruments to estimate disturbances for each equation. This set-up requires that disturbances obtained in each equation be uncorrelated with each other. Although it would be unrealistic to assume that disturbances are completely independent, the correlations between disturbances in the system are not found to be significant enough to warrant concern\footnote{See Appendix}. Following \textcite{sims1986forecasting} where we have a structural model that can be denoted as:
+
+\begin{equation}\label{eq:structural_form} AY_t =   \sum_{l=1}^{p} C_{l}Y_{t-l} +  \varepsilon_t \end{equation}
+
+where $Y_t$ is a vector with $Y_t' = (\pi^{oil}_{t}, \tilde{y}_{t}, \Delta e_{t}, \pi_t^m, \pi_t^w, \pi_t^c)$, $C_{l}$ is a matrix of coefficients of $Y_{t-l}$ on $Y_t$,  $\varepsilon_t$ is a vector of structural shocks at $t$ and $A$ is the matrix of contemporaneous coefficients. The recursive structure modelled by equations \eqref{eq:supply} - \eqref{eq:cpi} constitutes a Wold causal chain, meaning $A^{-1}$ is a triangular matrix with a diagonal populated by ones representing the variance of each (normalised) variable and off-diagonals representing the contemporaneous effects among different variables. In this matrix, the $j$-th column represents the immediate impact of a shock to the $j$-th variable in $Y_t$
+
+Multiplying both sides of \eqref{eq:structural_form} by $A^{-1}$, yields: \begin{equation}\label{eq:reduced_form} Y_t =   \sum_{j=1}^{p}A^{-1}C_{l}Y_{t-l} +  A^{-1}\varepsilon_t \end{equation}. 
+
+Given that $A^{-1}$ is a lower-triangle (by the Wold causal chain), structural disturbances in $\varepsilon_t$ affect only the variables ordered below them in $Y_t$. Thus, $\pi^{oil}_{t}$ is affected only by historical values of $Y_t$ and the contemporaneous value of $\varepsilon^{oil}_{t}$ while $\pi^{c}_{t}$ is impacted by contemporaneous structural disturbances of all variables. 
+
+Using the fact that the variance-covariance matrix $\Sigma$ is a positive definite along with the fact that errors in $\varepsilon_t$ are normalised and orthogonal, a Cholesky decomposition can be applied to recover $A^{-1}$, the matrix of contemporaneous coefficients of strucutral disturbances, by:  \begin{align} 
+\Sigma  &= E[A^{-1}\varepsilon_t (A^{-1}\varepsilon_t)']\\ 
+&= E[A^{-1}\varepsilon_t \varepsilon_t'({A^{-1}})'] \\
+&=  E[\varepsilon_t \varepsilon_{t}'] A^{-1}({A^{-1}})' \\
+ &= A^{-1}({A^{-1}})' \\ \text{where } E[\varepsilon_t \varepsilon_t'] = I 
+ \end{align}
+
+The object of interest in this paper is the effect of exchange rate shocks on prices. This can be done through recovering the impulse response function:
+
+\begin{align}  \label{eq:irf}
+    \theta_{VAR}^h &= {\varepsilon_{c / w}}' B_h A^{-1} \varepsilon_e,  \\
+    \text{where } B_h &= \sum_{l=1}^{\min\{p,\, h\}} (A^{-1}C_l)B_{h-l} \label{eq:Bh}
+\end{align}
+
+where the coefficient $\theta_{VAR}^h$ captures the dynamic effect of a exchange rate shock propagated through \eqref{eq:reduced_form} recursively over $h$ periods. The recursive structure of the identification scheme from \eqref{eq:supply} - \eqref{eq:cpi} implies knowledge the form of the data generating process is held to be known. Through using a VAR model, dynamic interactions between variables can be more precisely estimated, however to the extent that the VAR dynamics diverge from reality, estimates may suffer from misspecification bias. To address this possibility, the main results from the SVAR are compared with results obtained from local projections as per \textcite{Jorda2005}. 
+
+This approach involves regressing our prices at each period across horizon $h$ on an initial exchange rate disturbance along with a set of controls reflecting the posited structural relationships between the variables using ordinary least squares. This regression yields less precise estimates that reflect additional uncertainty around the data generating process, however is less likely to suffer from misspecification bias as each period is regressed independently instead of using the recursive SVAR estimation. Using sufficiently informative lags in our SVAR model should, however, reduce this possibility, although using higher lag orders does come at a substantial cost to the degrees of freedom in the SVAR. Although main results will be obtained using the SVAR model, discussion can be supplemented through comparing the estimates with those from LP. 
+
+In addition, while standard VAR and LP models are sign-agnostic in that disturbances are assumed to have symmetric effects (for example, a 1\% appreciation has the exact opposite impact as a 1\% depreciation), 
+
+ Although Akaike Information Criteria can be used to select the lag order, the tendency of AIC to pick out more parsimonous models with shorter lag lengths risks longer-horizon dynamics being omitted. Oil shocks, for example, can have gradual or delayed impacts on economic variables, meaning that short lag lengths may miss these effects altogether \cite{EDELSTEIN2009766, hamilton-herrera}. Following \textcite{mccarthy1999}, lag order is restricted to a year. This depth provides a balance between, on one hand maintaining greater degrees of freedom and on the other capturing long-term dynamics and is a standard application in VAR models \cite{Lutkepohl}. Applying $p$ = 12 across both SVAR and LP models implies that estimates will be similar between the two within the first year of the shock, with differences between the two models manifesting beyond this window. 
+
+
+ \section*{Data}
+
+For the purposes of this study, monthly data from February 1992 up to June 2025 are used, thus spanning a total of 399 months. Oil shock data is obtained from \textcite{Kanzig}\footnote{Updated vintages are available online at: https://github.com/dkaenzig/oilsupplynews}, who uses changes in oil futures prices during tight windows around OPEC announcements to construct an oil supply shock series, where the the effect of confounding structural shocks on oil supply is purged by controlling for changes in OPEC's global demand forecast, a technique analogous to that used in \textcite{romer_romer}. This series is particularly useful when applied to a small economy like South Africa, as the likelihood of any feedback from domestic disturbances to oil shocks is negligible, making it a superior approach to that used in \textcite{mccarthy1999}, who uses residuals of domestic oil price dynamics. Related to the fact that it is a more exogenous series than domestic oil prices, the K\"anzig oil supply shock series has the significant benefit to both VAR and LP models of fixing coefficients on oil shocks to zero. This means that there are less parameters requiring estimation, resulting in higher degrees of freedom.
+
+ A limitation imposed by this approach is that the impact of oil (supply) shocks on prices cannot be recovered via forecast error variance decomposition. This is a non-trivial issue given the primacy of oil shocks on downstream economic variables, thus it is worth comparing results of fully exogenous oil shocks with oil shocks as endogenous. As mentioned, however, the series is exogenous by construction, particularly in relations to a small economy, thus endogenising the series risks miscalculating the size of the shock if parts of it are "explained" by spurious correlation with previous values of $Y_{t-j}$ . To balance these considerations, IRF results between the two models are compared, with the expectation that the coefficients of the endogenised model's responses to exchange rate shocks will be biased upwards and less precise due to the loss in degrees of freedom from having more parameters to estimate. 
+
+In order to estimate demand shocks, seasonally-adjusted quarterly Real GDP figures are interpolated to a monthly frequency using Denton-Cholette interpolation, which allows for temporal disaggregation in the absence of any suitable high-frequency indicator variables\footnote{Regression-based methods like Chow-Lin and indexed Denton-Cholette were not suitable as the Bureau of Economic Research's Business Cycle Index series was not found to be sufficiently correlated with GDP series.} through distributing quarterly values evenly across constituent months by minimizing period-to-period differences subject to the constraint that three-month values should sum to quarterly values. The Denton-Cholette method also avoids the starting point problem present in the original formulation by \textcite{denton1971}, which imposes no constraint on the first high-frequency point from the previous period, resulting in a potential discontinuity at the starting point as, unlike interior data points, there is only one low-frequency constraint \cite{DagumCholette2006}. Because this adjustment does not account for seasonal trends, instead distributing quarterly values smoothly, using seasonally-adjusted data means that seasonal variation present in unadjusted series is not lost. A Hodrick-Prescott filter is applied to the disaggregated and logged series, from which the cyclical component, or the deviation from trend, is recovered and used as the output gap. 
+
+The SARB's Nominal Effective Exchange Rate\footnote{a detailed description of the methodology is available at https://www.resbank.co.za/content/dam/sarb/publications/quarterly-bulletins/quarterly-bulletin-publications/2020/10091/03Note-on-the-revision-of-South-Africas-nominal-and-real-effective-exchange-rate-indices.pdf}, which measures the external value of the Rand against a weighted basket of currencies is the preferred measure for the exchange rate. Although currencies are weighted by partners' shares of imports and exports, it is preferred to the Dollar given the importance of other major economies like China, the UK and the EU as trade partners and has precedents in previous studies\footnote{See \textcite{mccarthy1999}, \textcite{Karoroetal2008},   \textcite{aronetal2012},\textcite{choudri2015exchange}, \textcite{kabundi2016exchange}}. Indexed values are log-differenced and flipped such that positive movements represent depreciations.
+
+
+
+The availability of price data on a broad range of categories within CPI, PPI and import prices allows for further analysis of the ability of different sectors and groups to absorb or pass on price changes. While previous studies have resorted to using quarterly data sampled over longer time periods, monthly data is prefered for two reasons: firstly, restricting price adjustment frequency to once every three months is a less realistic assumption than allowing prices to change on a monthly basis -  a point acknowledged by both \textcite{mccarthy1999} and \textcite{choudhri2005explaining}. Secondly, and related to the first, is that tracking higher frequency data allows us to observe a more accurate picture of the rate of pass-through. 
+
+The opportunity cost of using monthly data instead of quarterly data is, however, non-trivial, particularly when one considers the estimation of the demand shock ($\varepsilon_t^d$) in \ref{eq:outputgap}. While quarterly GDP figures are conventionally used to estimate the output gap, the interval inconsistency requires the use of an alternative measure of economic activity. A potential replacement for GDP figures is using the SARB's composite coincident business cycle indicator, which is available at monthly frequencies. While this is not in line with previous practices, this approach nevertheless acts as a proxy for prevailing economic conditions, thus allowing us to recover ($\varepsilon_t^d$) as in \ref{eq:outputgap}. 
+
+\section*{Notes}
+\begin{itemize}
+    \item 2008 is chosen as the starting point for this study as January 2008 marked the adoption of a new CPI methodology by the SARB.
+    \item In 2022 SARB changed their methodology for measuring importers and exporters unit price changes to incorporate cluster-based analysis. There is substantial overlap between the two regimes, with the old measure extending until the end of 2022, while the new measure is back-dated to 2016. As such, a linkage factor will be used in order to rebase the pre-2016 data in order to make it comparable with the later data. In any case, dividing up the sample over this break provides opportunities for robustness tests. 
+    \item There is mixed consensus around whether the series are cointegrated, with the previously-cited international literature not finding evidence, while \cite{kabundi2016exchange} make use of a VECM model as they find price data in South Africa to be cointegrated.
+    
+\end{itemize}
+
+\newpage
+\printbibliography
+\end{document}
+\bibliography{citations} 
