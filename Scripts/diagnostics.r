@@ -405,3 +405,4 @@ openxlsx::write.xlsx(residcor,
            rowNames  = FALSE)
 
 
+cor(full_sample$m_all, full_sample$uvi2, use = "complete.obs")

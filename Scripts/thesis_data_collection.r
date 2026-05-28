@@ -539,11 +539,86 @@ neer_full <- readr::read_csv(here::here("data", "neer.csv"), skip = 2) %>%
     filter(time_period >= as.Date("1992-01-01") & time_period <= as.Date("2026-03-01"))
 View(neer_full)
 
-full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
-    select(-neer_sarb) %>%
-    left_join(neer_full %>% select(-Value), by = "time_period")
 
+codes <- c("UVI20000", "UVI34000", "UVI50000")
+
+m <- tibble(time_period = character())
+
+for (code in codes){
+
+    temp_m <- readxl::read_excel(here::here("data", "xm20102022.xlsx")) %>%
+                    filter(H03 == code) %>%
+                    rename(type = H03) %>%
+                    select(-c("H01", "H02", "H04", "H05", "H17", "H18", "H25")) %>%
+                    pivot_longer(-type, names_to = "period", values_to = code) %>%
+                    mutate(time_period = paste0(stringr::str_sub(period, 5, 8), "-", stringr::str_sub(period, 3, 4), "-01")) %>%
+                    select(time_period, !!sym(code)) %>%
+                    mutate(!!sym(code) := as.numeric(!!sym(code))) %>%
+                    arrange(time_period)
+
+    m <- full_join(m, temp_m, by = "time_period")
+}
+
+
+m <- m %>%
+    mutate(uvi2  = log(UVI20000) - log(lag(UVI20000, n = 1)), 
+            uvi34  = log(UVI34000) - log(lag(UVI34000, n = 1)),
+            uvi5 = log(UVI50000) - log(lag(UVI50000, n = 1)), 
+            time_period = as.Date(time_period)) %>%
+    select(-c("UVI20000", "UVI34000", "UVI50000")) 
+
+m_hist <- tibble(time_period = as.Date(character()),
+            m_hist = numeric()
+)
+
+periods <- c("1990", "2000")
+codes <- c("PI000021")
+
+temp_m_hist <- c()
+
+for (period in periods){
+        m_temp_i <- tibble(time_period = as.Date(character())
+)
+        for (code in codes){
+            name <- code
+            xlfile <- paste0("ppi_", period, ".xlsx")
+
+            temp_m_hist <- readxl::read_excel(here::here("data", "PPI DATA", xlfile)) %>%
+                filter(H03 == code) %>%
+                select(-c(H01, H02, H17, H25)) %>%
+                pivot_longer(-c("H03", "H04", "H05", "H18"), names_to = "period", values_to = name) %>%
+                mutate(time_period = as.Date(paste0(stringr::str_sub(period, 5, 8), "-", stringr::str_sub(period, 3, 4), "-01"))) %>%
+                select(time_period, !!sym(name)) %>%
+                mutate(!!sym(name) := as.numeric(!!sym(name))) %>%
+                arrange(time_period)
+
+            m_temp_i <- full_join(m_hist, temp_m_hist, by = "time_period")
+        }
+            m_hist <- bind_rows(m_hist, m_temp_i)
+}
+View(m_hist)
+
+m_hist <- m_hist %>%
+    mutate(m_hist = log(PI000021) - log(lag(PI000021, n = 1))) %>%
+    select(time_period, m_hist)
+    
+
+
+
+full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
+    select(-c("neer_sarb", "uvi34", "uvi2", "uvi5")) %>%
+    left_join(neer_full %>% select(-Value), by = "time_period") %>%
+    left_join(m, by = "time_period") %>%
+    mutate(ppi = case_when(time_period >= as.Date("2013-01-01") ~  finalmanufgoods_full,
+                            time_period <= as.Date("2012-12-01") ~ ppi_manuf)) %>%
+    left_join(m_hist, by = "time_period") %>%
+    mutate(m = case_when(time_period >= as.Date("2013-01-01") ~  uvi2,
+                            time_period <= as.Date("2012-12-01") ~ m_hist))
+
+View(m)
 
 
 filename <- file.path(here::here(), "data", "samples", "fullsample.csv")
 write.csv(full_sample, filename)
+
+
