@@ -77,118 +77,6 @@ theme_publication <- function(base_size = 11, base_family = "source_serif") {
 
 
 here::here()
-historical <- readr::read_csv(here::here("data", "samples", "historicalsample.csv"))
-
-df_var_hist <- historical %>%
-  dplyr::select(oil, outputgap_bci, usdzar_fred, ppi_all, cpi) %>%
-  na.omit()
-
-# Information criteria across lag lengths
-VARselect(df_var_hist, lag.max = 24, type = "const")
-
-var_model_hist <- VAR(df_var_hist, p = 12, type = "const")
-
-summary(var_model_hist)
-
-serial.test(var_model_hist, lags.pt = 12, type = "PT.asymptotic")
-
-normality.test(var_model_hist)
-
-resids_hist <- residuals(var_model_hist)
-sd(resids_hist[, "usdzar_fred"], na.rm = TRUE)
-
-
-for (col in colnames(resids_hist)) {
-  bt <- Box.test(resids[, col], lag = 16, type = "Ljung-Box")
-  cat(col, ": p-value =", round(bt$p.value, 4), "\n")
-}
-
-par(mfrow = c(2, 3))
-for (col in colnames(resids)) {
-  acf(resids[, col], main = col, lag.max = 24)
-}
-
-neer_sd <- sd(resids_hist[, "usdzar_fred"], na.rm = TRUE)
-scale_factor <- 0.01 / neer_sd
-
-irf_results_hist <- irf(var_model_hist,
-                  impulse  = "usdzar_fred",
-                  response = c("ppi_all", "cpi"),
-                  n.ahead  = 24,
-                  boot     = TRUE,
-                  ci       = 0.95,
-                  cumulative = TRUE,
-                  runs     = 500)
-
-
-# Rescale all components
-irf_results_hist$irf$usdzar_fred   <- irf_results_hist$irf$usdzar_fred  * scale_factor
-irf_results_hist$Lower$usdzar_fred <- irf_results_hist$Lower$usdzar_fred * scale_factor
-irf_results_hist$Upper$usdzar_fred <- irf_results_hist$Upper$usdzar_fred * scale_factor
-
-
-histpath <- file.path(here::here(), "irf", "irf_results_hist.png")
-png(histpath, width = 1200, height = 800, res = 150)
-plot(irf_results_hist)
-dev.off()
-
-class(irf_results_hist)
-str(irf_results_hist, max.level = 1)
-
-irf_df <- bind_rows(
-  data.frame(
-    horizon  = 0:24,
-    estimate = irf_results_hist$irf$usdzar_fred[, "ppi_all"] * 100,
-    lower    = irf_results_hist$Lower$usdzar_fred[, "ppi_all"] * 100,
-    upper    = irf_results_hist$Upper$usdzar_fred[, "ppi_all"] * 100,
-    response = "PPI"
-  ),
-  data.frame(
-    horizon  = 0:24,
-    estimate = irf_results_hist$irf$usdzar_fred[, "cpi"] * 100,
-    lower    = irf_results_hist$Lower$usdzar_fred[, "cpi"] * 100,
-    upper    = irf_results_hist$Upper$usdzar_fred[, "cpi"] * 100,
-    response = "CPI"
-  )
-)
-
-irf_plot_hist <- ggplot(irf_df, aes(x = horizon, y = estimate)) +
-  geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
-  geom_ribbon(aes(ymin = lower, ymax = upper),
-              alpha = 0.2, fill = "steelblue") +
-  geom_line(colour = "steelblue", linewidth = 0.8) +
-  facet_wrap(~response, scales = "free_y") +
-  scale_x_continuous(breaks = seq(0, 24, by = 3)) +
-  labs(x     = "Months after shock",
-       y     = "Cumulative response to 1% depreciation",
-       title = "Exchange rate pass-through — historical sample") +
-  theme_minimal(base_size = 11) +
-  theme(panel.grid.minor = element_blank(),
-        strip.text        = element_text(face = "bold"))
-
-ggsave(
-  filename = "irf_results_hist.png",
-  plot     = irf_plot_hist,
-  path     = file.path(here::here(), "irf"),
-  width    = 10,
-  height   = 6,
-  dpi      = 150
-)
-
-##############################################################################################################################################################################
-
-######################################################################### New Sample (2010 - 2025) ####################################################################
-
-##############################################################################################################################################################################
-
-new <- readr::read_csv(here::here("data", "samples", "newsample.csv"))
-
-df_var_new <- new %>%
-  dplyr::select(oil, outputgap_dc, usdzar_fred, ppi_full, cpi) %>%
-  na.omit()
-
-
-new <- readr::read_csv(here::here("data", "samples", "newsample.csv"))
 
 
 full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
@@ -196,6 +84,11 @@ full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
       filter(time_period <= as.Date("2025-06-01"), time_period >= as.Date("1992-02-01")) 
 
 full_filtered <- full %>% filter(time_period < as.Date("2023-01-01"))
+
+low_inflation <- full_filtered %>% filter(time_period >= as.Date("2009-01-01"))
+
+early <- full_filtered %>% filter(time_period < as.Date("2009-01-01"))
+
 
 
 View(full)
@@ -316,13 +209,13 @@ plot_var <- function(sample = full,
                 oil_var <- var_list[1]
                 
                 if (oil_var == "oilshock") {
-                  exog_fc <- matrix(0, nrow = 25, ncol = (as.numeric(n_lags) + 1),
+                  exog_fc <- matrix(0, nrow = 18, ncol = (as.numeric(n_lags) + 1),
                         dimnames = list(NULL, colnames(oil_exog)))
                   irf_results <- do.call(irf, list(
                     x          = var_model,
                     impulse    = imp,
                     response   = c(imp, resp),
-                    n.ahead    = 24,
+                    n.ahead    = 18,
                     boot       = TRUE,
                     ci         = 0.95,
                     cumulative = TRUE,
@@ -334,7 +227,7 @@ plot_var <- function(sample = full,
                     x          = var_model,
                     impulse    = imp,
                     response   = c(imp, resp),
-                    n.ahead    = 24,
+                    n.ahead    = 18,
                     boot       = TRUE,
                     ci         = 0.95,
                     cumulative = TRUE,
@@ -353,21 +246,21 @@ plot_var <- function(sample = full,
 
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
                     response = "Consumer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "m"] * 100,
                     lower    = irf_results$Lower[[imp]][, "m"] * 100,
                     upper    = irf_results$Upper[[imp]][, "m"] * 100,
@@ -377,14 +270,14 @@ plot_var <- function(sample = full,
                 else if ("m_manuf" %in% var_list) {
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
@@ -400,14 +293,14 @@ plot_var <- function(sample = full,
                  )} else {
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
@@ -417,21 +310,21 @@ plot_var <- function(sample = full,
                   if ("m" %in% var_list) {
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi_full"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi_full"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi_full"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
                     response = "Consumer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "m"] * 100,
                     lower    = irf_results$Lower[[imp]][, "m"] * 100,
                     upper    = irf_results$Upper[[imp]][, "m"] * 100,
@@ -440,14 +333,14 @@ plot_var <- function(sample = full,
                  )} else {
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi_full"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi_full"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi_full"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
@@ -458,21 +351,21 @@ plot_var <- function(sample = full,
                   if ("uvi34" %in% var_list) {
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi_manuf"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi_manuf"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi_manuf"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
                     response = "Consumer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "m"] * 100,
                     lower    = irf_results$Lower[[imp]][, "m"] * 100,
                     upper    = irf_results$Upper[[imp]][, "m"] * 100,
@@ -481,14 +374,14 @@ plot_var <- function(sample = full,
                  )} else {
                 irf_df <- bind_rows(
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "ppi_manuf"] * 100,
                     lower    = irf_results$Lower[[imp]][, "ppi_manuf"] * 100,
                     upper    = irf_results$Upper[[imp]][, "ppi_manuf"] * 100,
                     response = "Producer Price Index"
                   ),
                   data.frame(
-                    horizon  = 0:24,
+                    horizon  = 0:18,
                     estimate = irf_results$irf[[imp]][, "cpi"] * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
@@ -500,7 +393,8 @@ plot_var <- function(sample = full,
                 irf_plot <- ggplot(irf_df, aes(x = horizon, y = estimate, 
                                   fill = response, colour = response)) +
                 geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40", linewidth = 0.4) +
-                geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.15, colour = NA) +
+                geom_line(aes(y = lower), linewidth = 0.4, linetype = "dashed") +
+                geom_line(aes(y = upper), linewidth = 0.4, linetype = "dashed") +
                 geom_line(linewidth = 0.8) +
                 scale_colour_manual(values = c(
                   "Producer Price Index" = "#2C6E8A",
@@ -512,7 +406,7 @@ plot_var <- function(sample = full,
                   "Consumer Price Index" = "#C45E3E",
                   "Import Price Index" = "#4A9A6F"
                                   )) +
-                scale_x_continuous(breaks = seq(0, 24, by = 3), limits = c(0, 24), expand = c(0,0)) +
+                scale_x_continuous(breaks = seq(0, 18, by = 3), limits = c(0, 18), expand = c(0,0)) +
                 scale_y_continuous(labels = scales::label_percent(scale = 1)) +
                 labs(x       = "Months after shock",
                     y       = "Cumulative response (%)",
@@ -532,18 +426,27 @@ plot_var <- function(sample = full,
 
                   }
 
+sets <- c("full", "full_filtered", "early", "low_inflation")
 
-for (lag in c(3, 6, 12, 24)){
+for (lag in c(3, 6, 12, 18)){
 
 for (set in sets){
+  temp_resp <- c("m", "ppi", "cpi")
+
   if (set == "full"){
+    temp_name <- "Full Sample (1990-02 - 2025-06)"
     temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "ppi", "cpi")
-    temp_name <- "Full Sample (1992-01 - 2025-06)"
     temp_resp <- c("ppi", "cpi")
-  }  else {
-    temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
-    temp_name <- "Full Import Sample (1992-01 - 2022-12)"
-    temp_resp <- c("m", "ppi", "cpi")
+  }  else {temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m","ppi", "cpi")
+          temp_resp <- c("m", "ppi", "cpi")
+  }
+  if (set == "full_filtered"){
+    temp_name <- "Full Import Sample (1990-02 - 2022-12)"
+    
+  } else if (set == "low_inflation"){
+    temp_name <- "2009-01 - 2022-12"
+  } else if (set == "early"){
+    temp_name <- "1990-02 - 2008-12"
   }
 plot_var(sample = get(set), 
       var_list = temp_list,
@@ -765,11 +668,12 @@ var_table <- function(dat = new,
 }
 
 
+
+
 sd(full$ppi_manuf, na.rm = TRUE)
 
 sd(full$finalmanufgoods_full, na.rm = TRUE)
 
-sets <- c("full", "full_filtered")
 
 for (set in sets){
   if (set == "full"){
@@ -823,7 +727,7 @@ write.csv(full_var$table, filename_var)
 ################################################################################################################################################################################
 
 
-lp_table <- function(sample    = full,
+lp_table <- function(set    = full,
                      var_list  = c("oilshock", "outputgap_dc", "neer_sarb", "ppi_manuf", "cpi"),
                      n_lags    = 12,
                      name      = "Full Sample",
@@ -839,7 +743,7 @@ lp_table <- function(sample    = full,
     "Currency Measure is the SARB Nominal Effective Exchange Rate"
 
   # ── Data: contemporaneous + lags of every variable ──────────────────────
-  df_var <- sample %>%
+  df_var <- set %>%
     dplyr::select(all_of(var_list)) %>%
     na.omit() %>%
     as.data.frame()
@@ -940,13 +844,13 @@ openxlsx::write.xlsx(full_lp$table,
 filename_lp <- file.path(here::here(), "Tables", "full_lp_table.csv")
 write.csv(full_lp$table, filename_lp)
 
-plot_lp <- function(sample   = new,
+plot_lp <- function(dat   = new,
                     var_list = c("oilshock", "outputgap_dc", "usdzar_fred", "ppi_full", "cpi"),
                     n_lags   = 12,
                     name     = "New Sample",
                     imp      = var_list[3],
                     resp     = c("ppi_full", "cpi"),
-                    hor      = 24) {
+                    hor      = 18) {
 
   name <- as.character(name)
 
@@ -962,7 +866,7 @@ plot_lp <- function(sample   = new,
   dem <- var_list[2]
 
   # ── Data: contemporaneous + lags ─────────────────────────────────────────
-  df_var <- sample %>%
+  df_var <- set %>%
     dplyr::select(all_of(var_list)) %>%
     na.omit() %>%
     as.data.frame()
@@ -1048,16 +952,16 @@ plot_lp <- function(sample   = new,
 
   # ── Build irf_df ──────────────────────────────────────────────────────────
   if ("ppi" %in% var_list) {
-    if ("m_all" %in% var_list) {
+    if ("m" %in% var_list) {
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi", "Producer Price Index"),
         make_irf_df("cpi",     "Consumer Price Index"),
-        make_irf_df("m_all",   "Import Prices (All)"))
+        make_irf_df("m_all",   "Import Price Index"))
     } else if ("m_manuf" %in% var_list) {
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi", "Producer Price Index"),
         make_irf_df("cpi",     "Consumer Price Index"),
-        make_irf_df("m_manuf", "Import Prices (Manufacturing)"))
+        make_irf_df("m_manuf", "Import Price Index"))
     } else {
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi", "Producer Price Index"),
@@ -1068,7 +972,7 @@ plot_lp <- function(sample   = new,
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi_full", "Producer Price Index"),
         make_irf_df("cpi",      "Consumer Price Index"),
-        make_irf_df("uvi34",    "Import Prices (Excl. Crude)"))
+        make_irf_df("uvi34",    "Import Price Index"))
     } else {
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi_full", "Producer Price Index"),
@@ -1079,7 +983,7 @@ plot_lp <- function(sample   = new,
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi_manuf", "Producer Price Index"),
         make_irf_df("cpi",       "Consumer Price Index"),
-        make_irf_df("uvi34",     "Import Prices (Excl. Crude)"))
+        make_irf_df("uvi34",     "Import Price Index"))
     } else {
       irf_df <- dplyr::bind_rows(
         make_irf_df("ppi_manuf", "Producer Price Index"),
@@ -1094,21 +998,17 @@ plot_lp <- function(sample   = new,
                                   fill = response, colour = response)) +
     geom_hline(yintercept = 0, linetype = "dashed",
                colour = "grey40", linewidth = 0.4) +
-    geom_ribbon(aes(ymin = lower, ymax = upper),
-                alpha = 0.15, colour = NA) +
+    geom_line(aes(y = lower), linewidth = 0.4, linetype = "dashed") +
+    geom_line(aes(y = upper), linewidth = 0.4, linetype = "dashed") +
     geom_line(linewidth = 0.8) +
     scale_colour_manual(values = c(
       "Producer Price Index"         = "#2C6E8A",
       "Consumer Price Index"          = "#C45E3E",
-      "Import Prices (Excl. Crude)"  = "#4A9A6F",
-      "Import Prices (All)"           = "#4A9A6F",
-      "Import Prices (Manufacturing)" = "#4A9A6F")) +
+      "Import Price Index"  = "#4A9A6F")) +
     scale_fill_manual(values = c(
       "Producer Price Index"         = "#2C6E8A",
       "Consumer Price Index"          = "#C45E3E",
-      "Import Prices (Excl. Crude)"  = "#4A9A6F",
-      "Import Prices (All)"           = "#4A9A6F",
-      "Import Prices (Manufacturing)" = "#4A9A6F")) +
+      "Import Prices Index"  = "#4A9A6F")) +
     scale_x_continuous(breaks = seq(0, hor, by = 3),
                        limits = c(0, hor),
                        expand = c(0, 0)) +
@@ -1133,10 +1033,30 @@ plot_lp <- function(sample   = new,
   invisible(list(irf_df = irf_df, irf_plot = irf_plot))
 }
  
-for (lag in c(3, 6, 12, 24)){
-plot_lp(sample = full,
-      var_list = c("oilshock", "outputgap_dc", "neer_sarb", "ppi", "cpi"),
-      name = "Full Sample ", 
-      resp = c("ppi_manuf", "cpi"), 
-      n_lags = lag)
-}
+for (lag in c(3, 6, 12, 18)){
+
+  for (set in sets){
+    temp_resp <- c("m", "ppi", "cpi")
+
+    if (set == "full"){
+      temp_name <- "Full Sample (1990-02 - 2025-06)"
+      temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "ppi", "cpi")
+      temp_resp <- c("ppi", "cpi")
+    }  else {temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m","ppi", "cpi")
+            temp_resp <- c("m", "ppi", "cpi")
+    }
+    if (set == "full_filtered"){
+      temp_name <- "Full Import Sample (1990-02 - 2022-12)"
+      
+    } else if (set == "low_inflation"){
+      temp_name <- "2009-01 - 2022-12"
+    } else if (set == "early"){
+      temp_name <- "1990-02 - 2008-12"
+    }
+  plot_lp(sample = get(set), 
+        var_list = temp_list,
+        name = temp_name, 
+        resp = temp_resp, 
+        n_lags = lag)
+  }
+  }

@@ -263,10 +263,10 @@ historical_sample <- m %>%
   full_join(neer,       by = "time_period") %>%
   full_join(usdzar,     by = "time_period") %>%
   full_join(oil,        by = "time_period") %>%
-filter(time_period >= as.Date("1992-01-01") & time_period <= as.Date("2012-12-01"))
+filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2012-12-01"))
 
 
-
+View(historical_sample)
 filename <- file.path(here::here(), "data", "samples", "historicalsample.csv")
 write.csv(historical_sample, filename)
 
@@ -536,7 +536,7 @@ neer_full <- readr::read_csv(here::here("data", "neer.csv"), skip = 2) %>%
     mutate(neer_sarb = -(log(Value) - log(lag(Value, n = 1)))) %>%
     arrange(time_period) %>%
     select(-Date) %>%
-    filter(time_period >= as.Date("1992-01-01") & time_period <= as.Date("2026-03-01"))
+    filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2026-03-01"))
 View(neer_full)
 
 
@@ -572,37 +572,40 @@ m_hist <- tibble(time_period = as.Date(character()),
 )
 
 periods <- c("1990", "2000")
-codes <- c("PI000021")
 
-temp_m_hist <- c()
+m_hist <- tibble()
 
-for (period in periods){
-        m_temp_i <- tibble(time_period = as.Date(character())
-)
-        for (code in codes){
-            name <- code
-            xlfile <- paste0("ppi_", period, ".xlsx")
+for (period in periods) {
+  if (period == "2000") {
+    code <- "PI000004"
+  } else {
+    code <- "PI000021"
+  }
 
-            temp_m_hist <- readxl::read_excel(here::here("data", "PPI DATA", xlfile)) %>%
-                filter(H03 == code) %>%
-                select(-c(H01, H02, H17, H25)) %>%
-                pivot_longer(-c("H03", "H04", "H05", "H18"), names_to = "period", values_to = name) %>%
-                mutate(time_period = as.Date(paste0(stringr::str_sub(period, 5, 8), "-", stringr::str_sub(period, 3, 4), "-01"))) %>%
-                select(time_period, !!sym(name)) %>%
-                mutate(!!sym(name) := as.numeric(!!sym(name))) %>%
-                arrange(time_period)
+  xlfile <- paste0("ppi_", period, ".xlsx")
 
-            m_temp_i <- full_join(m_hist, temp_m_hist, by = "time_period")
-        }
-            m_hist <- bind_rows(m_hist, m_temp_i)
+  temp_m_hist <- readxl::read_excel(here::here("data", "PPI DATA", xlfile)) %>%
+    filter(H03 == code) %>%
+    select(-c(H01, H02, H17, H25)) %>%
+    pivot_longer(-c("H03", "H04", "H05", "H18"), names_to = "period", values_to = "value") %>%
+    mutate(
+      time_period = as.Date(paste0(stringr::str_sub(period, 5, 8), "-",
+                                   stringr::str_sub(period, 3, 4), "-01")),
+      m_hist = as.numeric(value)
+    ) %>%
+    select(time_period, m_hist) %>%
+    arrange(time_period)
+
+  m_hist <- bind_rows(m_hist, temp_m_hist)
 }
-View(m_hist)
+
 
 m_hist <- m_hist %>%
-    mutate(m_hist = log(PI000021) - log(lag(PI000021, n = 1))) %>%
-    select(time_period, m_hist)
+    mutate(m_hist = log(m_hist) - log(lag(m_hist, n = 1))) %>%
+    select(time_period, m_hist) %>%
+    distinct(time_period, .keep_all = TRUE)
     
-
+View(historical_sample)
 
 
 full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
@@ -610,15 +613,19 @@ full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), hist
     left_join(neer_full %>% select(-Value), by = "time_period") %>%
     left_join(m, by = "time_period") %>%
     mutate(ppi = case_when(time_period >= as.Date("2013-01-01") ~  finalmanufgoods_full,
-                            time_period <= as.Date("2012-12-01") ~ ppi_manuf)) %>%
-    left_join(m_hist, by = "time_period") %>%
+                            time_period <= as.Date("2012-12-01") ~ ppi_manuf))  %>%
+    left_join(m_hist %>% filter(time_period > as.Date("1990-01-01")), by = "time_period") %>%
     mutate(m = case_when(time_period >= as.Date("2013-01-01") ~  uvi2,
                             time_period <= as.Date("2012-12-01") ~ m_hist))
 
-View(m)
+
+View(full_sample)
+m_hist %>% filter(is.na(time_period))
 
 
 filename <- file.path(here::here(), "data", "samples", "fullsample.csv")
 write.csv(full_sample, filename)
+
+
 
 

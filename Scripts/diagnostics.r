@@ -85,13 +85,15 @@ theme_publication <- function(base_size = 11, base_family = "source_serif") {
 }
 
 
-# ADF test - null is unit root
-adf.test(bci$coincident)
 
-# KPSS test - null is stationarity
-kpss.test(bci$coincident, null = "Trend")
+full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
+       mutate(time_period = as.Date(time_period, format = "%Y-%m-%d")) %>%
+      filter(time_period <= as.Date("2025-06-01"), time_period >= as.Date("1990-02-01")) 
 
-full <- readr::read_csv(here::here("data", "samples", "fullsample.csv"))
+full_filtered <- full %>% filter(time_period < as.Date("2023-01-01"))
+
+short <- full_filtered %>% filter(time_period < as.Date("2013-01-01"))
+
 
 ####
 ## Show the 3 measures of output gap to support one another
@@ -315,47 +317,25 @@ for (sample in samples){
 ## Check for uncorrelated shocks
 #########
 
-full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
-       mutate(time_period = as.Date(time_period, format = "%Y-%m-%d")) %>%
-      filter(time_period <= as.Date("2025-06-01"), time_period >= as.Date("1992-02-01"))
 
-df_var <- full %>%
-    select(oilshock, outputgap_cl, usdzar_fred, ppi_manuf, cpi) %>%
+df_var <- full_filtered %>%
+    select(oilshock, outputgap_dc, usdzar_fred, m, ppi, cpi) %>%
     as.data.frame()
+n_lags <- 12
 
 var_model <- do.call(VAR, list(y = df_var, p = as.integer(n_lags), type = "const"))
 resids <- cbind(residuals(var_model), oilshock = tail(full$oilshock, nrow(residuals(var_model))))
 
-n_lags <- 12
-
-variance_decomposition <- fevd(var_model, n.ahead = 24)
-print(variance_decomposition$cpi)
-
-var_summary <- summary(var_model)
-var_summary$varresult$oil$coefficients
-
-var_summary$varresult$oil$r.squared
-
-
-
-var_summary
-
-
-
-
-
-
-
-plot <- plot(variance_decomposition$cpi)
-print(plot)
-
 residcor <- cor(resids) %>%
-        as.data.frame() %>%
-        rename("Demand Shock" = outputgap_cl,
-                "Exchange Rate" = usdzar_fred,
-                "PPI" = ppi_manuf, 
-                "CPI" = cpi, 
-                "Oil" = oilshock) 
+        as.data.frame() 
+View(residcor)
+
+openxlsx::write.xlsx(residcor, 
+           file      = here::here("Tables", "residcor.xlsx"),
+           sheetName = "Residuals",
+           rowNames  = FALSE)
+
+        
 
 lags <- c(1:24)
 print(lags)        
@@ -397,12 +377,123 @@ aic_var_df <- tibble(
     Lag = 1:24,
     AIC = info$criteria["AIC(n)", ]
 )
-pr
-
-openxlsx::write.xlsx(residcor, 
-           file      = here::here("Tables", "residcor.xlsx"),
-           sheetName = "Residuals",
-           rowNames  = FALSE)
 
 
-cor(full_sample$m_all, full_sample$uvi2, use = "complete.obs")
+
+cor(full$m_hist, full$uvi34, use = "complete.obs")
+
+
+
+
+
+full <- full %>%
+    arrange(time_period) %>%
+    filter(time_period <= as.Date("2022-12-01"))
+
+
+##############################################################################################################################################################################
+
+################################################################################ Stationarity ################################################################################
+
+##############################################################################################################################################################################
+
+
+vars <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
+
+export_adf_results <- function(data, vars, lags = 12,
+                                outfile = here::here("Tables", "adf_results.xlsx")) {
+  library(urca)
+  library(openxlsx)
+  
+  specs <- c("trend", "drift", "none")
+  tau_names <- c(trend = "tau3", drift = "tau2", none = "tau1")
+  
+  results <- lapply(vars, function(var) {
+    row <- list(variable = var)
+    for (spec in specs) {
+      res  <- urca::ur.df(data[[var]], type = spec, lags = lags, selectlags = "AIC")
+      s    <- summary(res)
+      tau  <- tau_names[spec]
+      stat <- s@teststat[1, tau]
+      cv   <- s@cval[tau, ]
+      row[[paste0(spec, "_stat")]]   <- round(stat, 4)
+      row[[paste0(spec, "_cv1")]]    <- cv["1pct"]
+      row[[paste0(spec, "_cv5")]]    <- cv["5pct"]
+      row[[paste0(spec, "_cv10")]]   <- cv["10pct"]
+      row[[paste0(spec, "_reject")]] <- ifelse(stat < cv["5pct"], "Yes", "No")
+    }
+    as.data.frame(row)
+  })
+  
+  df <- do.call(rbind, results)
+  write.xlsx(df, outfile, overwrite = TRUE)
+  message("Saved: ", outfile)
+}
+
+export_adf_results(
+  data = full_filtered,
+  vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi"),
+  lags = 12,
+  outfile = here::here("Tables", "adf_results.xlsx")
+)
+
+View(full)
+
+
+
+descriptive_table <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
+  
+  p1 <- data %>% filter(time_period >= as.Date("1990-02-01") & time_period <= as.Date("2008-12-01"))
+  p2 <- data %>% filter(time_period >= as.Date("2009-01-01") & time_period <= as.Date("2022-12-01"))
+
+  
+  fmt <- function(x) paste0(round(mean(x, na.rm = TRUE), 3), " (", round(sd(x, na.rm = TRUE), 3), ")")
+  
+  rows <- lapply(vars, function(var) {
+    tibble(
+      Variable    = var,
+      Full_Sample = fmt(data[[var]]),
+      `1990-2008` = fmt(p1[[var]]),
+      `2009-2023` = fmt(p2[[var]])
+    )
+  })
+  
+  bind_rows(rows)
+}
+
+desc <- descriptive_table(data = full_filtered)
+View(desc)
+writexl::write_xlsx(desc, path = here::here("Tables", "descriptives.xlsx"))
+
+
+##############################################################################################################################################################################
+
+################################################################################ Normality ###################################################################################
+
+##############################################################################################################################################################################
+
+normality_test <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
+    table <- tibble()
+    for (var in vars){
+        jb <- tseries::jarque.bera.test(data[[var]])
+
+        if (as.numeric(jb$p.value) < 0.001){
+            jbp <- "p < 0.01"
+        } else{
+            jbp <- round(jb$p.value, 3)
+        }
+        row <- tibble(
+        name = var,
+        skewness = round(moments::skewness(data[[var]]), 3),
+        kurtosis = round(moments::kurtosis(data[[var]]), 3),
+        jbstat = round(jb$statistic, 3),
+        jbp = jbp)
+    table <- bind_rows(table, row)
+    }
+    return(table)
+}
+
+norm <- normality_test(data = full_filtered)
+
+
+writexl::write_xlsx(norm, path = here::here("Tables", "normality.xlsx"))
