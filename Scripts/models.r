@@ -4,7 +4,7 @@
 
 ##############################################################################################################################################################################
 
-pacman::p_load(dplyr, tidyr, econdatar, ggplot2, vars, conflicted, lpirfs)
+pacman::p_load(dplyr, tidyr, econdatar, ggplot2, vars, conflicted, lpirfs, patchwork, magick, cowplot)
 
 
 conflict_prefer("select", "dplyr")
@@ -13,6 +13,32 @@ conflict_prefer("lag", "dplyr")
 
 
 # ── Theme ──────────────────────────────────────────────────────────────────────
+
+sysfonts::font_add_google("Source Serif 4", "source_serif")
+sysfonts::font_add_google("Source Sans 3",  "source_sans")
+
+
+showtext::showtext_auto()
+showtext::showtext_opts(dpi = 150)
+sysfonts::font_families()
+
+extrafont::loadfonts(device = "pdf")
+
+# Download Source Sans 3
+download.file(
+  "https://github.com/google/fonts/raw/main/ofl/sourcesans3/SourceSans3%5Bwght%5D.ttf",
+  destfile = "~/SourceSans3.ttf"
+)
+
+# Download Source Serif 4
+download.file(
+  "https://github.com/google/fonts/raw/main/ofl/sourceserif4/SourceSerif4%5Bwght%5D.ttf",
+  destfile = "~/SourceSerif4.ttf"
+)
+
+systemfonts::register_font(name = "source_sans", plain = "~/SourceSans3.ttf")
+systemfonts::register_font(name = "source_serif", plain = "~/SourceSerif4.ttf")
+
 theme_publication <- function(base_size = 11, base_family = "source_serif") {
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
     theme(
@@ -111,9 +137,9 @@ plot_var <- function(sample = full,
                 name <- as.character(name)
 
                 if (imp == "usdzar_fred"){
-                  measure <- "Currency Measure is the USD/ZAR exchange Rate"
+                  measure <- "Currency Measure is the USD/ZAR Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals."
                 } else{
-                  measure <- "Currency Measure is the SARB Nominal Effective Exchange Rate"
+                  measure <- "Currency Measure is the SARB Nominal Effective Exchange Rate.\nShaded Regions reflect bootstrapped 95% confidence intervals."
                 }
                 if ("m" %in% var_list){
                 file_name <- paste0(gsub(" ", "", tolower(name)), "_p_", as.character(n_lags), ".png")
@@ -124,7 +150,7 @@ plot_var <- function(sample = full,
 
                 irfpath <- file.path(here::here(), "irf", file_name)
 
-                plot_title <- paste0("Impulse Response Function of the ", name, " using p = ", n_lags)
+                plot_title <- name
 
                 df_var <- sample %>%
                   dplyr::select(all_of(var_list)) %>%
@@ -134,11 +160,11 @@ plot_var <- function(sample = full,
                 oil_exog <- sapply(0:as.numeric(n_lags), function(l) dplyr::lag(df_var$oilshock, l))
                 colnames(oil_exog) <- paste0("oil.l", 0:as.numeric(n_lags)) 
 
-                if (var_list[1] == "oilshock"){
-                              var_model <- do.call(VAR, list(y = df_var %>% dplyr::select(-oilshock), p = as.integer(n_lags), type = "const", exogen = oil_exog %>% as.matrix()))
-                  } else {
+                #if (var_list[1] == "oilshock"){
+                       #       var_model <- do.call(VAR, list(y = df_var %>% dplyr::select(-oilshock), p = as.integer(n_lags), type = "const", exogen = oil_exog %>% as.matrix()))
+                  #} else {
                               var_model <- do.call(VAR, list(y = df_var , p = as.integer(n_lags), type = "const"))
-                              }
+                              #}
 
               
                 var_summary <- summary(var_model)
@@ -389,12 +415,12 @@ plot_var <- function(sample = full,
                   ))
                  }
                  }
+                y_min <- max(-0.05, min(irf_df$lower, na.rm = TRUE))
 
                 irf_plot <- ggplot(irf_df, aes(x = horizon, y = estimate, 
                                   fill = response, colour = response)) +
                 geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40", linewidth = 0.4) +
-                geom_line(aes(y = lower), linewidth = 0.4, linetype = "dashed") +
-                geom_line(aes(y = upper), linewidth = 0.4, linetype = "dashed") +
+                geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.10, colour = NA) +
                 geom_line(linewidth = 0.8) +
                 scale_colour_manual(values = c(
                   "Producer Price Index" = "#2C6E8A",
@@ -408,27 +434,32 @@ plot_var <- function(sample = full,
                                   )) +
                 scale_x_continuous(breaks = seq(0, 18, by = 3), limits = c(0, 18), expand = c(0,0)) +
                 scale_y_continuous(labels = scales::label_percent(scale = 1)) +
+                coord_cartesian(ylim = c(y_min, NA)) +
                 labs(x       = "Months after shock",
-                    y       = "Cumulative response (%)",
+                    y       = "Cumulative Response (%)",
                     title   = plot_title,
-                    caption = measure,
+                    #caption = measure,
                     colour  = NULL,
                     fill    = NULL) +
-                theme_publication()
+                theme_publication() 
+
                 ggsave(
                   filename = file_name,
                   plot     = irf_plot,
                   path     = file.path(here::here(), "irf"),
                   width    = 10,
                   height   = 6,
-                  dpi      = 150
+                  dpi      = 150,
+                  device   = "png"
                 )
-
+return(irf_plot)
                   }
 
-sets <- c("full", "full_filtered", "early", "low_inflation")
+sets <- c("full_filtered", "early", "low_inflation")
 
-for (lag in c(3, 6, 12, 18)){
+
+plots <- list()
+
 
 for (set in sets){
   temp_resp <- c("m", "ppi", "cpi")
@@ -441,23 +472,60 @@ for (set in sets){
           temp_resp <- c("m", "ppi", "cpi")
   }
   if (set == "full_filtered"){
-    temp_name <- "Full Import Sample (1990-02 - 2022-12)"
+    temp_name <- "Full Sample (1990-02 - 2022-12)"
     
   } else if (set == "low_inflation"){
-    temp_name <- "2009-01 - 2022-12"
+    temp_name <- "Anchored Inflation (2009-01 - 2022-12)"
   } else if (set == "early"){
-    temp_name <- "1990-02 - 2008-12"
+    temp_name <- "Early Sample (1990-02 - 2008-12)"
   }
-plot_var(sample = get(set), 
+
+
+plots[[set]] <- plot_var(sample = get(set), 
       var_list = temp_list,
       name = temp_name, 
       resp = temp_resp, 
-      n_lags = lag)
-}
+      n_lags = 12)
 }
 
-View(full)
 
+combined_plot <- wrap_plots(plots, nrow = 3, ncol = 1) +
+  plot_layout(guides = "collect", axes = "collect") +
+  plot_annotation(
+    caption = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.",
+    theme = theme(
+      plot.caption  = element_text(hjust = 0, size = 9, family = "source_sans"),
+      legend.position = "bottom",
+      legend.text   = element_text(family = "source_sans"),
+      legend.title  = element_text(family = "source_sans"),
+      text         = element_text(family = "source_sans"),  # catches everything
+    plot.title   = element_text(family = "source_serif", face = "bold"),
+    axis.text    = element_text(family = "source_sans"),
+    axis.title   = element_text(family = "source_sans"),
+    )
+  ) &
+  theme(
+    text         = element_text(family = "source_sans"),  # catches everything
+    plot.title   = element_text(family = "source_serif", face = "bold"),
+    axis.text    = element_text(family = "source_sans"),
+    axis.title   = element_text(family = "source_sans"),
+    legend.text  = element_text(family = "source_sans"),
+    legend.title = element_text(family = "source_sans"),
+    strip.text   = element_text(family = "source_sans"),
+    plot.caption = element_text(family = "source_sans"),
+    plot.margin  = margin(6, 14, 6, 12)
+  )
+library(ragg)
+ggsave(here::here("irf", "combined.png"), combined_plot, width = 12, height = 18, dpi = 150, device   = "png", type = "cairo")
+
+
+plot <- ggdraw(combined_plot) + ##this creates a blank canvas with the combined plot on top of it. I then add codera logo
+        draw_image(here::here("logo-transparent.png"),
+               x = 0.8, y = -0.41,       # bottom right
+               width = 0.19,
+               hjust = 0, vjust = 0)
+
+ggsave(here::here("import_composition", "food_indices.png"), plot, width = 8, height = 5)
 var_table <- function(dat = new,
                              var_list = c("oil", "outputgap_dc", "neer_sarb", "ppi", "cpi"),
                              n_lags   = 12,
@@ -854,9 +922,10 @@ plot_lp <- function(dat   = new,
 
   name <- as.character(name)
 
-  measure <- if (imp == "usdzar_fred")
-    "Currency Measure is the USD/ZAR exchange Rate" else
-    "Currency Measure is the SARB Nominal Effective Exchange Rate"
+  measure <- if (imp == "usdzar_fred"){
+    "Currency Measure is the USD/ZAR exchange Rate.\nDashed lines reflect bootstrapped 95% confidence intervals."}
+     else{
+    "Currency Measure is the SARB Nominal Effective Exchange Rate.\nDashed lines reflect bootstrapped 95% confidence intervals."}
 
   file_name  <- paste0(gsub(" ", "", tolower(name)), "_lp_p_", as.character(n_lags), ".png")
   acfpath    <- file.path(here::here(), "acf", file_name)
