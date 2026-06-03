@@ -540,6 +540,7 @@ neer_full <- readr::read_csv(here::here("data", "neer.csv"), skip = 2) %>%
 View(neer_full)
 
 
+
 codes <- c("UVI20000", "UVI34000", "UVI50000")
 
 m <- tibble(time_period = character())
@@ -615,17 +616,15 @@ full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), hist
     mutate(ppi = case_when(time_period >= as.Date("2013-01-01") ~  finalmanufgoods_full,
                             time_period <= as.Date("2012-12-01") ~ ppi_manuf))  %>%
     left_join(m_hist %>% filter(time_period > as.Date("1990-01-01")), by = "time_period") %>%
-    mutate(m = case_when(time_period >= as.Date("2013-01-01") ~  uvi2,
-                            time_period <= as.Date("2012-12-01") ~ m_hist))
-
-
-View(full_sample)
-m_hist %>% filter(is.na(time_period))
+    arrange((time_period)) %>%
+    mutate(m = case_when(time_period >= as.Date("2010-02-01") ~  uvi34,
+                            time_period <= as.Date("2010-02-01") ~ m_hist),
+                            uvi34_l = lag(uvi34, n = 1))
 
 
 filename <- file.path(here::here(), "data", "samples", "fullsample.csv")
 write.csv(full_sample, filename)
 
 
-
+View(full_sample)
 

@@ -335,17 +335,38 @@ openxlsx::write.xlsx(residcor,
            sheetName = "Residuals",
            rowNames  = FALSE)
 
-        
+      
+View(full)
 
-lags <- c(1:24)
 print(lags)        
-        
+
+
+
+##############################################################################################################################################################################
+
+################################################################################ AIC ################################################################################
+
+##############################################################################################################################################################################
+
+
 
 
 aic_var_df <- tibble(Lag = as.numeric(), 
                     AIC = as.numeric(), 
                     BIC = as.numeric())
 
+View(full_filtered)
+
+full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
+       mutate(time_period = as.Date(time_period, format = "%Y-%m-%d")) %>%
+      filter(time_period <= as.Date("2025-06-01"), time_period >= as.Date("1992-02-01")) 
+
+full_filtered <- full %>% filter(time_period < as.Date("2023-01-01"))
+df_var <- full_filtered %>%
+    select(oilshock, outputgap_dc, neer_sarb, m, ppi, cpi) %>%
+    as.data.frame() 
+
+lags <- c(1:24)
 for (lag in lags){
 
     oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var$oilshock, l))
@@ -361,7 +382,7 @@ for (lag in lags){
 
     aic_var_df <- rbind(aic_var_df, temp)
 }
-
+View(full_filtered)
 print(aic_var_df)
 View(aic_var_df)
 View(residcor)
@@ -497,3 +518,162 @@ norm <- normality_test(data = full_filtered)
 
 
 writexl::write_xlsx(norm, path = here::here("Tables", "normality.xlsx"))
+
+
+
+
+##############################################################################################################################################################################
+
+########################################################################## Import Indices ####################################################################################
+
+##############################################################################################################################################################################
+
+overlap <- full %>%
+    filter(time_period >= as.Date("2010-01-01"), 
+            time_period <= as.Date("2012-12-01")) %>%
+    arrange(desc(time_period))
+
+ccf <- broom::tidy(ccf(overlap$uvi34, overlap$m_hist, na.action = na.omit, lag.max = 6)) %>%
+        knitr::kable(format = "latex", digits = 4, booktabs = TRUE, col.names = c("k Lag", "Correlation"),
+        caption = "Correlation between UVI(t+k) and SIC(t)")
+print(ccf)             
+writeLines(ccf, here::here("tables", "uvi_sic_ccf.tex"))
+
+print(ccf(overlap$uvi34, overlap$m_hist, na.action = na.omit, lag.max = 6))
+t_test <- broom::tidy(t.test(lag(overlap$uvi34, n = 1), overlap$m_hist, paired = TRUE)) %>%
+          select(estimate, statistic, p.value, conf.low, conf.high, parameter) %>%
+          rename("Mean diff." = estimate, "t" = statistic, "p" = p.value,
+                "CI low" = conf.low, "CI high" = conf.high, "df" = parameter) %>%
+          knitr::kable(format = "latex", digits = 4, booktabs = TRUE,
+                caption = "Paired t-test: UVI vs SIC import price series (lagged)")
+
+print(t_test)
+writeLines(t_test, here::here("tables", "uvi_sic_ttest.tex"))
+
+
+
+# VAR consumes first p=9 rows for lags; residuals start at row 13
+# break_idx is the position within the residual sequence
+
+chow_df <- full_filtered %>%
+    select(time_period, oilshock, outputgap_dc, neer_sarb, m, ppi, cpi) %>%
+    mutate(d_impulse = as.integer(time_period == as.Date("2010-02-01")))
+
+break_idx <- which(chow_df$time_period == as.Date("2010-02-01")) - 9
+print(break_idx)
+
+oil_exog <- sapply(0:9, function(l) lag(chow_df$oilshock, l)) %>%
+    `colnames<-`(paste0("oil.l", 0:9))
+
+exog_combined <- cbind(oil_exog, d_impulse = chow_df$d_impulse) %>% as.matrix()
+
+
+var_model_chow <- VAR(chow_df %>% select(-oilshock, -time_period), 
+                 p = 9, 
+                 type = "const",
+                 exogen = exog_combined)
+
+
+cat("Break index in residual sequence:", break_idx, "\n") 
+chow_manual <- function(eq, break_idx) {
+    mm  <- model.matrix(eq)
+    y   <- model.response(model.frame(eq))
+    k   <- ncol(mm)
+    n   <- nrow(mm)
+    
+    ssr_full  <- sum(resid(eq)^2)
+    ssr_pre   <- sum(lm.fit(mm[1:break_idx, ],          y[1:break_idx])$residuals^2)
+    ssr_post  <- sum(lm.fit(mm[(break_idx+1):n, ], y[(break_idx+1):n])$residuals^2)
+    
+    F_stat <- ((ssr_full - ssr_pre - ssr_post) / k) / 
+              ((ssr_pre + ssr_post) / (n - 2 * k))
+    p_val  <- pf(F_stat, df1 = k, df2 = n - 2*k, lower.tail = FALSE)
+    
+    c(F = round(F_stat, 3), p = round(p_val, 4))
+}
+
+for (eq_name in names(var_model_chow$varresult)) {
+    res <- chow_manual(var_model_chow$varresult[[eq_name]], break_idx)
+    cat(eq_name, ": F =", res["F"], ", p =", res["p"], "\n")
+}
+
+chow_results <- lapply(names(var_model_chow$varresult), function(eq_name) {
+    res <- chow_manual(var_model_chow$varresult[[eq_name]], break_idx)
+    data.frame(equation = eq_name, F_stat = res["F"], p_value = res["p"])
+}) %>% bind_rows()
+
+write.csv(chow_results, here::here("tables", "chow_test.csv"), row.names = FALSE)
+
+
+
+imports <- full_filtered %>%
+    select(time_period, m_hist, uvi34_l) %>%
+    pivot_longer(-time_period, names_to = "series", values_to = "value") %>%
+    mutate(series = recode(series, "m_hist" = "SIC", "uvi34_l" = "UVI")) %>%
+    ggplot(aes(x = time_period, y = value, colour = series)) +
+    geom_line() +
+    coord_cartesian(xlim = c(as.Date("2009-01-01"), as.Date("2014-01-01"))) +
+    theme_publication(base_size = 11, base_family = "source_serif")
+
+ggsave(filename = "import_indices.png", path = here::here("descriptives"))
+
+
+####
+### Arithmetic vs Geometric
+####
+
+
+folders <- c("xm20102022.xlsx", "uvi16_25.xlsx")
+codes <- c("UVI20000", "UVI34000", "UVI50000")
+
+uvi <- tibble(time_period = character())
+for (folder in folders){
+    m_temp <- tibble(time_period = character())
+
+    for (code in codes){
+        path <- paste0(here::here(), "/data")
+        temp_m <- readxl::read_excel(paste0(path, "/", folder)) %>%
+                        filter(H03 == code) %>%
+                        rename(type = H03) %>%
+                        select(-c("H01", "H02", "H04", "H05", "H17", "H18", "H25")) %>%
+                        pivot_longer(-type, names_to = "period", values_to = code) %>%
+                        mutate(time_period = paste0(stringr::str_sub(period, 5, 8), "-", stringr::str_sub(period, 3, 4), "-01")) %>%
+                        select(time_period, !!sym(code)) %>%
+                        mutate(!!sym(code) := as.numeric(!!sym(code))) %>%
+                        arrange(time_period) 
+        m_temp <- full_join(m_temp, temp_m, by = "time_period")
+
+        }
+
+        m_temp <- m_temp %>%
+                mutate(uvi2  = log(UVI20000) - log(lag(UVI20000, n = 1)), 
+                        uvi34  = log(UVI34000) - log(lag(UVI34000, n = 1)),
+                        uvi5 = log(UVI50000) - log(lag(UVI50000, n = 1)))
+        if (folder == "xm20102022.xlsx"){
+            temp_m <- temp_m %>%
+                    filter(time_period <= as.Date("2016-01-01"))
+    }
+
+    uvi <- full_join(m, m_temp, by = "time_period", suffix = c(".arit", ".geom"))
+}
+
+
+overlap_uvi <- m %>%
+    filter(time_period >= as.Date("2016-02-01"), 
+            time_period <= as.Date("2022-12-01")) %>%
+    arrange(desc(time_period))
+
+cor_uvi <- cor(overlap_uvi$uvi34.arit, overlap_uvi$uvi34.geom, use = "complete.obs")
+print(cor_uvi)  # [1] 0.7657967
+
+t_test_uvi <- broom::tidy(t.test(overlap_uvi$uvi34.arit, overlap_uvi$uvi34.geom, paired = TRUE)) %>%
+          select(estimate, statistic, p.value, conf.low, conf.high, parameter) %>%
+          rename("Mean diff." = estimate, "t" = statistic, "p" = p.value,
+                "CI low" = conf.low, "CI high" = conf.high, "df" = parameter) %>%
+          knitr::kable(format = "latex", digits = 4, booktabs = TRUE,
+                caption = "Paired t-test: Arithmetic vs Geometric UVI ")
+
+
+print(t.test(overlap_uvi$uvi34.arit, overlap_uvi$uvi34.geom, paired = TRUE))
+print(t_test_uvi)
+writeLines(t_test_uvi, here::here("tables", "arit_geom_ttest.tex"))
