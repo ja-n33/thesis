@@ -1,0 +1,48 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:adf}Augmented Dickey-Fuller Unit Root Tests}
+\centering
+\fontsize{8}{10}\selectfont
+\begin{tabular}[t]{lrrrrl}
+\toprule
+Specification & Statistic & 1\% & 5\% & 10\% & Reject\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Oil Shock}}\\
+\hspace{1em}Trend & -12.356 & -3.98 & -3.42 & -3.13 & Yes\\
+\hspace{1em}Drift & -12.374 & -3.44 & -2.87 & -2.57 & Yes\\
+\hspace{1em}None & -12.386 & -2.58 & -1.95 & -1.62 & Yes\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Demand}}\\
+\hspace{1em}Trend & -4.840 & -3.98 & -3.42 & -3.13 & Yes\\
+\hspace{1em}Drift & -4.850 & -3.44 & -2.87 & -2.57 & Yes\\
+\hspace{1em}None & -4.856 & -2.58 & -1.95 & -1.62 & Yes\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Exchange Rate}}\\
+\hspace{1em}Trend & -13.247 & -3.98 & -3.42 & -3.13 & Yes\\
+\hspace{1em}Drift & -13.243 & -3.44 & -2.87 & -2.57 & Yes\\
+\hspace{1em}None & -12.956 & -2.58 & -1.95 & -1.62 & Yes\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Import Price Index}}\\
+\hspace{1em}Trend & -8.281 & -3.98 & -3.42 & -3.13 & Yes\\
+\hspace{1em}Drift & -7.859 & -3.44 & -2.87 & -2.57 & Yes\\
+\hspace{1em}None & -7.645 & -2.58 & -1.95 & -1.62 & Yes\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Producer Price Index}}\\
+\hspace{1em}Trend & -8.352 & -3.98 & -3.42 & -3.13 & Yes\\
+\hspace{1em}Drift & -8.333 & -3.44 & -2.87 & -2.57 & Yes\\
+\hspace{1em}None & -2.746 & -2.58 & -1.95 & -1.62 & Yes\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Consumer Price Index}}\\
+\hspace{1em}Trend & -4.299 & -3.98 & -3.42 & -3.13 & Yes\\
+\hspace{1em}Drift & -3.953 & -3.44 & -2.87 & -2.57 & Yes\\
+\hspace{1em}None & -1.949 & -2.58 & -1.95 & -1.62 & No\\
+\midrule
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,33 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:adf}Augmented Dickey-Fuller Unit Root Tests}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\fontsize{9}{11}\selectfont
+\begin{tabular}[t]{lllrrrrl}
+\toprule
+  & Variable & Specification & Statistic & 1\% & 5\% & 10\% & Reject $H_0$\\
+\midrule
+trend...1 & oilshock & Trend & -12.356 & -3.98 & -3.42 & -3.13 & Yes\\
+drift...2 & oilshock & Drift & -12.374 & -3.44 & -2.87 & -2.57 & Yes\\
+none...3 & oilshock & None & -12.386 & -2.58 & -1.95 & -1.62 & Yes\\
+trend...4 & outputgap_dc & Trend & -4.840 & -3.98 & -3.42 & -3.13 & Yes\\
+drift...5 & outputgap_dc & Drift & -4.850 & -3.44 & -2.87 & -2.57 & Yes\\
+none...6 & outputgap_dc & None & -4.856 & -2.58 & -1.95 & -1.62 & Yes\\
+trend...7 & neer_sarb & Trend & -13.247 & -3.98 & -3.42 & -3.13 & Yes\\
+drift...8 & neer_sarb & Drift & -13.243 & -3.44 & -2.87 & -2.57 & Yes\\
+none...9 & neer_sarb & None & -12.956 & -2.58 & -1.95 & -1.62 & Yes\\
+trend...10 & m & Trend & -8.281 & -3.98 & -3.42 & -3.13 & Yes\\
+drift...11 & m & Drift & -7.859 & -3.44 & -2.87 & -2.57 & Yes\\
+none...12 & m & None & -7.645 & -2.58 & -1.95 & -1.62 & Yes\\
+trend...13 & ppi & Trend & -8.352 & -3.98 & -3.42 & -3.13 & Yes\\
+drift...14 & ppi & Drift & -8.333 & -3.44 & -2.87 & -2.57 & Yes\\
+none...15 & ppi & None & -2.746 & -2.58 & -1.95 & -1.62 & Yes\\
+trend...16 & cpi & Trend & -4.299 & -3.98 & -3.42 & -3.13 & Yes\\
+drift...17 & cpi & Drift & -3.953 & -3.44 & -2.87 & -2.57 & Yes\\
+none...18 & cpi & None & -1.949 & -2.58 & -1.95 & -1.62 & No\\
+\bottomrule
+\multicolumn{8}{l}{\rule{0pt}{1em}ADF test with lag length selected by AIC up to a maximum of 12 lags.}\\
+\multicolumn{8}{l}{\rule{0pt}{1em}$H_0$: series contains a unit root. Rejection at the 5% level indicated.}\\
+\end{tabular}}
+\end{table}

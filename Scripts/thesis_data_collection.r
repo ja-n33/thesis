@@ -607,7 +607,7 @@ m_hist <- m_hist %>%
     distinct(time_period, .keep_all = TRUE)
     
 View(historical_sample)
-
+View(m)
 
 full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
     select(-c("neer_sarb", "uvi34", "uvi2", "uvi5")) %>%
@@ -618,7 +618,7 @@ full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), hist
     left_join(m_hist %>% filter(time_period > as.Date("1990-01-01")), by = "time_period") %>%
     arrange((time_period)) %>%
     mutate(m = case_when(time_period >= as.Date("2010-02-01") ~  uvi34,
-                            time_period <= as.Date("2010-02-01") ~ m_hist),
+                            time_period <= as.Date("2010-01-01") ~ m_hist),
                             uvi34_l = lag(uvi34, n = 1))
 
 

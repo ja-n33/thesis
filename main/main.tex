@@ -8,6 +8,16 @@
 \usepackage{threeparttable}
 \usepackage{times}
 \usepackage{amsmath}
+\usepackage{booktabs}
+d\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
 
 \addbibresource{citations.bib}
 
@@ -32,9 +42,9 @@ Indeed, while South African exports have benefitted from a weaker exchange rate,
 In addition, the continued deindustrialisation and disappearance of key upstream inputs may lead to an increasing reliance on imports for inputs and final goods. Given these facts, determining the extent to which domestic prices are influenced by the exchange rate is of concern to policymakers aiming for low inflation. \\ 
 
 While the floating exchange rate may act as a shock absorber through responding to real shocks, structural factors like market imperfections and price rigidities may render the absorption incomplete. 
-Such a shock to the exchange rate may improve a country's terms of trade through bolstering exports and dampening imports, however this outcome depends on the elasticity of subsititution between domestic and foreign goods. This, in turn, depends on the degree to which a country depends on foreign goods and vice versa - 
+Such a shock to the exchange rate may improve a country's terms of trade through bolstering exports and dampening imports, however this outcome depends on the elasticity of substitution between domestic and foreign goods. This, in turn, depends on the degree to which a country depends on foreign goods and vice versa - 
 if a country is unable to substitute its imports of foreign goods while at the same time not enjoying foreign demand for its domestic products, an exchange rate depreciation will lead to a deterioration in a country's trade balance and higher domestic prices \parencite{obstfeld1995exchange}. 
-This indirectly relates to the degree of local currency pricing (LCP) and producer currency pricing (PCP), refering to goods priced in destination and origin country currencies respectively. 
+This indirectly relates to the degree of local currency pricing (LCP) and producer currency pricing (PCP), referring to goods priced in destination and origin country currencies respectively. 
 Concretely, if goods are priced in the domestic currency, nominal rigidity means there would be no impact of exchange rate fluctuations on domestic prices, while conversely goods being priced in the currency of the foreign country means that fluctuations lead to corresponding changes in domestic prices. According to \textcite{devereux2004endogenous}, producers' pricing  decisions are made according to the variance of the exchange  rate and its covariance with marginal costs: if firms face higher exchange rate volatility, they have a stronger incentive to price according to their own currency, while a higher covariance between marginal costs and exchange rate. As a result, currencies with lower variability are more likely to be chosen as the pricing medium. 
 
 While exchange rate stability may explain differences in pass-through across countries, industry-level features are also likely to determine currency pricing and thus pass-through. If an exporting firm has little market share in a given industry in the foreign market, their optimal strategy would be to follow LCP in order to avoid swings in demand owing to higher degrees of elasticity \parencite{NBERw9039}. To the extent that there is variation in trade patterns across different industries, there is likely to be heterogeneity in pass-through among different parts of the economy. 
@@ -128,15 +138,19 @@ In addition, while standard VAR and LP models are sign-agnostic in that disturba
 
 For the purposes of this study, monthly data from February 1990 up to December 2022 are used, thus spanning a total of 395 months. Along with looking at the full sample, the sample is divided into two periods: 1990 up to and including 2008 and 2009 until the end of 2022. Although this results in a slightly unbalanced comparison with the early period consisting of 227 months and the latter of 168, 2009 did mark a turning point for South Africa with lower average and variance in the inflation rates, representing a period of greater price stability. This in turn allows for the assessment of whether ...
 
- Oil shock data is obtained from \textcite{Kanzig}\footnote{Updated vintages are available online at: https://github.com/dkaenzig/oilsupplynews}, who uses changes in oil futures prices during tight windows around OPEC announcements to construct an oil supply shock series, where the the effect of confounding structural shocks on oil supply is purged by controlling for changes in OPEC's global demand forecast, a technique analogous to that used in \textcite{romer_romer}. This series is particularly useful when applied to a small economy like South Africa, as the likelihood of any feedback from domestic disturbances to oil shocks is negligible, making it a superior approach to that used in \textcite{mccarthy1999}, who uses residuals of domestic oil price dynamics. Related to the fact that it is a more exogenous series than domestic oil prices, the K\"anzig oil supply shock series has the significant benefit to both VAR and LP models of fixing coefficients on oil shocks to zero. In order to retain methodological consistency with previous studies and to enable analysis of variance decomposition, oil shocks are still included as endogenous variables, although results from 
+ Oil shock data is obtained from \textcite{Kanzig}\footnote{Updated vintages are available online at: https://github.com/dkaenzig/oilsupplynews}, who uses changes in oil futures prices during tight windows around OPEC announcements to construct an oil supply shock series, where the the effect of confounding structural shocks on oil supply is purged by controlling for changes in OPEC's global demand forecast, a technique analogous to that used in \textcite{romer_romer}. This series is particularly useful when applied to a small economy like South Africa, as the likelihood of any feedback from domestic disturbances to oil shocks is negligible, making it a superior approach to that used in \textcite{mccarthy1999}, who uses residuals of domestic oil price dynamics. Related to the fact that it is a more exogenous series than domestic oil prices, and that as a result the K\"anzig oil supply shock series has the significant benefit to both VAR and LP models of fixing coefficients on oil shocks to zero. Shocks are entered into the model as fully exogenous. 
 
- A limitation imposed by this approach is that the impact of oil (supply) shocks on prices cannot be recovered via forecast error variance decomposition. This is a non-trivial issue given the primacy of oil shocks on downstream economic variables, thus it is worth comparing results of fully exogenous oil shocks with oil shocks as endogenous. As mentioned, however, the series is exogenous by construction, particularly in relations to a small economy, thus endogenising the series risks miscalculating the size of the shock if parts of it are "explained" by spurious correlation with previous values of $Y_{t-j}$ . To balance these considerations, IRF results between the two models are compared, with the expectation that the coefficients of the endogenised model's responses to exchange rate shocks will be biased upwards and less precise due to the loss in degrees of freedom from having more parameters to estimate. 
+ A limitation imposed by this approach is that the impact of oil (supply) shocks on prices cannot be recovered via forecast error variance decomposition. This is a non-trivial issue given the primacy of oil shocks on downstream economic variables,however despite the centrality of oil shocks to the economy, it does not form part of the central undertaking of this study. Nevertheless, a fully endogenised model is included as part of the sensitivity analysis. As mentioned, however, the series is exogenous by construction, particularly in relations to a small economy, thus endogenising the series risks miscalculating the size of the shock if parts of it are "explained" by spurious correlation with previous values of $Y_{t-j}$. While this leads to a deviation from previous literature, it decreases the bias that may result from spurious correlation with endogenous variables and increases the degrees of freedom in the estimation. 
 
 In order to estimate demand shocks, seasonally-adjusted quarterly Real GDP figures are interpolated to a monthly frequency using Denton-Cholette interpolation, which allows for temporal disaggregation in the absence of any suitable high-frequency indicator variables\footnote{Regression-based methods like Chow-Lin and indexed Denton-Cholette were not suitable as the Bureau of Economic Research's Business Cycle Index series was not found to be sufficiently correlated with GDP series.} through distributing quarterly values evenly across constituent months by minimizing period-to-period differences subject to the constraint that three-month values should sum to quarterly values. The Denton-Cholette method also avoids the starting point problem present in the original formulation by \textcite{denton1971}, which imposes no constraint on the first high-frequency point from the previous period, resulting in a potential discontinuity at the starting point as, unlike interior data points, there is only one low-frequency constraint \cite{DagumCholette2006}. Because this adjustment does not account for seasonal trends, instead distributing quarterly values smoothly, using seasonally-adjusted data means that seasonal variation present in unadjusted series is not lost. A Hodrick-Prescott filter is applied to the disaggregated and logged series, from which the cyclical component, or the deviation from trend, is recovered and used as the output gap. 
 
 The SARB's Nominal Effective Exchange Rate\footnote{a detailed description of the methodology is available at https://www.resbank.co.za/content/dam/sarb/publications/quarterly-bulletins/quarterly-bulletin-publications/2020/10091/03Note-on-the-revision-of-South-Africas-nominal-and-real-effective-exchange-rate-indices.pdf}, which measures the external value of the Rand against a weighted basket of currencies is the preferred measure for the exchange rate\footnote{The USD-ZAR exchange rate is used as a robustness check}. Although currencies are weighted by partners' shares of imports and exports, it is preferred to the Dollar given the importance of other major economies like China, the UK and the EU as trade partners and has precedents in previous studies\footnote{See \textcite{mccarthy1999}, \textcite{Karoroetal2008},   \textcite{aronetal2012},\textcite{choudri2015exchange}, \textcite{kabundi2016exchange}}. Indexed values are log-differenced and flipped such that positive movements represent depreciations.
 
-South African import data are characterised by various breaks which compromise its suitability: between 1980 and 2012, import prices formed part of producer price indices and were subdivided by Standard Industry Classification. After 2010, import prices were obtained from customs data using a classification system based on the Central Product Classification System, which aggregates goods together according to physical characteristics. This index was calculated as the arithmetic mean up until 2023, while a geometric mean was used from 2017 up to the time of writing \cite{StatsSA2025XUVI}. The most coherent series would be the use of total import price indices across the two series using the arithmetic means. For producer and consumer prices, headline PPI and CPI figures are used. All price series are log-differenced. 
+South African import data are characterised by various breaks which compromise its suitability: between 1980 and 2012, import prices formed part of producer price indices and were subdivided by Standard Industry Classification. After 2010, import prices were obtained from customs data using a classification system based on the Central Product Classification System, which aggregates goods together according to physical characteristics. This index was calculated as the arithmetic mean up until 2023, while a geometric mean was used from 2017 up to the time of writing \cite{StatsSA2025XUVI}. Tests were carried out to determine the compatibility between the different series. 
+
+ The overlapping period between 2010 and 2013 also indicates that the two series 
+
+ For producer and consumer prices, headline PPI and CPI figures are used. All price series are log-differenced. 
 
 Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are found to be stationary according to Augmented Dickey-Fuller tests, thus justifying the use of the VAR model as opposed to a vector error correction model. Residuals from the VAR models display very low correlation between different variables and across lags. Normality tests indicate that our data displays skewness, with Jarque-Bera p-values being significant beyond 1\% for all variables. With this in mind, series are bootstrapped??????
 
@@ -148,20 +162,26 @@ Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are f
 
 
 \section*{Appendix}
+
+\subsection*{Results}
+
+\input{main_results.txt}
+
+
 \subsection*{Diagnostics}
+\subsubsection*{Stationarity}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{stationarity_combined.png}
+    \caption{Variable Time Series Plots}
+    \label{fig:stationarity_plots}
+\end{figure}
 
-
-
-
-The opportunity cost of using monthly data instead of quarterly data is, however, non-trivial, particularly when one considers the estimation of the demand shock ($\varepsilon_t^d$) in \ref{eq:outputgap}. While quarterly GDP figures are conventionally used to estimate the output gap, the interval inconsistency requires the use of an alternative measure of economic activity. A potential replacement for GDP figures is using the SARB's composite coincident business cycle indicator, which is available at monthly frequencies. While this is not in line with previous practices, this approach nevertheless acts as a proxy for prevailing economic conditions, thus allowing us to recover ($\varepsilon_t^d$) as in \ref{eq:outputgap}. 
-
-\section*{Notes}
-\begin{itemize}
-    \item 2008 is chosen as the starting point for this study as January 2008 marked the adoption of a new CPI methodology by the SARB.
-    \item In 2022 SARB changed their methodology for measuring importers and exporters unit price changes to incorporate cluster-based analysis. There is substantial overlap between the two regimes, with the old measure extending until the end of 2022, while the new measure is back-dated to 2016. As such, a linkage factor will be used in order to rebase the pre-2016 data in order to make it comparable with the later data. In any case, dividing up the sample over this break provides opportunities for robustness tests. 
-    \item There is mixed consensus around whether the series are cointegrated, with the previously-cited international literature not finding evidence, while \cite{kabundi2016exchange} make use of a VECM model as they find price data in South Africa to be cointegrated.
-    
-\end{itemize}
+\input{adf_results.txt}
+\begin{minipage}{\linewidth}
+\footnotesize
+\textit{Note:} ADF test with lag length selected by AIC up to a maximum of 12 lags. H$_0$: series contains a unit root. Rejection at the 5\% level indicated.
+\end{minipage}
 
 \newpage
 \printbibliography

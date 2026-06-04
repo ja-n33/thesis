@@ -4,7 +4,7 @@
 
 ##############################################################################################################################################################################
 
-pacman::p_load(dplyr, tidyr, econdatar, ggplot2, vars, conflicted, lpirfs, patchwork, magick, cowplot)
+pacman::p_load(dplyr, tidyr, econdatar, ggplot2, vars, conflicted, lpirfs, patchwork, magick, cowplot, knitr, kableExtra)
 
 
 conflict_prefer("select", "dplyr")
@@ -118,11 +118,16 @@ low_inflation <- full_filtered %>% filter(time_period >= as.Date("2010-01-01"))
 low_inflation_m <- low_inflation
 
 
-early <- full_filtered %>% filter(time_period < as.Date("2008-12-01"))
+early <- full_filtered %>% filter(time_period < as.Date("2010-01-01"))
 early_m <- early
 
-
-
+for (var in c("m", "ppi", "cpi", "neer_sarb")) {
+    ts_x <- ts(full_filtered[[var]], start = c(1990, 2), frequency = 12)
+    png(here::here("descriptives", paste0("monthplot_", var, ".png")),
+        width = 1200, height = 600, res = 150)
+    monthplot(ts_x, main = var)
+    dev.off()
+}
 View(full)
 ##############################################################################################################################################################################
 
@@ -158,8 +163,8 @@ plot_var <- function(sample = full,
                 # Build df_var
                 if (!is.na(break_date)){
                   df_var <- sample %>%
-                    mutate(d_impulse = ifelse(time_period >= break_date, 1L, 0L)) %>%
-                    dplyr::select(all_of(var_list), d_impulse) %>%
+                    mutate(d_step = ifelse(time_period >= break_date, 1L, 0L)) %>%
+                    dplyr::select(all_of(var_list), d_step) %>%
                     na.omit()
                 } else {
                   df_var <- sample %>%
@@ -175,7 +180,7 @@ plot_var <- function(sample = full,
                   colnames(oil_exog) <- paste0("oil.l", 0:as.numeric(n_lags))
 
                   if (!is.na(break_date)) {
-                    exog_mat <- cbind(oil_exog, d_impulse = df_var$d_impulse)
+                    exog_mat <- cbind(oil_exog, d_step = df_var$d_step)
                   } else {
                     exog_mat <- oil_exog
                   }
@@ -185,7 +190,7 @@ plot_var <- function(sample = full,
                 if (oil_var == "oilshock"){
                   if (!is.na(break_date)){
                     var_model <- do.call(VAR, list(
-                      y      = df_var %>% dplyr::select(-oilshock, -d_impulse),
+                      y      = df_var %>% dplyr::select(-oilshock, -d_step),
                       p      = as.integer(n_lags),
                       type   = "const",
                       exogen = exog_mat))
@@ -222,30 +227,19 @@ plot_var <- function(sample = full,
                 }
 
                 resids <- residuals(var_model)
-
+                ppi_var <- intersect(c("ppi", "ppi_full", "ppi_manuf"), var_list)
+                m_var   <- intersect(c("m", "m_manuf", "m_all", "uvi34"), var_list)
                 # Residual labelling
-                if ("oil" %in% var_list){
-                  if (length(var_list) == 5){
-                    resids_df <- resids %>% as.data.frame() %>%
-                      rename("Oil Shock" = 1, "Demand Shock" = 2,
-                             "Exchange Rate Shock" = 3, "PPI Shock" = 4, "CPI Shock" = 5)
-                  } else {
-                    resids_df <- resids %>% as.data.frame() %>%
-                      rename("Oil Shock" = 1, "Demand Shock" = 2,
-                             "Exchange Rate Shock" = 3, "Import Price Shock" = 4,
-                             "PPI Shock" = 5, "CPI Shock" = 6)
-                  }
-                } else if ("oilshock" %in% var_list){
-                  if (length(var_list) == 5){
-                    resids_df <- resids %>% as.data.frame() %>%
-                      rename("Demand Shock" = 1, "Exchange Rate Shock" = 2,
-                             "PPI Shock" = 3, "CPI Shock" = 4)
-                  } else {
-                    resids_df <- resids %>% as.data.frame() %>%
-                      rename("Demand Shock" = 1, "Exchange Rate Shock" = 2,
-                             "Import Price Shock" = 3, "PPI Shock" = 4, "CPI Shock" = 5)
-                  }
-                }
+                resid_names <- c()
+                if ("oilshock" %in% var_list) resid_names <- c(resid_names, "Demand Shock", "Exchange Rate Shock") else
+                if ("oil" %in% var_list)      resid_names <- c(resid_names, "Oil Shock", "Demand Shock", "Exchange Rate Shock")
+                if (length(m_var) > 0)        resid_names <- c(resid_names, "Import Price Shock")
+                if (length(ppi_var) > 0)      resid_names <- c(resid_names, "PPI Shock")
+                resid_names <- c(resid_names, "CPI Shock")
+
+                resids_df <- resids %>%
+                    as.data.frame() %>%
+                    setNames(resid_names)
 
                 png(filename = acfpath, width = 1200, height = 800, res = 150)
                 par(mfrow = c(2, 3))
@@ -291,37 +285,40 @@ plot_var <- function(sample = full,
                 xr_response <- irf_results$irf[[imp]][, imp]
 
                 # Build irf_df
-                ppi_var <- intersect(c("ppi", "ppi_full", "ppi_manuf"), var_list)
-                m_var   <- intersect(c("m", "m_manuf", "m_all", "uvi34"), var_list)
 
-                irf_df <- bind_rows(
-                  data.frame(
-                    horizon  = 0:hor,
-                    estimate = irf_results$irf[[imp]][, ppi_var]   * 100,
-                    lower    = irf_results$Lower[[imp]][, ppi_var] * 100,
-                    upper    = irf_results$Upper[[imp]][, ppi_var] * 100,
-                    response = "Producer Price Index"
-                  ),
-                  data.frame(
+                irf_df <- data.frame(
                     horizon  = 0:hor,
                     estimate = irf_results$irf[[imp]][, "cpi"]   * 100,
                     lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
                     upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
                     response = "Consumer Price Index"
-                  )
                 )
 
-                if (length(m_var) > 0){
-                  irf_df <- bind_rows(irf_df,
-                    data.frame(
-                      horizon  = 0:hor,
-                      estimate = irf_results$irf[[imp]][, m_var]   * 100,
-                      lower    = irf_results$Lower[[imp]][, m_var] * 100,
-                      upper    = irf_results$Upper[[imp]][, m_var] * 100,
-                      response = "Import Price Index"
+                if (length(ppi_var) > 0){
+                    irf_df <- bind_rows(
+                        data.frame(
+                            horizon  = 0:hor,
+                            estimate = irf_results$irf[[imp]][, ppi_var]   * 100,
+                            lower    = irf_results$Lower[[imp]][, ppi_var] * 100,
+                            upper    = irf_results$Upper[[imp]][, ppi_var] * 100,
+                            response = "Producer Price Index"
+                        ),
+                        irf_df
                     )
-                  )
                 }
+
+                if (length(m_var) > 0){
+                    irf_df <- bind_rows(irf_df,
+                        data.frame(
+                            horizon  = 0:hor,
+                            estimate = irf_results$irf[[imp]][, m_var]   * 100,
+                            lower    = irf_results$Lower[[imp]][, m_var] * 100,
+                            upper    = irf_results$Upper[[imp]][, m_var] * 100,
+                            response = "Import Price Index"
+                        )
+                    )
+                }
+                                
 
                 y_min <- max(-0.05, min(irf_df$lower, na.rm = TRUE))
 
@@ -360,7 +357,20 @@ plot_var <- function(sample = full,
                   device   = "png"
                 )
 
-                return(irf_plot)
+                horizons <- seq(3, hor, by = 3)
+
+pt_table <- irf_df %>%
+    filter(horizon %in% horizons) %>%
+    mutate(
+        se    = (upper - lower) / (2 * 1.96),
+        xr_cum = irf_results$irf[[imp]][horizon + 1, imp] * scale_factor * 100,
+        df = var_summary$varresult[[resp[1]]]$df[2]
+    ) %>%
+    select(horizon, response, estimate, se, lower, upper, df) %>%
+    arrange(response, horizon)
+
+return(list(plot = irf_plot, table = pt_table, model = summary(var_model)))
+
 }
 
 
@@ -369,7 +379,7 @@ sets <- c("full_filtered", "full_m", "early", "early", "early_m", "low_inflation
 
 
 plots <- list()
-
+tables <- list()
 
 for (set in sets){
   if (set == "full_m"){
@@ -395,16 +405,23 @@ for (set in sets){
     temp_name <- paste0("Low Inflation Sample ", with , "(2010-02 - 2022-12)")
   }
 
-
-plots[[set]] <- plot_var(sample = get(set), 
+result <- plot_var(sample = get(set), 
       var_list = temp_list,
       name = temp_name, 
       resp = temp_resp, 
       n_lags = 9, 
       horizon = 15, 
       break_date = temp_break)
+
+plots[[set]] <- result$plot
+
+tables[[set]] <- result$table
 }
+
 pacman::p_load(ragg, grid, gridExtra)
+
+print(tables$full_filtered)
+print(tables$full_m$estimate)
 
 
 combined_plot <- wrap_plots(plots, nrow = 3, ncol = 2) +
@@ -465,233 +482,120 @@ labelled <- arrangeGrob(
 
 ggsave(here::here("irf", "exog_combined_all.png"), labelled, width = 15, height = 21, dpi = 150, device   = "png", type = "cairo")
 
+sets_table <- c("full_filtered", "early", "low_inflation", "full_m", "early_m", "low_inflation_m")
+sets_names <- c("1990 - 2023 ", "1990 - 2010 ", "2010 - 2023 ", "1990 - 2023", "1990 - 2010", "2010 - 2023")
+
+combined_table <- function(tbls = tables, sets = sets_table, names = sets_names, horiz = 15){
+  hor <- as.numeric(horiz)
+      main <- lapply(seq_along(sets), function(i){
+        tbls[[sets[i]]] %>%
+        filter(horizon %in% seq(3, hor, by = 3)) %>%
+        mutate(
+                sample = names[i], 
+                display = paste0(round(estimate, 2), " (", round(se, 2), ")")
+                ) %>%
+      select(sample, response, horizon, display)}) %>%
+      bind_rows() %>%
+      mutate(response = factor(response, levels = c("Import Price Index", "Producer Price Index", "Consumer Price Index", "Residual df")))      %>%
+      arrange(response, horizon) %>%
+      pivot_wider(names_from = sample, values_from = display) %>%
+      mutate(horizon = as.character(horizon))
+
+    df_row <- lapply(seq_along(sets), function(i){
+      tibble(sample = names[i], display = as.character(tbls[[sets[i]]]$df[1]))
+      }) %>%
+      bind_rows() %>%
+      pivot_wider(names_from = sample, values_from = display) %>%
+      mutate(horizon = "", response = factor("Residual df", levels = c("Import Price Index", "Producer Price Index", "Consumer Price Index", "Residual df")))
+    results_table <- bind_rows(main, df_row) 
+
+    results_txt <- results_table %>%
+    select(-response) %>%
+    rename("Horizon" = horizon) %>%
+    kable(
+        format   = "latex",
+        booktabs = TRUE,
+        linesep  = "",
+        caption  = "Cumulative Exchange Rate Pass-Through at Selected Horizons",
+        label    = "tab:erpt_results"
+    ) %>%
+    kable_styling(
+        latex_options = c("HOLD_position", "scale_down"),
+        full_width    = TRUE,
+        font_size     = 8
+    ) %>%
+    add_header_above(
+        c(" " = 1, "Incl. Imports" = 3, "Excl. Imports" = 3),
+        bold = TRUE
+    ) %>%
+    pack_rows("Import Price Index",   1, 5)  %>%
+    pack_rows("Producer Price Index", 6, 10) %>%
+    pack_rows("Consumer Price Index", 11, 15) %>%
+    row_spec(5,  hline_after = TRUE) %>%
+    row_spec(10, hline_after = TRUE) %>%
+    row_spec(15, hline_after = TRUE) %>%
+    footnote(
+        general           = c("{Note:} Cumulative impulse responses to a one percent exchange rate depreciation.",
+                              "        Bootstrapped standard errors in parentheses (500 replications)."),
+        general_title = "",
+        footnote_as_chunk = FALSE,
+        escape            = FALSE
+    )
+
+  writeLines(results_txt, here::here("main", "main_results.txt"))
+
+
+  }
+
+combined_table() 
 
 
 
 
-
-plot <- ggdraw(combined_plot) + ##this creates a blank canvas with the combined plot on top of it. I then add codera logo
-        draw_image(here::here("logo-transparent.png"),
-               x = 0.8, y = -0.41,       # bottom right
-               width = 0.19,
-               hjust = 0, vjust = 0)
-
-ggsave(here::here("import_composition", "food_indices.png"), plot, width = 8, height = 5)
-var_table <- function(dat = new,
-                             var_list = c("oil", "outputgap_dc", "neer_sarb", "ppi", "cpi"),
-                             n_lags   = 12,
-                             name     = "New Sample",
-                             imp      = var_list[3],
-                             resp     = c("ppi", "cpi"),
-                             horizons = c(3, 6, 12, 18, 24),
-                             B        = 1000) {
-
-  # ── Labels and paths ──────────────────────────────────────────────────────────
-  if (imp == "usdzar_fred") {
-    measure <- "Currency Measure is the USD/ZAR Exchange Rate"
+for (set in sets){
+  if (set == "full_m"){
+    temp_break  <- as.Date("2010-03-01")
   } else {
-    measure <- "Currency Measure is the SARB Nominal Effective Exchange Rate"
+    temp_break = NA
   }
 
-  file_name  <- paste0(gsub(" ", "", tolower(name)), ".png")
-  acfpath    <- file.path(here::here(), "acf", file_name)
-  irfpath    <- file.path(here::here(), "irf", file_name)
-  plot_title <- paste0("Exchange Rate Pass-Through (", name, ")")
-
-  # ── Estimate VAR ──────────────────────────────────────────────────────────────
-  df_var <- dat %>%
-    dplyr::select(all_of(var_list)) %>%
-    na.omit()
-
-  p_val     <- as.integer(n_lags)
-
-
-  oil_exog <- sapply(0:as.numeric(n_lags), function(l) dplyr::lag(df_var$oilshock, l))
-  colnames(oil_exog) <- paste0("oil.l", 0:as.numeric(n_lags)) 
-
-  if (var_list[1] == "oilshock"){
-                var_model <- do.call(VAR, list(y = df_var %>% dplyr::select(-oilshock), p = as.integer(n_lags), type = "const", exogen = oil_exog %>% as.matrix()))
-    } else {
-                var_model <- do.call(VAR, list(y = df_var , p = as.integer(n_lags), type = "const"))
-                }
-
-  var_summary <- summary(var_model)
-
-  coefficients_cpi <- var_summary$varresult$cpi
-
-  if ("ppi_full" %in% var_list) {
-    coefficients_ppi <- var_summary$varresult$ppi_full
-  } else if ("ppi_all" %in% var_list){
-    coefficients_ppi <- var_summary$varresult$ppi_all
-  } else if ("ppi_manuf" %in% var_list){
-    coefficients_ppi <- var_summary$varresult$ppi_manuf
+  if (grepl("_m$", set)) {
+  temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
+  temp_resp <- c("m", "ppi", "cpi")
+  with <- "with Import Prices "
+  } else {
+  temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "ppi", "cpi")
+  temp_resp <- c("ppi", "cpi")
+  with <- ""
   } 
-
-  if ("uvi34" %in% var_list) {
-    coefficients_m <- var_summary$varresult$uvi34
-  } else if ("m_all" %in% var_list) {
-    coefficients_m <- var_summary$varresult$m_all
-  } else if ("m_manuf" %in% var_list) {
-    coefficients_m <- var_summary$varresult$m_manuf
+  if (grepl("^full", set)){
+  temp_name <- paste0("Full Sample ", with , "(1990-02 - 2022-12)")}
+  else if (grepl("^early", set)) {
+  temp_name <- paste0("Early Sample ", with , "(1990-02 - 2010-01)")
+  } else{
+    temp_name <- paste0("Low Inflation Sample ", with , "(2010-02 - 2022-12)")
   }
 
-  # ── ACF plot of residuals ─────────────────────────────────────────────────────
-  resids <- residuals(var_model)
+result <- plot_var(sample = get(set), 
+      var_list = temp_list[temp_list != "ppi"],
+      name = temp_name, 
+      resp = temp_resp[temp_resp != "ppi"], 
+      n_lags = 9, 
+      horizon = 15, 
+      break_date = temp_break)
 
-  png(filename = acfpath, width = 1200, height = 800, res = 150)
-  par(mfrow = c(2, 3))
-  for (col in colnames(resids)) {
-    acf(resids[, col], main = col, lag.max = 24)
-  }
-  dev.off()
+plots[[set]] <- result$plot
 
-  # ── IRF for plotting ──────────────────────────────────────────────────────────
-  imp_sd       <- sd(resids[, imp], na.rm = TRUE)
-  scale_factor <- 0.01 / imp_sd
+tables[[set]] <- result$table
 
-  
-    oil_var <- var_list[1]
-    
-    if (oil_var == "oilshock") {
-      exog_fc <- matrix(0, nrow = 25, ncol = (as.numeric(n_lags) + 1),
-                        dimnames = list(NULL, colnames(oil_exog)))
-      irf_results <- do.call(irf, list(
-        x          = var_model,
-        impulse    = imp,
-        response   = c(imp, resp),
-        n.ahead    = 24,
-        boot       = FALSE,
-        ci         = 0.95,
-        cumulative = TRUE,
-        runs       = 500,
-        exogen     = exog_fc
-      ))
-    } else {
-      irf_results <- do.call(irf, list(
-        x          = var_model,
-        impulse    = imp,
-        response   = c(imp, resp),
-        n.ahead    = 24,
-        boot       = FALSE,
-        ci         = 0.95,
-        cumulative = TRUE,
-        runs       = 500
-      ))
-    }
-  # ── Helper: cumulative PT ratio and response at each horizon ───────────────────────────────
-  get_pt <- function(model, imp, resp, horizons) {
-
-    irf_obj <- irf(model,
-                   impulse  = imp,
-                   response = c(imp, resp),
-                   n.ahead  = max(horizons),
-                   ortho    = TRUE,
-                   boot     = FALSE)
-
-    irf_mat <- irf_obj$irf[[imp]]   # (max(horizons)+1) rows × n_vars cols
-    irf_s   <- irf_mat[, imp]       # exchange rate own-response (denominator)
-
-    pt <- mapply(function(r, h) {
-      irf_p <- irf_mat[, r]
-      sum(irf_p[1:(h+1)]) / sum(irf_s[1:(h+1)])
-    },
-    r = rep(resp,     each  = length(horizons)),
-    h = rep(horizons, times = length(resp)))
-
-    return(pt)
-  }
-
-   get_resp <- function(model, imp, resp, horizons) {
-
-    irf_obj <- irf(model,
-                   impulse  = imp,
-                   response = c(imp, resp),
-                   n.ahead  = max(horizons),
-                   ortho    = TRUE,
-                   boot     = FALSE)
-
-    irf_mat <- irf_obj$irf[[imp]]   # (max(horizons)+1) rows × n_vars cols
-
-    response <- mapply(function(r, h) {
-      irf_p <- irf_mat[, r]
-      sum(irf_p[1:(h + 1)])
-    },
-    r = rep(resp,     each  = length(horizons)),
-    h = rep(horizons, times = length(resp)))
-  }
-
-  # ── Point estimates ───────────────────────────────────────────────────────────
-  pt_point <- get_pt(var_model, imp, resp, horizons)
-  r_point <- get_resp(var_model, imp, resp, horizons) * scale_factor
-
-
-  # ── Bootstrap standard errors ─────────────────────────────────────────────────
-  n_obs       <- nrow(resids)
-  fitted_vals <- fitted(var_model)
-  n_col_pt    <- length(resp) * length(horizons)
-  pt_boot     <- matrix(NA_real_, nrow = B, ncol = n_col_pt)
-  r_boot      <- matrix(NA_real_, nrow = B, ncol = n_col_pt)
-
-  for (b in seq_len(B)) {
-  resid_boot <- resids[base::sample(n_obs, n_obs, replace = TRUE), ]
-  y_boot     <- fitted_vals + resid_boot
-
-  tryCatch({
-    if (var_list[1] == "oilshock") {
-      exog_boot <- oil_exog[-(1:var_model$p), , drop = FALSE]
-      var_boot  <- do.call(VAR, list(y      = y_boot,
-                                     p      = var_model$p,
-                                     type   = "const",
-                                     exogen = exog_boot))
-    } else {
-      var_boot <- do.call(VAR, list(y    = y_boot,
-                                    p    = var_model$p,
-                                    type = "const"))
-    }
-    pt_boot[b, ] <- get_pt(var_boot, imp, resp, horizons)
-    r_boot[b, ]  <- get_resp(var_boot, imp, resp, horizons)
-  }, error = function(e) NULL)
-}
-  pt_se <- apply(pt_boot, 2L, sd, na.rm = TRUE)
-  r_se <- apply(r_boot, 2L, sd, na.rm = TRUE) * scale_factor
-
-  # ── Assemble table ────────────────────────────────────────────────────────────
-  resp_labels <- dplyr::case_when(
-    resp == "ppi_full" ~ "PPI",
-    resp == "ppi_all"  ~ "PPI",
-    resp == "ppi_manuf"  ~ "PPI",
-    resp == "cpi"      ~ "CPI",
-    resp == "uvi34"    ~ "Import prices",
-    resp == "m_all"    ~ "Import prices",
-    resp == "m_manuf"  ~ "Import prices",
-    TRUE               ~ resp
-  )
-
-  result <- data.frame(
-    Variable = rep(resp_labels, each = length(horizons)),
-    Horizon  = paste0("Month ", horizons),
-    Response       = paste0(round(r_point * 100, 4)," (", round(r_se * 100, 4), ")"),
-    PT       = paste0(round(pt_point, 4)," (", round(pt_se, 4), ")"),
-    stringsAsFactors = FALSE
-  )
-
-  print(
-    knitr::kable(result,
-                 col.names = c("Price stage", "Horizon", "Cumulative Response (%)","Pass-through"),
-                 align     = c("l", "l", "r", "r"),
-                 caption   = paste0("Cumulative ERPT — ", name, " (B = ", B, ")"))
-  )
-
-  invisible(list(table = result, var_model = var_model, irf = irf_results))
 
 }
 
 
+no_ppi <- combined_table()
 
 
-sd(full$ppi_manuf, na.rm = TRUE)
-
-sd(full$finalmanufgoods_full, na.rm = TRUE)
+result_no_ppi$model
 
 
 for (set in sets){
