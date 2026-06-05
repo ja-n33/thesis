@@ -295,35 +295,171 @@ early <- full_filtered %>% filter(time_period < as.Date("2010-01-01"))
 
 
 
+##############################################################################################################################################################################
 
-########
-## Check for uncorrelated shocks
-#########
+################################################################################ ERROR CORRELATION ################################################################################
+
+##############################################################################################################################################################################
 
 
-df_var <- full_filtered %>%
-    select(oilshock, outputgap_dc, usdzar_fred, m, ppi, cpi) %>%
-    as.data.frame()
-n_lags <- 12
 
-var_model <- do.call(VAR, list(y = df_var, p = as.integer(n_lags), type = "const"))
+lag <- 9
+df_var_full <- full_filtered %>%
+  mutate(d_imp = ifelse(time_period == break_date, 1L, 0L)) %>%
+  dplyr::select(time_period, all_of(var_list), d_imp) 
+print(names(df_var_full))
+
+oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l))
+colnames(oil_exog) <- paste0("oil.l", 0:lag)
+
+exog_mat <- cbind(oil_exog, d_imp = df_var_full$d_imp)
+
+valid_rows <- complete.cases(exog_mat)
+
+keep <- df_var_full$time_period >= lubridate::ymd("1990-02-01")
+exog_mat <- exog_mat[keep, ]
+df_var <- df_var_full[keep, ] %>% dplyr::select(-time_period) %>% na.omit()
+
+
+var_model <- do.call(VAR, list(
+  y      = df_var %>% dplyr::select(-oilshock, -d_imp),
+  p      = as.integer(lag),
+  type   = "const",
+  exogen = exog_mat
+))
 resids <- cbind(residuals(var_model), oilshock = tail(full$oilshock, nrow(residuals(var_model))))
 
-residcor <- cor(resids) %>%
-        as.data.frame() 
+
+new_names <- c("Oil Shock", "Demand", "Exchange Rate", "Import Price Index", "Producer Price Index", "Consumer Price Index")
+residcor <- cor(cbind(resids, oilshock = tail(df_var_full$oilshock[keep], nrow(resids)))) %>%        as.data.frame() %>%
+        as.data.frame() %>%
+        setNames(new_names)
+rownames(residcor) <- new_names
 View(residcor)
 
-openxlsx::write.xlsx(residcor, 
-           file      = here::here("Tables", "residcor.xlsx"),
-           sheetName = "Residuals",
-           rowNames  = FALSE)
 
-      
-View(full)
+residcor_txt <- residcor %>%
+        kable(
+          format = "latex",
+          booktabs = TRUE,
+          linesp = "", 
+          digit = 3,
+          caption = "Contemporaneous Correlation Between Errors"
+        ) %>%
+        kable_styling(
+          latex_options = c("HOLD_position", "scale_down"),
+          full_width    = TRUE,
+          font_size     = 8
+        )
 
-print(lags)        
+writeLines(residcor_txt, here::here("main", "residcor.txt"))
 
 
+plot_acf <- function(resids, n_lags = 24, file_name = "acf_resids.png"){
+  
+  var_labels <- c(
+    "outputgap_dc" = "Demand",
+    "neer_sarb"    = "Exchange Rate",
+    "m"            = "Import Price Index",
+    "ppi"          = "Producer Price Index",
+    "cpi"          = "Consumer Price Index"
+  )
+
+  acf_data <- lapply(colnames(resids), function(col){
+    acf_obj <- acf(resids[, col], lag.max = n_lags, plot = FALSE)
+    tibble(
+      variable = var_labels[col],
+      lag      = as.numeric(acf_obj$lag),
+      acf      = as.numeric(acf_obj$acf)
+    )
+  }) %>% 
+    bind_rows() %>%
+    mutate(variable = factor(variable, levels = var_labels))
+
+  ci <- qnorm(0.975) / sqrt(nrow(resids))
+
+  acf_plot <- ggplot(acf_data, aes(x = lag, y = acf)) +
+    geom_hline(yintercept =  0,       colour = "grey40", linewidth = 0.3) +
+    geom_hline(yintercept =  c(-ci, ci), linetype = "dashed", 
+               colour = "#C45E3E", linewidth = 0.4) +
+    geom_segment(aes(xend = lag, yend = 0), 
+                 colour = "#2C6E8A", linewidth = 0.5) +
+    geom_point(size = 0.8, colour = "#2C6E8A") +
+    facet_wrap(~variable, ncol = 3, scales = "free_y") +
+    scale_x_continuous(breaks = seq(0, n_lags, by = 6)) +
+    scale_y_continuous(breaks = seq(-0.2, 0.2, by = 0.1)) +
+    coord_cartesian(ylim = c(-0.3, 0.3)) +
+    labs(
+      x     = "Lag (months)",
+      y     = "Autocorrelation",
+      title  = NULL
+    ) +
+    theme_publication() +
+    theme(
+      strip.text    = element_text(size = 7, face = "bold"),
+      panel.spacing = unit(0.8, "lines"),
+      axis.text     = element_text(size = 6)
+    )
+
+  ggsave(
+    filename = file_name,
+    plot     = acf_plot,
+    path     = file.path(here::here(), "main"),
+    width    = 7,
+    height   = 4,
+    dpi      = 150,
+    device   = "png"
+  )
+
+  return(acf_plot)
+}
+
+plot_acf(resids, n_lags = 24, file_name = "main_acf_early.png")
+
+cpi_box <- Box.test(resids[,"cpi"], lag = 12, type = "Ljung-Box") 
+
+ljung_box_tbl <- tibble(
+  Variable = "cpi",
+  ) %>%
+  mutate(
+    lb_12 = purrr::map(Variable, ~ Box.test(resids[, .x], lag = 12, type = "Ljung-Box")),
+    lb_24 = purrr::map(Variable, ~ Box.test(resids[, .x], lag = 24, type = "Ljung-Box")),
+    `Stat (12)`    = purrr::map_dbl(lb_12, ~ round(.x$statistic, 3)),
+    `p-value (12)` = purrr::map_chr(lb_12, ~ ifelse(.x$p.value < 0.001, "< 0.001", as.character(round(.x$p.value, 3)))),
+    `Stat (24)`    = purrr::map_dbl(lb_24, ~ round(.x$statistic, 3)),
+    `p-value (24)` = purrr::map_chr(lb_24, ~ ifelse(.x$p.value < 0.001, "< 0.001", as.character(round(.x$p.value, 3))))
+  ) %>%
+  select(-lb_12, -lb_24) %>%
+  mutate(Variable = recode(Variable,
+    "cpi"          = "Consumer Price Index"
+  ))
+
+lb_txt <- ljung_box_tbl %>%
+  kable(
+    format   = "latex",
+    booktabs = TRUE,
+    linesep  = "\\addlinespace",
+    caption  = "Ljung-Box Tests for Residual Autocorrelation",
+    label    = "tab:ljung_box",
+    escape   = FALSE
+  ) %>%
+  add_header_above(
+    c(" " = 1, "Lag 12" = 2, "Lag 24" = 2),
+    bold = TRUE
+  ) %>%
+  kable_styling(
+    latex_options = c("HOLD_position"),
+    full_width    = TRUE,
+    font_size     = 8
+  ) %>%
+  footnote(
+    general           = "{Note:} Ljung-Box test for residual autocorrelation at lags 12 and 24.",
+    general_title     = "",
+    footnote_as_chunk = FALSE,
+    escape            = FALSE
+  )
+
+writeLines(lb_txt, here::here("main", "ljung_box.txt"))
 
 ##############################################################################################################################################################################
 
@@ -342,50 +478,101 @@ View(full_filtered)
 
 full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
        mutate(time_period = as.Date(time_period, format = "%Y-%m-%d")) %>%
-      filter(time_period <= as.Date("2022-012-01"), time_period >= as.Date("1990-02-01")) 
+      filter(time_period <= as.Date("2022-012-01"), time_period >= as.Date("1988-01-01")) 
 
 full_filtered <- full %>% filter(time_period < as.Date("2023-01-01"))
+var_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
 
-df_var <- full_filtered %>%
-    select(oilshock, outputgap_dc, neer_sarb, m, ppi, cpi) %>%
-    as.data.frame() 
 
-lags <- c(1:24)
-for (lag in lags){
+break_date <- as.Date("2010-02-01")
 
-    oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var$oilshock, l))
-    colnames(oil_exog) <- paste0("oil.l", 0:lag)
-    
-    var_model <- do.call(VAR, list(y = df_var %>% dplyr::select(-oilshock), p = as.integer(lag), type = "const", exogen = df_var %>% dplyr::select(oilshock) %>% as.matrix()))
+df_var_full <- full_filtered %>%
+  mutate(d_imp = ifelse(time_period == break_date, 1L, 0L)) %>%
+  dplyr::select(time_period, all_of(var_list), d_imp) 
+print(names(df_var_full))
 
-    AIC <- as.numeric(AIC(var_model))
-    Lag <- as.numeric(lag)
-    BIC <- as.numeric(BIC(var_model))
+aic_var_df <- tibble(Lag = integer(), AIC = numeric(), BIC = numeric())
 
-    temp <- tibble(Lag = Lag, AIC = AIC, BIC = BIC)
+for (lag in 1:24){
+  oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l))
+  colnames(oil_exog) <- paste0("oil.l", 0:lag)
 
-    aic_var_df <- rbind(aic_var_df, temp)
+  exog_mat <- cbind(oil_exog, d_imp = df_var_full$d_imp)
+
+  valid_rows <- complete.cases(exog_mat)
+
+  keep <- df_var_full$time_period >= lubridate::ymd("1990-02-01")
+  exog_mat <- exog_mat[keep, ]
+  df_var <- df_var_full[keep, ] %>% dplyr::select(-time_period) %>% na.omit()
+
+
+  var_model <- do.call(VAR, list(
+    y      = df_var %>% dplyr::select(-oilshock, -d_imp),
+    p      = as.integer(lag),
+    type   = "const",
+    exogen = exog_mat
+  ))
+
+  aic_var_df <- rbind(aic_var_df, tibble(
+    Lag = lag,
+    AIC = as.numeric(AIC(var_model)),
+    BIC = as.numeric(BIC(var_model))
+  ))
 }
 
-print(aic_var_df)
 View(aic_var_df)
 View(residcor)
 
-info <- VARselect(
-    df_var %>% dplyr::select(-oilshock), 
-    lag.max = 24, 
-    type = "const",
-    exogen = df_var %>% dplyr::select(oilshock) %>% as.matrix()
-)
+oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l))
+colnames(oil_exog) <- paste0("oil.l", 0:lag)
 
-aic_var_df <- tibble(
-    Lag = 1:24,
-    AIC = info$criteria["AIC(n)", ]
-)
+exog_mat <- cbind(oil_exog, d_imp = df_var_full$d_imp)
+keep <- df_var_full$time_period >= lubridate::ymd("1990-02-01")
+exog_mat <- exog_mat[keep, ]
 
 
+mark_top3 <- function(x){
+  ranks <- rank(x, ties.method = "first")
+  stars <- case_when(
+    ranks == 1 ~ paste0(round(x, 3), "***"),
+    ranks == 2 ~ paste0(round(x, 3), "**"),
+    ranks == 3 ~ paste0(round(x, 3), "*"),
+    TRUE       ~ as.character(round(x, 3))
+  )
+  stars
+}
 
-cor(full$m_hist, full$uvi34, use = "complete.obs")
+lag_selection_txt <- aic_var_df %>%
+  mutate(
+    AIC = mark_top3(AIC),
+    BIC = mark_top3(BIC)
+  ) %>%
+  kable(
+    format    = "latex",
+    booktabs  = TRUE,
+    linesep   = "",
+    caption   = "VAR Lag Length Selection Criteria",
+    label     = "tab:lag_selection",
+    escape    = FALSE,
+    col.names = c("Lag", "AIC", "BIC")
+  ) %>%
+  kable_styling(
+    latex_options = c("HOLD_position"),
+    full_width    = TRUE,
+    font_size     = 8
+  ) %>%
+  footnote(
+    general           = "{Note:} AIC and BIC computed for VAR with oil shock as exogenous variable. $^{***}$ minimum, $^{**}$ second minimum, $^{*}$ third minimum.",
+    general_title     = "",
+    footnote_as_chunk = FALSE,
+    escape            = FALSE
+  )
+
+writeLines(lag_selection_txt, here::here("main", "lag_selection.txt"))
+
+
+
+
 
 
 
@@ -454,7 +641,7 @@ export_adf_results <- function(data, vars, lags = 12,
     pack_rows("Oil Shock",             1, 3)  %>%
     pack_rows("Demand",                4, 6)  %>%
     pack_rows("Exchange Rate",         7, 9)  %>%
-    pack_rows("Import Price Index",   10, 12) %>%
+    pack_rows("Importer Price Index",   10, 12) %>%
     pack_rows("Producer Price Index", 13, 15) %>%
     pack_rows("Consumer Price Index", 16, 18) %>%
     row_spec(3,  hline_after = TRUE) %>%
@@ -466,7 +653,7 @@ export_adf_results <- function(data, vars, lags = 12,
     kable_styling(
         latex_options = c("HOLD_position"),
         font_size     = 8,
-        full_width    = FALSE
+        full_width    = TRUE
     ) 
   tbl_text <- as.character(tbl)
   writeLines(tbl_text, outfile)
@@ -575,28 +762,67 @@ ggsave(
 )
 
 
+##############################################################################################################################################################################
 
-descriptive_table <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
+################################################################################ Descriptive Table ################################################################################
+
+##############################################################################################################################################################################
+
+descriptive_table <- function(data, 
+vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
   
-  p1 <- data %>% filter(time_period >= as.Date("1990-02-01") & time_period <= as.Date("2008-12-01"))
-  p2 <- data %>% filter(time_period >= as.Date("2009-01-01") & time_period <= as.Date("2022-12-01"))
+  p1 <- data %>% filter(time_period >= as.Date("1990-02-01") & time_period <= as.Date("2010-01-01"))
+  p2 <- data %>% filter(time_period >= as.Date("2010-02-01") & time_period <= as.Date("2022-12-01"))
 
   
   fmt <- function(x) paste0(round(mean(x, na.rm = TRUE), 3), " (", round(sd(x, na.rm = TRUE), 3), ")")
   
-  rows <- lapply(vars, function(var) {
-    tibble(
-      Variable    = var,
-      Full_Sample = fmt(data[[var]]),
-      `1990-2008` = fmt(p1[[var]]),
-      `2009-2023` = fmt(p2[[var]])
+  desc_tbl <- tibble(Variable = character(),
+                      `1990 - 2023` = character(),
+                      `1990 - 2010` = character(),
+                      `2010 - 2023` = character())
+  for (var in vars){
+      Variable   <- case_when(var == "oilshock" ~ "Oil Shock",
+                                var == "outputgap_dc" ~ "Demand",
+                                var == "neer_sarb" ~ "Exchange Rate",
+                                var == "m" ~ "Importer Price Index",
+                                var == "ppi" ~ "Producer Price Index",
+                                var == "cpi" ~ "Consumer Price Index") 
+      temp_row <- tibble(
+  Variable      = as.character(Variable),
+  `1990 - 2023` = as.character(fmt(data[[var]])),
+  `1990 - 2010` = as.character(fmt(p1[[var]])),
+  `2010 - 2023` = as.character(fmt(p2[[var]]))
+)
+    desc_tbl <- bind_rows(desc_tbl, temp_row)
+  }
+
+
+  desc_txt <- desc_tbl %>%
+    kable(
+      format   = "latex",
+      booktabs = TRUE,
+      linesep  = "\\addlinespace[6pt]",
+      caption  = "Descriptive Statistics",
+      label    = "tab:desc_table"
+    ) %>%
+    kable_styling(
+      latex_options = c("HOLD_position"),
+      full_width    = TRUE,
+      font_size     = 8
+    ) %>%
+    footnote(
+      general           = "{Note:} Mean (standard deviation). Sample splits at 2010-02-01.",
+      general_title     = "",
+      footnote_as_chunk = FALSE,
+      escape            = FALSE
     )
-  })
-  
-  bind_rows(rows)
+
+  writeLines(desc_txt, here::here("main", "desc_tbl.txt"))
+writeLines(desc_txt, here::here("main", "desc_tbl.txt"))
 }
 
-desc <- descriptive_table(data = full_filtered)
+desc <- descriptive_table(data = full_filtered, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi"))
 View(desc)
 writexl::write_xlsx(desc, path = here::here("Tables", "descriptives.xlsx"))
 
@@ -608,28 +834,53 @@ writexl::write_xlsx(desc, path = here::here("Tables", "descriptives.xlsx"))
 ##############################################################################################################################################################################
 
 normality_test <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
-    table <- tibble()
-    for (var in vars){
-        jb <- tseries::jarque.bera.test(data[[var]])
+  table <- tibble()
+  for (var in vars){
+    jb <- tseries::jarque.bera.test(na.omit(data[[var]]))
 
-        if (as.numeric(jb$p.value) < 0.001){
-            jbp <- "p < 0.01"
-        } else{
-            jbp <- round(jb$p.value, 3)
-        }
-        row <- tibble(
-        name = var,
-        skewness = round(moments::skewness(data[[var]]), 3),
-        kurtosis = round(moments::kurtosis(data[[var]]), 3),
-        jbstat = round(jb$statistic, 3),
-        jbp = jbp)
+    jbp <- ifelse(as.numeric(jb$p.value) < 0.001, "p < 0.001", as.character(round(jb$p.value, 3)))
+
+    row <- tibble(
+      Variable = case_when(
+        var == "oilshock"     ~ "Oil Shock",
+        var == "outputgap_dc" ~ "Demand",
+        var == "neer_sarb"    ~ "Exchange Rate",
+        var == "m"            ~ "Import Price Index",
+        var == "ppi"          ~ "Producer Price Index",
+        var == "cpi"          ~ "Consumer Price Index",
+        TRUE                  ~ var
+      ),
+      Skewness  = round(moments::skewness(data[[var]], na.rm = TRUE), 3),
+      Kurtosis  = round(moments::kurtosis(data[[var]], na.rm = TRUE), 3),
+      `JB Stat` = round(jb$statistic, 3),
+      `p-value` = jbp
+    )
     table <- bind_rows(table, row)
-    }
-    return(table)
+  }
 
+  results_txt <- table %>%
+    kable(
+      format   = "latex",
+      booktabs = TRUE,
+      linesep  = "\\addlinespace",
+      caption  = "Normality Tests",
+      label    = "tab:normality"
+    ) %>%
+    kable_styling(
+      latex_options = c("HOLD_position"),
+      full_width    = TRUE,
+      font_size     = 8
+    ) %>%
+    footnote(
+      general           = "{Note:} Jarque-Bera test for normality. Skewness and excess kurtosis reported.",
+      general_title     = "",
+      footnote_as_chunk = FALSE,
+      escape            = FALSE
+    )
 
+  writeLines(results_txt, here::here("main", "normality.txt"))
+  return(table)
 }
-
 norm <- normality_test(data = full_filtered)
 
 
@@ -644,7 +895,7 @@ writexl::write_xlsx(norm, path = here::here("Tables", "normality.xlsx"))
 
 ##############################################################################################################################################################################
 
-overlap <- full %>%
+overlap <- full_filtered %>%
     filter(time_period >= as.Date("2010-01-01"), 
             time_period <= as.Date("2012-12-01")) %>%
     arrange(desc(time_period))
@@ -656,82 +907,121 @@ print(ccf)
 writeLines(ccf, here::here("tables", "uvi_sic_ccf.tex"))
 
 print(ccf(overlap$uvi34, overlap$m_hist, na.action = na.omit, lag.max = 6))
+
 t_test <- broom::tidy(t.test(lag(overlap$uvi34, n = 1), overlap$m_hist, paired = TRUE)) %>%
           select(estimate, statistic, p.value, conf.low, conf.high, parameter) %>%
           rename("Mean diff." = estimate, "t" = statistic, "p" = p.value,
                 "CI low" = conf.low, "CI high" = conf.high, "df" = parameter) %>%
           knitr::kable(format = "latex", digits = 4, booktabs = TRUE,
-                caption = "Paired t-test: UVI vs SIC import price series (lagged)")
+                caption = "Paired t-test: UVI vs SIC import price series") %>%
+                kable_styling(latex_options = c("HOLD_position", "scale_down"),
+          full_width    = TRUE,
+          font_size     = 8
+        ) 
 
 print(t_test)
-writeLines(t_test, here::here("tables", "uvi_sic_ttest.tex"))
+
+writeLines(t_test, here::here("main", "uvi_sic_ttest.txt"))
 
 
 
 # VAR consumes first p=9 rows for lags; residuals start at row 13
 # break_idx is the position within the residual sequence
 
-chow_df <- full_sample %>%
-    filter(time_period <= as.Date("2022-12-01"), time_period > as.Date("1990-01-01")) %>%
-    select(time_period, oilshock, outputgap_dc, neer_sarb, m, ppi, cpi) %>%
-    mutate(d_step = as.integer(time_period >= as.Date("2010-02-01")))
 
 
-break_idx <- which(chow_df$time_period == as.Date("2010-03-01")) - 9
-print(break_idx)
+lag <- 9
+df_var_full <- full_filtered %>%
+  mutate(d_imp = ifelse(time_period == break_date, 1L, 0L)) %>%
+  dplyr::select(time_period, all_of(var_list), d_imp) 
+print(names(df_var_full))
 
-oil_exog <- sapply(0:9, function(l) lag(chow_df$oilshock, l)) %>%
-    `colnames<-`(paste0("oil.l", 0:9))
+oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l))
+colnames(oil_exog) <- paste0("oil.l", 0:lag)
+
+exog_mat <- cbind(oil_exog, d_imp = df_var_full$d_imp)
+
+valid_rows <- complete.cases(exog_mat)
+
+keep <- df_var_full$time_period >= lubridate::ymd("1990-02-01")
+exog_mat <- exog_mat[keep, ]
+df_var <- df_var_full[keep, ] %>% dplyr::select(-time_period) %>% na.omit()
 
 
-var_model_chow <- VAR(chow_df %>% select(-oilshock, -time_period, -d_step), 
+var_model_chow <- VAR(df_var %>% select(-oilshock, -d_imp), 
                  p = 9, 
                  type = "const",
-                 exogen = cbind(oil_exog, d_step = chow_df$d_step))
+                 exogen = exog_mat)
 
+df_var_cropped <- df_var_full %>% filter(time_period >= as.Date("1990-02-01"))
+break_idx <- which(df_var_cropped$time_period >= break_date)[1] - lag  # adjust for lag consumption
 
-cat("Break index in residual sequence:", break_idx, "\n") 
-chow_manual <- function(eq, break_idx) {
-    mm  <- model.matrix(eq)
-    y   <- model.response(model.frame(eq))
-    k   <- ncol(mm)
-    n   <- nrow(mm)
-    
-    ssr_full  <- sum(resid(eq)^2)
-    ssr_pre   <- sum(lm.fit(mm[1:break_idx, ],          y[1:break_idx])$residuals^2)
-    ssr_post  <- sum(lm.fit(mm[(break_idx+1):n, ], y[(break_idx+1):n])$residuals^2)
-    
-    F_stat <- ((ssr_full - ssr_pre - ssr_post) / k) / 
-              ((ssr_pre + ssr_post) / (n - 2 * k))
-    p_val  <- pf(F_stat, df1 = k, df2 = n - 2*k, lower.tail = FALSE)
-    
-    c(F = round(F_stat, 3), p = round(p_val, 4))
-}
+chow_txt <- chow_results %>%
+  mutate(
+     equation = recode(equation,
+      "outputgap_dc" = "Demand",
+      "neer_sarb"    = "Exchange Rate",
+      "m"            = "Import Price Index",
+      "ppi"          = "Producer Price Index",
+      "cpi"          = "Consumer Price Index"
+    ),
+    F_stat   = round(F_stat, 3),
+    p_value  = case_when(
+      p_value < 0.001 ~ "$<$ 0.001$^{\\ast\\ast\\ast}$",
+      p_value < 0.01  ~ paste0(round(p_value, 3), "$^{\\ast\\ast\\ast}$"),
+      p_value < 0.05  ~ paste0(round(p_value, 3), "$^{\\ast\\ast}$"),
+      p_value < 0.10  ~ paste0(round(p_value, 3), "$^{\\ast}$"),
+      TRUE            ~ as.character(round(p_value, 3))
+    )
+  ) %>%
+  `rownames<-`(NULL) %>%
+  select(equation, F_stat, p_value) %>%
+  kable(
+    format    = "latex",
+    booktabs  = TRUE,
+    linesep   = "\\addlinespace",
+    caption   = "Chow Test for Structural Break at 2010-02",
+    label     = "tab:chow_test",
+    escape    = FALSE,
+    col.names = c("Equation", "F-Statistic", "p-value")
+  ) %>%
+  kable_styling(
+    latex_options = c("HOLD_position"),
+    full_width    = TRUE,
+    font_size     = 8
+  ) %>%
+  footnote(
+    general           = "{Note:} Chow test for parameter stability at 2010-02-01. $^{***}$ $p<0.01$, $^{**}$ $p<0.05$, $^{*}$ $p<0.10$.",
+    general_title     = "",
+    footnote_as_chunk = FALSE,
+    escape            = FALSE
+  )
 
-for (eq_name in names(var_model_chow$varresult)) {
-    res <- chow_manual(var_model_chow$varresult[[eq_name]], break_idx)
-    cat(eq_name, ": F =", res["F"], ", p =", res["p"], "\n")
-}
-
-chow_results <- lapply(names(var_model_chow$varresult), function(eq_name) {
-    res <- chow_manual(var_model_chow$varresult[[eq_name]], break_idx)
-    data.frame(equation = eq_name, F_stat = res["F"], p_value = res["p"])
-}) %>% bind_rows()
-
-write.csv(chow_results, here::here("tables", "chow_test_2010.csv"), row.names = FALSE)
-
-
+writeLines(chow_txt, here::here("main", "chow_test.txt"))
 
 imports <- full_filtered %>%
-    select(time_period, m_hist, uvi34_l) %>%
-    pivot_longer(-time_period, names_to = "series", values_to = "value") %>%
-    mutate(series = recode(series, "m_hist" = "SIC", "uvi34_l" = "UVI")) %>%
-    ggplot(aes(x = time_period, y = value, colour = series)) +
-    geom_line() +
-    coord_cartesian(xlim = c(as.Date("2009-01-01"), as.Date("2014-01-01"))) +
-    theme_publication(base_size = 11, base_family = "source_serif")
+  select(time_period, m_hist, uvi34) %>%
+  pivot_longer(-time_period, names_to = "series", values_to = "value") %>%
+  mutate(series = recode(series, "m_hist" = "SIC", "uvi34" = "UVI (Arithmetic)")) %>%
+  ggplot(aes(x = time_period, y = value, colour = series)) +
+  scale_colour_manual(values = c("SIC" = "#2C6E8A", "UVI (Arithmetic)" = "#C45E3E")) +
+  geom_line(linewidth = 1.2) +
+  coord_cartesian(xlim = c(as.Date("2009-01-01"), as.Date("2014-01-01"))) +
+  labs(
+    x      = "Time Period",
+    y      = "",
+    colour = NULL
+  ) +
+  theme_publication() +
+  theme(
+    axis.text    = element_text(size = 12),
+    axis.title   = element_text(size = 13),
+    legend.text  = element_text(size = 12),
+    plot.title   = element_text(size = 14),
+    legend.key.width = unit(1.5, "cm")
+  )
 
-ggsave(filename = "import_indices.png", path = here::here("descriptives"))
+ggsave(filename = "sic_uvi.png", path = here::here("main"), width = 6, height = 6)
 
 
 ####
@@ -741,43 +1031,57 @@ ggsave(filename = "import_indices.png", path = here::here("descriptives"))
 
 folders <- c("xm20102022.xlsx", "uvi16_25.xlsx")
 codes <- c("UVI20000", "UVI34000", "UVI50000")
+m <- tibble(time_period = character())
+uvi <- tibble(time_period = as.Date(character()))
 
-uvi <- tibble(time_period = character())
+geom <- readxl::read_excel(here::here("data", "uvi16_25.xlsx"))
+View(geom)
+
+uvi <- tibble(time_period = as.Date(character()))
+
 for (folder in folders){
-    m_temp <- tibble(time_period = character())
+  tag <- ifelse(folder == "xm20102022.xlsx", "arit", "geom")
+  
+  m_temp <- tibble(time_period = as.Date(character()))
 
-    for (code in codes){
-        path <- paste0(here::here(), "/data")
-        temp_m <- readxl::read_excel(paste0(path, "/", folder)) %>%
-                        filter(H03 == code) %>%
-                        rename(type = H03) %>%
-                        select(-c("H01", "H02", "H04", "H05", "H17", "H18", "H25")) %>%
-                        pivot_longer(-type, names_to = "period", values_to = code) %>%
-                        mutate(time_period = paste0(stringr::str_sub(period, 5, 8), "-", stringr::str_sub(period, 3, 4), "-01")) %>%
-                        select(time_period, !!sym(code)) %>%
-                        mutate(!!sym(code) := as.numeric(!!sym(code))) %>%
-                        arrange(time_period) 
-        m_temp <- full_join(m_temp, temp_m, by = "time_period")
+  for (code in codes){
+    path <- paste0(here::here(), "/data")
+    temp_m <- readxl::read_excel(paste0(path, "/", folder)) %>%
+      filter(H03 == code) %>%
+      rename(type = H03) %>%
+      select(-c("H01", "H02", "H04", "H05", "H17", "H18", "H25")) %>%
+      pivot_longer(-type, names_to = "period", values_to = code) %>%
+      mutate(time_period = lubridate::ymd(paste0(
+        stringr::str_sub(period, 5, 8), "-",
+        stringr::str_sub(period, 3, 4), "-01"
+      ))) %>%
+      select(time_period, !!sym(code)) %>%
+      mutate(!!sym(code) := as.numeric(!!sym(code))) %>%
+      arrange(time_period)
 
-        }
+    m_temp <- full_join(m_temp, temp_m, by = "time_period")
+  }
 
-        m_temp <- m_temp %>%
-                mutate(uvi2  = log(UVI20000) - log(lag(UVI20000, n = 1)), 
-                        uvi34  = log(UVI34000) - log(lag(UVI34000, n = 1)),
-                        uvi5 = log(UVI50000) - log(lag(UVI50000, n = 1)))
-        if (folder == "xm20102022.xlsx"){
-            temp_m <- temp_m %>%
-                    filter(time_period <= as.Date("2016-01-01"))
-    }
+  m_temp <- m_temp %>%
+    mutate(
+      uvi2  = log(UVI20000) - log(lag(UVI20000, n = 1)),
+      uvi34 = log(UVI34000) - log(lag(UVI34000, n = 1)),
+      uvi5  = log(UVI50000) - log(lag(UVI50000, n = 1))
+    ) %>%
+    rename_with(~ paste0(.x, ".", tag), -time_period)
 
-    uvi <- full_join(m, m_temp, by = "time_period", suffix = c(".arit", ".geom"))
+  uvi <- full_join(uvi, m_temp, by = "time_period")
 }
+View(uvi)
 
-
-overlap_uvi <- m %>%
+overlap_uvi <- uvi %>%
     filter(time_period >= as.Date("2016-02-01"), 
             time_period <= as.Date("2022-12-01")) %>%
-    arrange(desc(time_period))
+    arrange(desc(time_period)) %>%
+    select(where(~ !any(is.na(.))))
+
+
+View(overlap_uvi)
 
 cor_uvi <- cor(overlap_uvi$uvi34.arit, overlap_uvi$uvi34.geom, use = "complete.obs")
 print(cor_uvi)  # [1] 0.7657967
@@ -786,10 +1090,39 @@ t_test_uvi <- broom::tidy(t.test(overlap_uvi$uvi34.arit, overlap_uvi$uvi34.geom,
           select(estimate, statistic, p.value, conf.low, conf.high, parameter) %>%
           rename("Mean diff." = estimate, "t" = statistic, "p" = p.value,
                 "CI low" = conf.low, "CI high" = conf.high, "df" = parameter) %>%
+          
           knitr::kable(format = "latex", digits = 4, booktabs = TRUE,
-                caption = "Paired t-test: Arithmetic vs Geometric UVI ")
+                caption = "Paired t-test: Geometric vs Arithmetic UVI Series") %>%
+                kable_styling(latex_options = c("HOLD_position", "scale_down"),
+          full_width    = TRUE,
+          font_size     = 8
+        ) 
+
+writeLines(t_test_uvi, here::here("main", "arit_geom_ttest.txt"))
 
 
-print(t.test(overlap_uvi$uvi34.arit, overlap_uvi$uvi34.geom, paired = TRUE))
-print(t_test_uvi)
-writeLines(t_test_uvi, here::here("tables", "arit_geom_ttest.tex"))
+geom_arit <- uvi %>%
+  select(time_period, uvi34.geom, uvi34.arit) %>%
+  pivot_longer(-time_period, names_to = "series", values_to = "value") %>%
+  mutate(series = recode(series, "uvi34.geom" = "Geometric", "uvi34.arit" = "Arithmetic")) %>%
+  ggplot(aes(x = time_period, y = value, colour = series)) +
+  scale_colour_manual(values = c("Geometric" = "#2C6E8A", "Arithmetic" = "#C45E3E")) +
+  geom_line(linewidth = 1.2) +
+  coord_cartesian(xlim = c(as.Date("2015-06-01"), as.Date("2023-06-01"))) +
+  labs(
+    x      = "Time Period",
+    y      = "",
+    colour = NULL
+  ) +
+  theme_publication() +
+  theme(
+    axis.text    = element_text(size = 12),
+    axis.title   = element_text(size = 13),
+    legend.text  = element_text(size = 12),
+    plot.title   = element_text(size = 14),
+    legend.key.width = unit(1.5, "cm")
+  )
+
+ggsave(filename = "arit_geom.png", path = here::here("main"), width = 6, height = 6)
+
+
