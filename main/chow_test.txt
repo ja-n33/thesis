@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:chow_test}Chow Test for Structural Break at 2010-02}
+\centering
+\fontsize{8}{10}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedright}X}
+\toprule
+Equation & F-Statistic & p-value\\
+\midrule
+Demand & 1.012 & 0.46\\
+\addlinespace
+Exchange Rate & 0.792 & 0.856\\
+\addlinespace
+Import Price Index & 2.228 & $<$ 0.001$^{\ast\ast\ast}$\\
+\addlinespace
+Producer Price Index & 1.204 & 0.167\\
+\addlinespace
+Consumer Price Index & 1.229 & 0.142\\
+\bottomrule
+\multicolumn{3}{l}{\rule{0pt}{1em}{Note:} Chow test for parameter stability at 2010-02-01. $^{***}$ $p<0.01$, $^{**}$ $p<0.05$, $^{*}$ $p<0.10$.}\\
+\end{tabu}
+\end{table}

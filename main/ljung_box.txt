@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:ljung_box}Ljung-Box Tests for Residual Autocorrelation}
+\centering
+\fontsize{8}{10}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedright}X>{\raggedleft}X>{\raggedright}X}
+\toprule
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{2}{c}{\textbf{Lag 12}} & \multicolumn{2}{c}{\textbf{Lag 24}} \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+Variable & Stat (12) & p-value (12) & Stat (24) & p-value (24)\\
+\midrule
+Consumer Price Index & 33.837 & < 0.001 & 75.309 & < 0.001\\
+\bottomrule
+\multicolumn{5}{l}{\rule{0pt}{1em}{Note:} Ljung-Box test for residual autocorrelation at lags 12 and 24.}\\
+\end{tabu}
+\end{table}

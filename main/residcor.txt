@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\caption{Contemporaneous Correlation Between Errors}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\fontsize{8}{10}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\toprule
+  & Oil Shock & Demand & Exchange Rate & Import Price Index & Producer Price Index & Consumer Price Index\\
+\midrule
+Oil Shock & 1.000 & -0.078 & 0.016 & 0.017 & -0.070 & 0\\
+Demand & -0.078 & 1.000 & 0.141 & 0.049 & 0.043 & 0\\
+Exchange Rate & 0.016 & 0.141 & 1.000 & 0.251 & 0.143 & 0\\
+Import Price Index & 0.017 & 0.049 & 0.251 & 1.000 & 0.255 & 0\\
+Producer Price Index & -0.070 & 0.043 & 0.143 & 0.255 & 1.000 & 0\\
+\addlinespace
+Consumer Price Index & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 1\\
+\bottomrule
+\end{tabu}}
+\end{table}

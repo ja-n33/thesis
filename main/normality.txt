@@ -1,0 +1,24 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:normality}Normality Tests}
+\centering
+\fontsize{8}{10}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedright}X}
+\toprule
+Variable & Skewness & Kurtosis & JB Stat & p-value\\
+\midrule
+Oil Shock & -0.359 & 4.632 & 52.296 & p < 0.001\\
+\addlinespace
+Demand & -6.031 & 59.492 & 54919.628 & p < 0.001\\
+\addlinespace
+Exchange Rate & 1.047 & 7.290 & 374.992 & p < 0.001\\
+\addlinespace
+Import Price Index & -0.130 & 7.408 & 320.846 & p < 0.001\\
+\addlinespace
+Producer Price Index & 3.061 & 32.496 & 14935.865 & p < 0.001\\
+\addlinespace
+Consumer Price Index & 0.762 & 3.792 & 48.588 & p < 0.001\\
+\bottomrule
+\multicolumn{5}{l}{\rule{0pt}{1em}{Note:} Jarque-Bera test for normality. Skewness and excess kurtosis reported.}\\
+\end{tabu}
+\end{table}

@@ -3,7 +3,7 @@
 \caption{\label{tab:tab:adf}Augmented Dickey-Fuller Unit Root Tests}
 \centering
 \fontsize{8}{10}\selectfont
-\begin{tabular}[t]{lrrrrl}
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedright}X}
 \toprule
 Specification & Statistic & 1\% & 5\% & 10\% & Reject\\
 \midrule
@@ -44,5 +44,5 @@ Specification & Statistic & 1\% & 5\% & 10\% & Reject\\
 \hspace{1em}None & -1.949 & -2.58 & -1.95 & -1.62 & No\\
 \midrule
 \bottomrule
-\end{tabular}
+\end{tabu}
 \end{table}

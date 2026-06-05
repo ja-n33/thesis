@@ -9,7 +9,7 @@
 \usepackage{times}
 \usepackage{amsmath}
 \usepackage{booktabs}
-d\usepackage{multirow}
+\usepackage{multirow}
 \usepackage{makecell}
 \usepackage{pdflscape}
 \usepackage{tabu}
@@ -17,7 +17,7 @@ d\usepackage{multirow}
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{booktabs}
-
+\usepackage{adjustbox}
 
 \addbibresource{citations.bib}
 
@@ -34,7 +34,7 @@ d\usepackage{multirow}
 \maketitle
 
 \vspace{-2.2em}
-\section*{Introduction}
+\section{Introduction}
 After over two decades of continuous depreciation, the South African Rand (ZAR) was buoyed by a weaker dollar, higher prices for commodities like gold and platinum-group metals and improved investors sentiment towards the end of 2025. 
 At around the same time, the National Treasury and the South African Reserve Bank (SARB) announced the move from the target range of 3\%-6\% to a 3\% target with a 1\% tolerance band. This change in monetary policy is aimed at bringing down expected and actual inflation as well as borrowing costs \parencite{sa_infl}.
 In order to maintain credibility, the Reserve Bank will need to be be vigilant of potential drivers of inflation, both in the domestic as well as the global economy. A rebound in the value of the dollar, cooling global demand for commodities and fickle investor sentiment could all trigger further depreciation of the Rand at the expense of price stability. 
@@ -53,7 +53,7 @@ Exchange rate pass-through has previously been quantified in a variety of papers
 
 While past studies have investigated pass-through differences across countries and industries internationally, there is limited evidence on pass-through differences within specific countries. This is surprising given the policy relevance and the aforementioned literature evincing the likelihood of different pass-through rates based on industry characteristics. Through exploring the response of various domestic prices to shocks in the exchange rate, this paper will elucidate the relationship between the exchange rate and different parts of the economy, allowing for a more nuanced understanding of pass-through. 
 
-\section*{Literature Review}
+\section{Literature Review}
 
 Since the 1980’s, literature on the show that the relationship between exchange rates and prices can be assessed through both micro and macroeconomic perspectives. With regard to the former, industrial organization theory has been used to explain disconnects between changes to nominal exchange rates and prices and the resulting violation of the Law of One Price over the long term. According to \textcite{dornbusch1985exchange}, exchange rate movements interact with sticky prices and wages, producing a cost-shock for foreign firms in domestic markets which will result in an industry-wide adjustment in prices based on the industry’s market concentration, producer homogeneity, substitutability and relative split between foreign and domestic goods. \textcite{krugman1986} provides three potential explanations for why dynamic exchange rates may not lead to proportionate adjustments in import prices. Supply-side constraints (for example in marketing and distribution channels) in different markets dampens the effect of a depreciation in the domestic currency on domestic prices, as foreign firms face costs in expanding supply infrastructure. On the demand-side, to the extent that the impact of prices on demand is lagged, foreign producers anticipating domestic currency depreciations may decrease their current prices in order to avoid losing sales. Finally, firm reputation concerns may also affect pricing decisions when agents face additional costs to reputation among importers when changing prices. \textcite{marston1990pricing} studied the behaviour of Japanese firms exporting to the US and showed that differences in the elasticity of mark-ups between domestic and foreign markets and interdependence in quantities allocated to foreign and domestic markets mean that yen depreciations can lead to exporting firms increasing their mark-ups,  resulting in a decrease in the  dollar price that is less than the magnitude of the dollar appreciation. 
 
@@ -75,7 +75,7 @@ The extensive literature on ERPT and adjacent topic enables a thorough explorati
 
 
 
-\section*{Methodology}
+\section{Methodology}
 
 The identification framework employed in this paper is based on the methodology developed by \textcite{mccarthy1999} and subsequently used by \textcite{choudhri2015exchange}. In this model, a distribution chain of price shocks from import prices to producer prices to consumer prices is used. The prices at each stage are in turn determined by the expected prices based on information available at the end of period $t-1$, contemporaneous supply, demand  and exchange shocks, as well as the inflation shocks at preceding points in the distribution chain. This implies a recursive structure where supply conditions affect demand, both of which influence the exchange rate, which together impact the domestic prices along the distributional chain. For each stage in the recursive sequence, there is no contemporaneous feedback from subsequent variables in the model. In economic terms, this means we assume prices do not immediately affect the exchange rate and is based off the fact that while exchange rates can be observed at any given moment, data on prices are published at discrete frequencies and thus are reported with a lag \cite{choudhri2005explaining}. The primacy of oil shocks as an upstream disturbance is supported by \cite{kilian2009} and \cite{Kanzig}, who argue that oil supply does not respond to demand within the same month, and that supply decisions taken by OPEC countries are to a large extent exogenous. Formally, this model can be represented by the following  system of equations:
 
@@ -134,7 +134,7 @@ In addition, while standard VAR and LP models are sign-agnostic in that disturba
  Although Akaike Information Criteria can be used to select the lag order, the tendency of AIC to pick out more parsimonous models with shorter lag lengths risks longer-horizon dynamics being omitted. Oil shocks, for example, can have gradual or delayed impacts on economic variables, meaning that short lag lengths may miss these effects altogether \cite{EDELSTEIN2009766, hamilton-herrera}. Following \textcite{mccarthy1999}, lag order is restricted to a year. This depth provides a balance between, on one hand maintaining greater degrees of freedom and on the other capturing long-term dynamics and is a standard application in VAR models \cite{Lutkepohl}. Applying $p$ = 12 across both SVAR and LP models implies that estimates will be similar between the two within the first year of the shock, with differences between the two models manifesting beyond this window. 
 
 
- \section*{Data}
+ \section{Data}
 
 For the purposes of this study, monthly data from February 1990 up to December 2022 are used, thus spanning a total of 395 months. Along with looking at the full sample, the sample is divided into two periods: 1990 up to and including 2008 and 2009 until the end of 2022. Although this results in a slightly unbalanced comparison with the early period consisting of 227 months and the latter of 168, 2009 did mark a turning point for South Africa with lower average and variance in the inflation rates, representing a period of greater price stability. This in turn allows for the assessment of whether ...
 
@@ -155,21 +155,27 @@ South African import data are characterised by various breaks which compromise i
 Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are found to be stationary according to Augmented Dickey-Fuller tests, thus justifying the use of the VAR model as opposed to a vector error correction model. Residuals from the VAR models display very low correlation between different variables and across lags. Normality tests indicate that our data displays skewness, with Jarque-Bera p-values being significant beyond 1\% for all variables. With this in mind, series are bootstrapped??????
 
 
-\section*{Results}
-\subsection*{Impulse Responses}
+\section{Results}
+\subsection{Impulse Responses}
+
+\subsection{Variance Decomposition}
+
+\input{main_fevd.txt}
 
 
+\section{Appendix}
 
-
-\section*{Appendix}
-
-\subsection*{Results}
+\subsection{Results}
 
 \input{main_results.txt}
 
 
-\subsection*{Diagnostics}
-\subsubsection*{Stationarity}
+\subsection{Diagnostics}
+\subsubsection{Stationarity}
+
+\input{desc_tbl.txt}
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{stationarity_combined.png}
@@ -182,6 +188,69 @@ Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are f
 \footnotesize
 \textit{Note:} ADF test with lag length selected by AIC up to a maximum of 12 lags. H$_0$: series contains a unit root. Rejection at the 5\% level indicated.
 \end{minipage}
+
+\subsubsection{Normality}
+
+\input{normality.txt}
+
+\subsection{Lag Selection}
+\input{lag_selection.txt}
+
+\subsection{Error Correlation}
+
+\input{residcor.txt}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{main_acf.png}
+    \caption{Autocorrelation Functions 1990 - 2023}
+    \label{fig:acf_plots_full}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{main_acf_2010.png}
+    \caption{Autocorrelation Functions 2010 - 2023}
+    \label{fig:acf_plots_2010}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{main_acf_early.png}
+    \caption{Autocorrelation Functions 1990 - 2010}
+    \label{fig:acf_plots_early}
+\end{figure}
+
+
+\subsection{Linking Tests}
+
+\subsubsection{SIC and UVI (Arithmetic)}
+
+\input{uvi_sic_ttest.txt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{sic_uvi.png}
+    \caption{Overlap period for SIC and UVI (Arithmetic) Indices}
+    \label{fig:uvisic_plot}
+\end{figure}
+
+\input{chow_test.txt}
+
+\subsubsection{UVI (Arithmetic) and UVI (Geometric)}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{arit_geom.png}
+    \caption{Overlap period for Arithmetic and Geometric UVI Indices}
+    \label{fig:aritgeom_plot}
+\end{figure}
+
+\input{arit_geom_ttest.txt}
+
 
 \newpage
 \printbibliography
