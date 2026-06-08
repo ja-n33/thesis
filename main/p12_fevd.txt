@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:fevd_p12}Forecast Error Variance Decomposition at Selected Horizons with 12 lags}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\fontsize{8}{10}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\toprule
+\multicolumn{2}{c}{\textbf{ }} & \multicolumn{6}{c}{\textbf{Horizon (months)}} \\
+\cmidrule(l{3pt}r{3pt}){3-8}
+Sample & Imports & 3 & 6 & 9 & 12 & 15 & 18\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{8}{l}{\textbf{Import Price Index}}\\
+\hspace{1em}1990 - 2023 & Excl. Imports & NA & NA & NA & NA & NA & NA\\
+\hspace{1em} & Incl. Imports & 0.231 & 0.232 & 0.223 & 0.216 & 0.212 & 0.212\\
+\hspace{1em}1990 - 2010 & Excl. Imports & NA & NA & NA & NA & NA & NA\\
+\hspace{1em} & Incl. Imports & 0.184 & 0.197 & 0.170 & 0.169 & 0.166 & 0.162\\
+\hspace{1em}2010 - 2023 & Excl. Imports & NA & NA & NA & NA & NA & NA\\
+\hspace{1em} & Incl. Imports & 0.344 & 0.300 & 0.264 & 0.241 & 0.237 & 0.231\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{8}{l}{\textbf{Producer Price Index}}\\
+\hspace{1em}1990 - 2023 & Excl. Imports & 0.076 & 0.118 & 0.116 & 0.116 & 0.116 & 0.116\\
+\hspace{1em} & Incl. Imports & 0.076 & 0.113 & 0.110 & 0.109 & 0.108 & 0.108\\
+\hspace{1em}1990 - 2010 & Excl. Imports & 0.090 & 0.152 & 0.150 & 0.147 & 0.147 & 0.149\\
+\hspace{1em} & Incl. Imports & 0.083 & 0.145 & 0.136 & 0.130 & 0.131 & 0.131\\
+\hspace{1em}2010 - 2023 & Excl. Imports & 0.169 & 0.156 & 0.150 & 0.145 & 0.146 & 0.148\\
+\hspace{1em} & Incl. Imports & 0.193 & 0.172 & 0.157 & 0.137 & 0.132 & 0.131\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{8}{l}{\textbf{Consumer Price Index}}\\
+\hspace{1em}1990 - 2023 & Excl. Imports & 0.060 & 0.075 & 0.081 & 0.092 & 0.097 & 0.097\\
+\hspace{1em} & Incl. Imports & 0.070 & 0.083 & 0.089 & 0.098 & 0.095 & 0.095\\
+\hspace{1em}1990 - 2010 & Excl. Imports & 0.073 & 0.098 & 0.100 & 0.109 & 0.111 & 0.110\\
+\hspace{1em} & Incl. Imports & 0.101 & 0.126 & 0.125 & 0.134 & 0.128 & 0.127\\
+\hspace{1em}2010 - 2023 & Excl. Imports & 0.092 & 0.110 & 0.107 & 0.118 & 0.119 & 0.131\\
+\hspace{1em} & Incl. Imports & 0.059 & 0.068 & 0.068 & 0.072 & 0.066 & 0.076\\
+\midrule
+\bottomrule
+\multicolumn{8}{l}{\rule{0pt}{1em}}\\
+\end{tabu}}
+\end{table}

@@ -180,17 +180,37 @@ Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are f
 \section{Robustness Checks}
 
 \subsection{Lag Length}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{irf_12lags.png}
+    \caption{Impulse Response Functions with 12 Lags}
+    \label{fig:irf_12lags}
+\end{figure}
+
 
 \subsection{Endogenous Oil Shocks}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{irf_endog_oil.png}
+    \caption{Impulse Response Functions with Endogenous Oil Shocks}
+    \label{fig:irf_endog}
+\end{figure}
 \subsection{Monetary Policy}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{irf_monetary_policy.png}
     \caption{Impulse Response Functions with Real Prime Rates}
-    \label{fig:adj_main}
+    \label{fig:irf_mon}
 \end{figure}
-\subsection{} 
+
+
+\subsection{Linear Projections} 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{irf_lp.png}
+    \caption{Impulse Response Functions using Linear Projections}
+    \label{fig:irf_lp}
+\end{figure}
 
 
 \section{Appendix}
@@ -199,12 +219,58 @@ Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are f
 
 \input{main_results.txt}
 
+
+
+\input{p12_results.txt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{adj_12lags.png}
+    \caption{Adjustment Speed Plots with 12 Lags}
+    \label{fig:p12_adj_plots}
+\end{figure}
+
+\input{oil_results.txt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{adj_endog_oil.png}
+    \caption{Adjustment Speed Plots with Endogenous Oil}
+    \label{fig:oil_adj_plots}
+\end{figure}
+
+\input{oil_fevd.txt}
+
+
 \input{monetary_results.txt}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{adj_monetary_policy.png}
+    \caption{Adjustment Speed Plots with Real Prime Rates}
+    \label{fig:monetary_adj_plots}
+\end{figure}
 
 \input{monetary_fevd.txt}
 
+\input{lp_results.txt}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{adj_lp.png}
+    \caption{Adjustment Speed Plots using Linear Projections}
+    \label{fig:lp_adj_plots}
+\end{figure}
+
 
 \subsection{Diagnostics}
+
+\subsection{Chow-Lin Disaggregation}
+
+\input{chow_lin.txt}
+
 \subsubsection{Stationarity}
 
 \input{desc_tbl.txt}

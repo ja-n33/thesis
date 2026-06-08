@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:chow_lin}Chow-Lin Temporal Disaggregation: GDP on BCI}
+\centering
+\fontsize{8}{10}\selectfont
+\begin{tabular}[t]{lr}
+\toprule
+Term & fit$coefficients\\
+\midrule
+(Intercept) & 5.0037\\
+\addlinespace
+bci\_ts & 0.0001\\
+\bottomrule
+\multicolumn{2}{l}{\rule{0pt}{1em}{Note:} Rho = 0.9987. R$^2$ = 0.0014.}\\
+\end{tabular}
+\end{table}

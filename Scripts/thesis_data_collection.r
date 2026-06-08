@@ -233,7 +233,7 @@ neer <- readr::read_csv(here::here("data", "neer.csv"), skip = 2) %>%
 ####
 
 oil <- fredr::fredr(series_id = "POILBREUSDM", 
-                    observation_start = as.Date("1990-01-01"), 
+                    observation_start = as.Date("1988-01-01"), 
                     observation_end = as.Date("2012-12-31"),   
                     frequency = "m") %>%
                     mutate(time_period = as.Date(paste0(stringr::str_sub(as.character(date), 1, 7), "-01"))) %>%
@@ -247,7 +247,7 @@ shock <- readxl::read_excel(here::here("data", "oilsupplynews", "oilSupplyNewsSh
     select(time_period, oilshock) 
 
 oil <- left_join(oil, shock, by = "time_period")
-
+View(oil)
 
 ####
 
@@ -263,10 +263,9 @@ historical_sample <- m %>%
   full_join(neer,       by = "time_period") %>%
   full_join(usdzar,     by = "time_period") %>%
   full_join(oil,        by = "time_period") %>%
-filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2012-12-01"))
+filter(time_period >= as.Date("1988-01-01") & time_period <= as.Date("2012-12-01"))
 
 
-View(historical_sample)
 filename <- file.path(here::here(), "data", "samples", "historicalsample.csv")
 write.csv(historical_sample, filename)
 
@@ -537,7 +536,6 @@ neer_full <- readr::read_csv(here::here("data", "neer.csv"), skip = 2) %>%
     arrange(time_period) %>%
     select(-Date) %>%
     filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2026-03-01"))
-View(neer_full)
 
 
 
@@ -576,6 +574,7 @@ periods <- c("1990", "2000")
 
 m_hist <- tibble()
 
+
 for (period in periods) {
   if (period == "2000") {
     code <- "PI000004"
@@ -605,9 +604,16 @@ m_hist <- m_hist %>%
     mutate(m_hist = log(m_hist) - log(lag(m_hist, n = 1))) %>%
     select(time_period, m_hist) %>%
     distinct(time_period, .keep_all = TRUE)
-    
-View(historical_sample)
-View(m)
+
+
+repo <- readr::read_csv(here::here("data", "hist_prime.csv"), skip = 2) %>%
+            mutate(time_period = lubridate::my(Date)) %>%
+            arrange(time_period) %>%
+            mutate(int_eff = -(log(Value) - log(lag(Value, n = 1)))) %>%
+            arrange(time_period) %>%
+            select(-Date, Value) %>%
+            filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2026-03-01"))
+
 
 full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
     select(-c("neer_sarb", "uvi34", "uvi2", "uvi5")) %>%
@@ -615,12 +621,12 @@ full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), hist
     left_join(m, by = "time_period") %>%
     mutate(ppi = case_when(time_period >= as.Date("2013-01-01") ~  finalmanufgoods_full,
                             time_period <= as.Date("2012-12-01") ~ ppi_manuf))  %>%
-    left_join(m_hist %>% filter(time_period > as.Date("1990-01-01")), by = "time_period") %>%
+    left_join(m_hist %>% filter(time_period > as.Date("1988-01-01")), by = "time_period") %>%
     arrange((time_period)) %>%
     mutate(m = case_when(time_period >= as.Date("2010-02-01") ~  uvi34,
                             time_period <= as.Date("2010-01-01") ~ m_hist),
-                            uvi34_l = lag(uvi34, n = 1))
-
+                            uvi34_l = lag(uvi34, n = 1)) %>%
+    left_join(repo, by = "time_period")
 
 filename <- file.path(here::here(), "data", "samples", "fullsample.csv")
 write.csv(full_sample, filename)

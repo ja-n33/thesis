@@ -103,9 +103,9 @@ theme_publication <- function(base_size = 11, base_family = "source_serif") {
 # short <- full_filtered %>% filter(time_period < as.Date("2013-01-01"))
 
 
-# ####
+####
 # ## Show the 3 measures of output gap to support one another
-
+####
 
 
 # output_long <- outputgap %>%
@@ -294,6 +294,100 @@ low_inflation <- full_filtered %>% filter(time_period >= as.Date("2010-01-01"))
 early <- full_filtered %>% filter(time_period < as.Date("2010-01-01"))
 
 
+##############################################################################################################################################################################
+
+################################################################################ INTERPOLATION ################################################################################
+
+##############################################################################################################################################################################
+
+
+
+sarb_gdp <- read_dataset(id = "QB_NATLACC", 
+                      series_key = "KBP6006D.Q.R.S.LA") %>%
+                      as_tibble() %>%
+                      rename(gdp = "KBP6006D.Q.R.S.LA") %>%
+                      mutate(lgdp = log(gdp),
+          detrended_gdp = gdp - lag(gdp)) %>%
+  filter(time_period >= as.Date("1992-01-01") & 
+          time_period <= as.Date("2026-02-01")) %>%
+          mutate(gdp_cycle = mFilter::hpfilter(lgdp, freq = 1600)$cycle) 
+          
+            
+
+bci <- readxl::read_excel(here::here("data", "BCI DATA", "BCI_April_2026.xls")) %>%
+  rename(time_period = "...1", 
+          leading = "Leading\n indicator", 
+          lagging = "Lagging\n indicator",
+          coincident = "Coincident\n indicator") %>%
+  filter(!is.na(time_period)) %>%
+  mutate(time_period = lubridate::floor_date(lubridate::as_date(time_period), "month"),
+  leading_lagged = lag(leading, n = 1), 
+  coincident_lagged = lag(coincident, n = 1),
+  across(c(leading, lagging, coincident, leading_lagged, coincident_lagged), as.numeric), 
+  leading_detrended = leading - leading_lagged,
+  coincident_detrended = coincident - coincident_lagged) %>%
+  filter(time_period >= lubridate::ymd("1992-01-01") & time_period <= lubridate::ymd("2026-01-28")) %>%
+  group_by(time_period)
+
+sarb_gdp <- full_join(sarb_gdp, bci %>% select(time_period, coincident, coincident_detrended), by = "time_period")
+
+gdp_ts <- ts(sarb_gdp$lgdp, 
+            start = c(1992, 1), 
+            frequency = 4)
+View(sarb_gdp)
+
+bci_ts <- ts(sarb_gdp$coincident.x, 
+            start = c(1992, 1), 
+            frequency = 12)
+
+bci_ts_detrended <- ts(sarb_gdp$coincident_detrended, 
+            start = c(1992, 1), 
+            frequency = 12)
+
+gdp_ts_detrended <- ts(sarb_gdp$detrended_gdp, 
+            start = c(1992, 1), 
+            frequency = 4)
+
+fit <- tempdisagg::td(gdp_ts ~ bci_ts, method = "chow-lin-maxlog")
+
+fit_detrended <- tempdisagg::td(gdp_ts_detrended ~ bci_ts_detrended, method = "chow-lin-maxlog")
+
+summary(fit)
+
+summary(fit_detrended)
+
+model_cl <- tempdisagg::td(sarb_gdp_ts ~ 1, 
+  to = 12,
+    method = "denton-cholette")
+
+cl_coef <- as.data.frame(fit$coefficients) %>%
+  tibble::rownames_to_column("Term") %>%
+  mutate(across(where(is.numeric), ~ round(., 4)))
+
+cl_coef %>%
+    mutate(Term = gsub("_", "\\_", Term, fixed = TRUE)) %>%
+
+  kable(
+    format   = "latex",
+    booktabs = TRUE,
+    linesep  = "\\addlinespace",
+    caption  = "Chow-Lin Temporal Disaggregation: GDP on BCI",
+    label    = "tab:chow_lin",
+    escape   = FALSE
+  ) %>%
+  kable_styling(
+    latex_options = c("HOLD_position"),
+    full_width    = FALSE,
+    font_size     = 8
+  ) %>%
+  footnote(
+    general           = paste0("{Note:} Rho = ", round(fit$rho, 4), 
+                               ". R$^2$ = ", round(fit$r.squared, 4), "."),
+    general_title     = "",
+    footnote_as_chunk = FALSE,
+    escape            = FALSE
+  ) %>%
+  writeLines(here::here("main", "chow_lin.txt"))
 
 ##############################################################################################################################################################################
 
