@@ -1,0 +1,45 @@
+\begin{table}[H]
+\centering
+\caption{\label{tab:tab:erpt_monetary}Cumulative Exchange Rate Pass-Through at Selected Horizons with Real Prime Rate}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\fontsize{8}{10}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
+\toprule
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{3}{c}{\textbf{Excl. Imports}} & \multicolumn{3}{c}{\textbf{Incl. Imports}} \\
+\cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-7}
+Horizon & 1990 - 2023 & 1990 - 2010 & 2010 - 2023 & 1990 - 2023  & 1990 - 2010  & 2010 - 2023 \\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Import Price Index}}\\
+\hspace{1em}3 & 0.51 (0.08) & 0.43 (0.08) & 0.69 (0.12) & NA & NA & NA\\
+\hspace{1em}6 & 0.58 (0.11) & 0.49 (0.11) & 0.66 (0.18) & NA & NA & NA\\
+\hspace{1em}9 & 0.53 (0.13) & 0.4 (0.14) & 0.74 (0.23) & NA & NA & NA\\
+\hspace{1em}12 & 0.49 (0.14) & 0.35 (0.17) & 0.72 (0.28) & NA & NA & NA\\
+\hspace{1em}15 & 0.48 (0.15) & 0.27 (0.17) & 0.78 (0.31) & NA & NA & NA\\
+\hspace{1em}18 & 0.46 (0.15) & 0.19 (0.17) & 0.79 (0.35) & NA & NA & NA\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Producer Price Index}}\\
+\hspace{1em}3 & 0.15 (0.03) & 0.14 (0.03) & 0.18 (0.05) & 0.15 (0.03) & 0.15 (0.03) & 0.18 (0.05)\\
+\hspace{1em}6 & 0.22 (0.05) & 0.23 (0.05) & 0.21 (0.07) & 0.22 (0.05) & 0.24 (0.06) & 0.18 (0.07)\\
+\hspace{1em}9 & 0.24 (0.06) & 0.26 (0.07) & 0.27 (0.08) & 0.24 (0.06) & 0.25 (0.08) & 0.22 (0.08)\\
+\hspace{1em}12 & 0.25 (0.06) & 0.26 (0.09) & 0.28 (0.09) & 0.25 (0.06) & 0.24 (0.1) & 0.23 (0.09)\\
+\hspace{1em}15 & 0.25 (0.06) & 0.21 (0.1) & 0.27 (0.1) & 0.25 (0.06) & 0.21 (0.1) & 0.22 (0.1)\\
+\hspace{1em}18 & 0.24 (0.06) & 0.17 (0.1) & 0.29 (0.11) & 0.25 (0.07) & 0.19 (0.11) & 0.22 (0.11)\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Consumer Price Index}}\\
+\hspace{1em}3 & 0.09 (0.02) & 0.14 (0.03) & 0.01 (0.03) & 0.09 (0.02) & 0.12 (0.03) & 0.02 (0.03)\\
+\hspace{1em}6 & 0.12 (0.03) & 0.17 (0.05) & 0.06 (0.03) & 0.12 (0.03) & 0.16 (0.05) & 0.07 (0.03)\\
+\hspace{1em}9 & 0.16 (0.04) & 0.22 (0.07) & 0.09 (0.04) & 0.16 (0.04) & 0.21 (0.07) & 0.09 (0.03)\\
+\hspace{1em}12 & 0.19 (0.05) & 0.27 (0.08) & 0.09 (0.04) & 0.2 (0.05) & 0.27 (0.08) & 0.09 (0.04)\\
+\hspace{1em}15 & 0.2 (0.05) & 0.28 (0.1) & 0.07 (0.04) & 0.22 (0.05) & 0.28 (0.1) & 0.07 (0.04)\\
+\hspace{1em}18 & 0.21 (0.06) & 0.29 (0.1) & 0.08 (0.04) & 0.23 (0.06) & 0.29 (0.11) & 0.08 (0.04)\\
+\midrule
+ & 320 & 165 & 82 & 330 & 174 & 91\\
+\bottomrule
+\multicolumn{7}{l}{\rule{0pt}{1em}{Note:} Cumulative impulse responses to a one percent exchange rate depreciation.}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}        Bootstrapped standard errors in parentheses (500 replications).}\\
+\end{tabu}}
+\end{table}

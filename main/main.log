@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.2.24)  5 JUN 2026 19:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.2.24)  8 JUN 2026 17:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -747,7 +747,11 @@ LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 3
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
-) (./main.aux)
+) (./main.aux
+
+LaTeX Warning: Label `fig:adj_main' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
@@ -1536,161 +1540,218 @@ LaTeX Warning: Citation 'StatsSA2025XUVI' on page 10 undefined on input line 14
 LaTeX Warning: Reference `sec:Appendix' on page 10 undefined on input line 155.
 
 
-(./main_fevd.txt)
+<irf_main.png, id=171, 4215.75pt x 3011.25pt>
+File: irf_main.png Graphic file (type png)
+<use irf_main.png>
+Package pdftex.def Info: irf_main.png  used on input line 163.
+(pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
-[10] (./main_results.txt)
+
+[10]
+<adj_main.png, id=180, 4215.75pt x 3011.25pt>
+File: adj_main.png Graphic file (type png)
+<use adj_main.png>
+Package pdftex.def Info: adj_main.png  used on input line 171.
+(pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
+
 
 [11
-pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.171 
-      ] (./desc_tbl.txt)
-<stationarity_combined.png, id=163, 722.7pt x 722.7pt>
-File: stationarity_combined.png Graphic file (type png)
-<use stationarity_combined.png>
-Package pdftex.def Info: stationarity_combined.png  used on input line 181.
-(pdftex.def)             Requested size: 452.96826pt x 452.96558pt.
-
-
-[12
-pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.185 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.185 
-      ] (./adf_results.txt)
-
-[13
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.187 \begin{minipage}{\linewidth}
-                                   <./stationarity_combined.png>]
-(./normality.txt) (./lag_selection.txt)
+l.175 
+       <./irf_main.png>] (./main_fevd.txt)
+
+[12
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.179 
+       <./adj_main.png>]
+<irf_monetary_policy.png, id=193, 4215.75pt x 3011.25pt>
+File: irf_monetary_policy.png Graphic file (type png)
+<use irf_monetary_policy.png>
+Package pdftex.def Info: irf_monetary_policy.png  used on input line 189.
+(pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
+
+
+[13
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.193 \subsection
+                 {}] (./main_results.txt)
 
 [14
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.201 
+       <./irf_monetary_policy.png>] (./monetary_results.txt)
+
+[15
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.203 
+      ] (./monetary_fevd.txt) (./desc_tbl.txt)
+
+[16
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.211 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.198 
-      
+l.211 
+      ]
+<stationarity_combined.png, id=217, 722.7pt x 722.7pt>
+File: stationarity_combined.png Graphic file (type png)
+<use stationarity_combined.png>
+Package pdftex.def Info: stationarity_combined.png  used on input line 215.
+(pdftex.def)             Requested size: 452.96826pt x 452.96558pt.
+
+
+[17
 pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.198 
-      ] (./residcor.txt)
-<main_acf.png, id=184, 505.89pt x 289.08pt>
-File: main_acf.png Graphic file (type png)
-<use main_acf.png>
-Package pdftex.def Info: main_acf.png  used on input line 206.
-(pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
+l.219 
+      ] (./adf_results.txt)
 
+[18
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.221 \begin{minipage}{\linewidth}
+                                   <./stationarity_combined.png>]
+(./normality.txt) (./lag_selection.txt)
 
-[15
+[19
 pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.210 
+l.232 
       
 pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.210 
-      ]
-<main_acf_2010.png, id=192, 505.89pt x 289.08pt>
-File: main_acf_2010.png Graphic file (type png)
-<use main_acf_2010.png>
-Package pdftex.def Info: main_acf_2010.png  used on input line 214.
-(pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
-<main_acf_early.png, id=193, 505.89pt x 289.08pt>
-File: main_acf_early.png Graphic file (type png)
-<use main_acf_early.png>
-Package pdftex.def Info: main_acf_early.png  used on input line 221.
+l.232 
+      ] (./residcor.txt)
+<main_acf.png, id=237, 505.89pt x 289.08pt>
+File: main_acf.png Graphic file (type png)
+<use main_acf.png>
+Package pdftex.def Info: main_acf.png  used on input line 240.
 (pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
 
 
-[16
-pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.225 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.225 
-       <./main_acf.png> <./main_acf_2010.png>] (./uvi_sic_ttest.txt)
-<sic_uvi.png, id=200, 433.62pt x 433.62pt>
-File: sic_uvi.png Graphic file (type png)
-<use sic_uvi.png>
-Package pdftex.def Info: sic_uvi.png  used on input line 235.
-(pdftex.def)             Requested size: 452.96826pt x 452.99205pt.
-
-
-[17
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.239 
-      
+[20
 pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.239 
-       <./main_acf_early.png>] (./chow_test.txt)
-<arit_geom.png, id=207, 433.62pt x 433.62pt>
-File: arit_geom.png Graphic file (type png)
-<use arit_geom.png>
-Package pdftex.def Info: arit_geom.png  used on input line 247.
-(pdftex.def)             Requested size: 452.96826pt x 452.99205pt.
-
-
-[18
-pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.251 
+l.244 
       
 pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.251 
-       <./sic_uvi.png>] (./arit_geom_ttest.txt)
+l.244 
+      ]
+<main_acf_2010.png, id=245, 505.89pt x 289.08pt>
+File: main_acf_2010.png Graphic file (type png)
+<use main_acf_2010.png>
+Package pdftex.def Info: main_acf_2010.png  used on input line 248.
+(pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
+<main_acf_early.png, id=246, 505.89pt x 289.08pt>
+File: main_acf_early.png Graphic file (type png)
+<use main_acf_early.png>
+Package pdftex.def Info: main_acf_early.png  used on input line 255.
+(pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
 
-[19
+
+[21
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.259 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.255 \newpage
-              
+l.259 
+       <./main_acf.png> <./main_acf_2010.png>] (./uvi_sic_ttest.txt)
+<sic_uvi.png, id=253, 433.62pt x 433.62pt>
+File: sic_uvi.png Graphic file (type png)
+<use sic_uvi.png>
+Package pdftex.def Info: sic_uvi.png  used on input line 269.
+(pdftex.def)             Requested size: 452.96826pt x 452.99205pt.
+
+
+[22
+pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.273 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.10}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.255 \newpage
+l.273 
+       <./main_acf_early.png>] (./chow_test.txt)
+<arit_geom.png, id=260, 433.62pt x 433.62pt>
+File: arit_geom.png Graphic file (type png)
+<use arit_geom.png>
+Package pdftex.def Info: arit_geom.png  used on input line 281.
+(pdftex.def)             Requested size: 452.96826pt x 452.99205pt.
+
+
+[23
+pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.285 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.11}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.285 
+       <./sic_uvi.png>] (./arit_geom_ttest.txt)
+
+[24
+pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.289 \newpage
+              
+pdfTeX warning (ext4): destination with the same identifier (name{table.12}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.289 \newpage
                <./arit_geom.png>]
 
-LaTeX Warning: Empty bibliography on input line 256.
+LaTeX Warning: Empty bibliography on input line 290.
 
 (./main.aux)
  ***********
@@ -1701,8 +1762,11 @@ L3 programming layer <2025-01-18>
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 454E4E53FB0FC149BC09B3EE402FA6A5;2190.
+(rerunfilecheck)             Checksum: E0FE557559C626D4609C6D2ED4CE23AC;2821.
 
 Package biblatex Warning: Please (re)run Biber on the file:
 (biblatex)                main
@@ -1713,10 +1777,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 20952 strings out of 473190
- 363876 string characters out of 5715800
- 1341697 words of memory out of 5000000
- 43834 multiletter control sequences out of 15000+600000
+ 21009 strings out of 473190
+ 364906 string characters out of 5715800
+ 1363967 words of memory out of 5000000
+ 43870 multiletter control sequences out of 15000+600000
  584892 words of font info for 82 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,17n,101p,2044b,5185s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1733,10 +1797,10 @@ exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/tex
 live/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/
 texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist
 /fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (19 pages, 2055343 bytes).
+Output written on main.pdf (24 pages, 4452885 bytes).
 PDF statistics:
- 297 PDF objects out of 1000 (max. 8388607)
- 241 compressed objects within 3 object streams
- 74 named destinations out of 1000 (max. 500000)
- 167 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 351 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
+ 89 named destinations out of 1000 (max. 500000)
+ 222 words of extra memory for PDF output out of 10000 (max. 10000000)
 

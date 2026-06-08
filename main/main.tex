@@ -155,12 +155,42 @@ South African import data are characterised by various breaks which compromise i
 Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are found to be stationary according to Augmented Dickey-Fuller tests, thus justifying the use of the VAR model as opposed to a vector error correction model. Residuals from the VAR models display very low correlation between different variables and across lags. Normality tests indicate that our data displays skewness, with Jarque-Bera p-values being significant beyond 1\% for all variables. With this in mind, series are bootstrapped??????
 
 
-\section{Results}
+\section{Main Results}
 \subsection{Impulse Responses}
 
-\subsection{Variance Decomposition}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{irf_main.png}
+    \caption{Impulse Response Function Plots}
+    \label{fig:irf_main}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{adj_main.png}
+    \caption{Adjustment Speed Plots}
+    \label{fig:adj_main}
+\end{figure}
+
+\subsection{Variance Decompositions}
 
 \input{main_fevd.txt}
+
+\section{Robustness Checks}
+
+\subsection{Lag Length}
+
+\subsection{Endogenous Oil Shocks}
+
+\subsection{Monetary Policy}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{irf_monetary_policy.png}
+    \caption{Impulse Response Functions with Real Prime Rates}
+    \label{fig:adj_main}
+\end{figure}
+\subsection{} 
 
 
 \section{Appendix}
@@ -168,6 +198,10 @@ Results of diagnostic tests are provided in the \ref{sec:Appendix}. Series are f
 \subsection{Results}
 
 \input{main_results.txt}
+
+\input{monetary_results.txt}
+
+\input{monetary_fevd.txt}
 
 
 \subsection{Diagnostics}

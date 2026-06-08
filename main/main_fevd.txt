@@ -4,40 +4,40 @@
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \fontsize{8}{10}\selectfont
-\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
 \toprule
-\multicolumn{2}{c}{\textbf{ }} & \multicolumn{5}{c}{\textbf{Horizon (months)}} \\
-\cmidrule(l{3pt}r{3pt}){3-7}
-Sample & Imports & 3 & 6 & 9 & 12 & 15\\
+\multicolumn{2}{c}{\textbf{ }} & \multicolumn{6}{c}{\textbf{Horizon (months)}} \\
+\cmidrule(l{3pt}r{3pt}){3-8}
+Sample & Imports & 3 & 6 & 9 & 12 & 15 & 18\\
 \midrule
 \addlinespace[0.3em]
-\multicolumn{7}{l}{\textbf{Import Price Index}}\\
-\hspace{1em}1990 - 2023 & Excl. Imports & NA & NA & NA & NA & NA\\
-\hspace{1em} & Incl. Imports & 0.249 & 0.252 & 0.241 & 0.238 & 0.237\\
-\hspace{1em}1990 - 2010 & Excl. Imports & NA & NA & NA & NA & NA\\
-\hspace{1em} & Incl. Imports & 0.172 & 0.196 & 0.186 & 0.180 & 0.182\\
-\hspace{1em}2010 - 2023 & Excl. Imports & NA & NA & NA & NA & NA\\
-\hspace{1em} & Incl. Imports & 0.465 & 0.417 & 0.391 & 0.381 & 0.373\\
+\multicolumn{8}{l}{\textbf{Import Price Index}}\\
+\hspace{1em}1990 - 2023 & Excl. Imports & NA & NA & NA & NA & NA & NA\\
+\hspace{1em} & Incl. Imports & 0.249 & 0.252 & 0.241 & 0.238 & 0.237 & 0.237\\
+\hspace{1em}1990 - 2010 & Excl. Imports & NA & NA & NA & NA & NA & NA\\
+\hspace{1em} & Incl. Imports & 0.172 & 0.196 & 0.186 & 0.180 & 0.182 & 0.182\\
+\hspace{1em}2010 - 2023 & Excl. Imports & NA & NA & NA & NA & NA & NA\\
+\hspace{1em} & Incl. Imports & 0.465 & 0.417 & 0.391 & 0.381 & 0.373 & 0.370\\
 \midrule
 \addlinespace[0.3em]
-\multicolumn{7}{l}{\textbf{Producer Price Index}}\\
-\hspace{1em}1990 - 2023 & Excl. Imports & 0.088 & 0.124 & 0.122 & 0.125 & 0.125\\
-\hspace{1em} & Incl. Imports & 0.087 & 0.120 & 0.118 & 0.120 & 0.119\\
-\hspace{1em}1990 - 2010 & Excl. Imports & 0.079 & 0.134 & 0.129 & 0.132 & 0.133\\
-\hspace{1em} & Incl. Imports & 0.074 & 0.131 & 0.124 & 0.126 & 0.127\\
-\hspace{1em}2010 - 2023 & Excl. Imports & 0.182 & 0.169 & 0.166 & 0.161 & 0.158\\
-\hspace{1em} & Incl. Imports & 0.190 & 0.180 & 0.175 & 0.169 & 0.166\\
+\multicolumn{8}{l}{\textbf{Producer Price Index}}\\
+\hspace{1em}1990 - 2023 & Excl. Imports & 0.088 & 0.124 & 0.122 & 0.125 & 0.125 & 0.125\\
+\hspace{1em} & Incl. Imports & 0.087 & 0.120 & 0.118 & 0.120 & 0.119 & 0.119\\
+\hspace{1em}1990 - 2010 & Excl. Imports & 0.079 & 0.134 & 0.129 & 0.132 & 0.133 & 0.132\\
+\hspace{1em} & Incl. Imports & 0.074 & 0.131 & 0.124 & 0.126 & 0.127 & 0.133\\
+\hspace{1em}2010 - 2023 & Excl. Imports & 0.182 & 0.169 & 0.166 & 0.161 & 0.158 & 0.160\\
+\hspace{1em} & Incl. Imports & 0.190 & 0.180 & 0.175 & 0.169 & 0.166 & 0.165\\
 \midrule
 \addlinespace[0.3em]
-\multicolumn{7}{l}{\textbf{Consumer Price Index}}\\
-\hspace{1em}1990 - 2023 & Excl. Imports & 0.056 & 0.064 & 0.075 & 0.091 & 0.095\\
-\hspace{1em} & Incl. Imports & 0.059 & 0.065 & 0.075 & 0.087 & 0.089\\
-\hspace{1em}1990 - 2010 & Excl. Imports & 0.071 & 0.083 & 0.090 & 0.113 & 0.115\\
-\hspace{1em} & Incl. Imports & 0.081 & 0.091 & 0.098 & 0.114 & 0.115\\
-\hspace{1em}2010 - 2023 & Excl. Imports & 0.039 & 0.061 & 0.070 & 0.073 & 0.075\\
-\hspace{1em} & Incl. Imports & 0.038 & 0.062 & 0.073 & 0.074 & 0.073\\
+\multicolumn{8}{l}{\textbf{Consumer Price Index}}\\
+\hspace{1em}1990 - 2023 & Excl. Imports & 0.056 & 0.064 & 0.075 & 0.091 & 0.095 & 0.095\\
+\hspace{1em} & Incl. Imports & 0.059 & 0.065 & 0.075 & 0.087 & 0.089 & 0.089\\
+\hspace{1em}1990 - 2010 & Excl. Imports & 0.071 & 0.083 & 0.090 & 0.113 & 0.115 & 0.115\\
+\hspace{1em} & Incl. Imports & 0.081 & 0.091 & 0.098 & 0.114 & 0.115 & 0.115\\
+\hspace{1em}2010 - 2023 & Excl. Imports & 0.039 & 0.061 & 0.070 & 0.073 & 0.075 & 0.080\\
+\hspace{1em} & Incl. Imports & 0.038 & 0.062 & 0.073 & 0.074 & 0.073 & 0.081\\
 \midrule
 \bottomrule
-\multicolumn{7}{l}{\rule{0pt}{1em}}\\
+\multicolumn{8}{l}{\rule{0pt}{1em}}\\
 \end{tabu}}
 \end{table}
