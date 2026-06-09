@@ -6,15 +6,15 @@
 \fontsize{8}{10}\selectfont
 \begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
 \toprule
-  & Oil Shock & Demand & Exchange Rate & Import Price Index & Producer Price Index & Consumer Price Index\\
+  & Oil Shock & Output Gap & Exchange Rate & Import Price Index & Producer Price Index & Consumer Price Index\\
 \midrule
-Oil Shock & 1.000 & -0.078 & 0.016 & 0.017 & -0.070 & 0\\
-Demand & -0.078 & 1.000 & 0.141 & 0.049 & 0.043 & 0\\
-Exchange Rate & 0.016 & 0.141 & 1.000 & 0.251 & 0.143 & 0\\
-Import Price Index & 0.017 & 0.049 & 0.251 & 1.000 & 0.255 & 0\\
-Producer Price Index & -0.070 & 0.043 & 0.143 & 0.255 & 1.000 & 0\\
+Oil Shock & 1.000 & -0.077 & 0.023 & 0.016 & 0.030 & 0.068\\
+Output Gap & -0.077 & 1.000 & 0.147 & 0.059 & 0.089 & 0.010\\
+Exchange Rate & 0.023 & 0.147 & 1.000 & 0.235 & 0.188 & 0.034\\
+Import Price Index & 0.016 & 0.059 & 0.235 & 1.000 & 0.177 & 0.056\\
+Producer Price Index & 0.030 & 0.089 & 0.188 & 0.177 & 1.000 & 0.001\\
 \addlinespace
-Consumer Price Index & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 1\\
+Consumer Price Index & 0.068 & 0.010 & 0.034 & 0.056 & 0.001 & 1.000\\
 \bottomrule
 \end{tabu}}
 \end{table}
