@@ -1,0 +1,27 @@
+[0] Config.pm:308> INFO - This is Biber 2.20
+[0] Config.pm:311> INFO - Logfile is 'main.blg'
+[35] biber-darwin:340> INFO - === Tue Jun  9, 2026, 21:28:26
+[47] Biber.pm:420> INFO - Reading 'main.bcf'
+[91] Biber.pm:994> INFO - Found 55 citekeys in bib section 0
+[102] Biber.pm:4463> INFO - Processing section 0
+[107] Biber.pm:4654> INFO - Looking for bibtex file 'citations.bib' for section 0
+[110] bibtex.pm:1713> INFO - LaTeX decoding ...
+[144] bibtex.pm:1519> INFO - Found BibTeX data source 'citations.bib'
+[268] Utils.pm:410> ERROR - BibTeX subsystem: /var/folders/mc/lkf5cwfn7dx5wkf7c7sjgkp00000gn/T/biber_tmp_Pux4/56f1c414433802ad7930cb94138c5670_61945.utf8, line 328, syntax error: found "Ã¤", expected end of entry ("}" or ")") (skipping to next "@")
+[268] Biber.pm:131> WARN - Duplicate entry key: 'goldberg2010sensitivity' in file 'citations.bib', skipping ...
+[268] Biber.pm:131> WARN - Duplicate entry key: 'goldberg2010sensitivity' in file 'citations.bib', skipping ...
+[268] Biber.pm:131> WARN - Duplicate entry key: 'devereux2004endogenous' in file 'citations.bib', skipping ...
+[268] Biber.pm:131> WARN - Duplicate entry key: 'clark1999responses' in file 'citations.bib', skipping ...
+[268] Biber.pm:131> WARN - legacy month field 'November' in entry 'sa_infl' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'August' in entry 'stern_ramkolowan' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'July' in entry 'NBERw9039' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'May' in entry 'krugman1986' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'March' in entry 'engel-2006' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'November' in entry 'kabundi2016exchange' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'November' in entry 'mccarthy1999' is not an integer - this will probably not sort properly.
+[268] Biber.pm:131> WARN - legacy month field 'January' in entry 'comunale2017erpt' is not an integer - this will probably not sort properly.
+[269] Biber.pm:131> WARN - legacy month field 'January' in entry 'AnWang2011' is not an integer - this will probably not sort properly.
+[269] Biber.pm:131> WARN - legacy month field 'June' in entry 'kilian2009' is not an integer - this will probably not sort properly.
+[269] Biber.pm:131> WARN - legacy month field 'September' in entry 'romer_romer' is not an integer - this will probably not sort properly.
+[269] Biber.pm:133> INFO - WARNINGS: 15
+[269] Biber.pm:136> INFO - ERRORS: 1

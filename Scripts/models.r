@@ -124,15 +124,23 @@ View(full)
 
 ##############################################################################################################################################################################
 
-  
+   
 plot_var <- function(sample = full, 
-                var_list = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi"),
+                var_list = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj"),
                 n_lags = 9, 
                 name = "Full Sample", 
                 imp      = "neer_sarb",
-                resp = c("ppi_full", "cpi"), 
+                resp = c("ppi_full", "cpi_adj"), 
                 horizon = 15, 
                 break_date = NA){
+
+              if ("cpi_adj" %in% var_list){
+                var_list <- gsub("cpi_adj", "cpi", var_list)
+                resp     <- gsub("cpi_adj", "cpi", resp)
+                sample   <- sample %>% 
+                  dplyr::select(-any_of("cpi")) %>%
+                  rename(any_of(c(cpi = "cpi_adj")))
+              }
 
                 coefficients_m <- NULL
                 hor <- as.numeric(horizon)
@@ -149,6 +157,7 @@ plot_var <- function(sample = full,
                 acfpath   <- file.path(here::here(), "acf", file_name)
                 irfpath   <- file.path(here::here(), "irf", file_name)
                 plot_title <- name
+
 
                 # Build df_var
                 if (!is.na(break_date)){
@@ -313,42 +322,43 @@ plot_var <- function(sample = full,
                 irf_results$Lower[[imp]] <- irf_results$Lower[[imp]] * scale_factor
                 irf_results$Upper[[imp]] <- irf_results$Upper[[imp]] * scale_factor
 
-                xr_response <- irf_results$irf[[imp]][, imp]
+                # Cumulative NEER self-response at each horizon (denominator for elasticity)
+                xr_response <- irf_results$irf[[imp]][, imp] * 100   # in pp
 
                 # Build irf_df
 
-                irf_df <- data.frame(
-                    horizon  = 0:hor,
-                    estimate = irf_results$irf[[imp]][, "cpi"]   * 100,
-                    lower    = irf_results$Lower[[imp]][, "cpi"] * 100,
-                    upper    = irf_results$Upper[[imp]][, "cpi"] * 100,
-                    response = "Consumer Price Index"
+            irf_df <- data.frame(
+                horizon  = 0:hor,
+                estimate = (irf_results$irf[[imp]][, "cpi"]   * 100) / xr_response,
+                lower    = (irf_results$Lower[[imp]][, "cpi"] * 100) / xr_response,
+                upper    = (irf_results$Upper[[imp]][, "cpi"] * 100) / xr_response,
+                response = "Consumer Price Index"
+            )
+
+            if (length(ppi_var) > 0){
+                irf_df <- bind_rows(
+                    data.frame(
+                        horizon  = 0:hor,
+                        estimate = (irf_results$irf[[imp]][, ppi_var]   * 100) / xr_response,
+                        lower    = (irf_results$Lower[[imp]][, ppi_var] * 100) / xr_response,
+                        upper    = (irf_results$Upper[[imp]][, ppi_var] * 100) / xr_response,
+                        response = "Producer Price Index"
+                    ),
+                    irf_df
                 )
+            }
 
-                if (length(ppi_var) > 0){
-                    irf_df <- bind_rows(
-                        data.frame(
-                            horizon  = 0:hor,
-                            estimate = irf_results$irf[[imp]][, ppi_var]   * 100,
-                            lower    = irf_results$Lower[[imp]][, ppi_var] * 100,
-                            upper    = irf_results$Upper[[imp]][, ppi_var] * 100,
-                            response = "Producer Price Index"
-                        ),
-                        irf_df
+            if (length(m_var) > 0){
+                irf_df <- bind_rows(irf_df,
+                    data.frame(
+                        horizon  = 0:hor,
+                        estimate = (irf_results$irf[[imp]][, m_var]   * 100) / xr_response,
+                        lower    = (irf_results$Lower[[imp]][, m_var] * 100) / xr_response,
+                        upper    = (irf_results$Upper[[imp]][, m_var] * 100) / xr_response,
+                        response = "Import Price Index"
                     )
-                }
-
-                if (length(m_var) > 0){
-                    irf_df <- bind_rows(irf_df,
-                        data.frame(
-                            horizon  = 0:hor,
-                            estimate = irf_results$irf[[imp]][, m_var]   * 100,
-                            lower    = irf_results$Lower[[imp]][, m_var] * 100,
-                            upper    = irf_results$Upper[[imp]][, m_var] * 100,
-                            response = "Import Price Index"
-                        )
-                    )
-                }
+                )
+            }
                                 
 
                 y_min <- max(-0.05, min(irf_df$lower, na.rm = TRUE))
@@ -374,7 +384,7 @@ plot_var <- function(sample = full,
                   scale_y_continuous(labels = scales::label_percent(scale = 1)) +
                   coord_cartesian(ylim = c(y_min, NA)) +
                   labs(x      = "Months after shock",
-                       y      = "Cumulative Response (%)",
+                       y      = "Pass-Through Elasticity",
                        title  = plot_title,
                        colour = NULL,
                        fill   = NULL) +
@@ -404,14 +414,14 @@ plot_var <- function(sample = full,
                 ####
 
                 pt_table <- irf_df %>%
-                    filter(horizon %in% horizons) %>%
-                    mutate(
-                        se    = (upper - lower) / (2 * 1.96),
-                        xr_cum = irf_results$irf[[imp]][horizon + 1, imp] * scale_factor * 100,
-                        df = var_summary$varresult[[resp[1]]]$df[2]
-                    ) %>%
-                    select(horizon, response, estimate, se, lower, upper, df) %>%
-                    arrange(response, horizon)
+                filter(horizon %in% horizons) %>%
+                mutate(
+                    se     = (upper - lower) / (2 * 1.96),
+                    xr_cum = xr_response[horizon + 1],
+                    df     = var_summary$varresult[[resp[1]]]$df[2]
+                ) %>%
+                select(horizon, response, estimate, se, lower, upper, xr_cum, df) %>%
+                arrange(response, horizon)
 
                 ####
                 ## Generate FEVD Table
@@ -438,7 +448,7 @@ plot_var <- function(sample = full,
                 speed_table <- irf_df %>%
                               group_by(response) %>%
                               mutate(
-                              speed_est = (estimate / max(estimate) * 100)
+                              speed_est = (estimate / quantile(estimate, 0.8) * 100)
                               ) %>%
                               ungroup() %>%
                               mutate(estimate = estimate) %>%
@@ -487,32 +497,128 @@ plot_var <- function(sample = full,
               )
 
               horizons <- seq(3, hor, by = 3)
-                  
 
-return(list(irfplot = irf_plot, table = pt_table, model = summary(var_model), fevd = fevd_df, nobs = nrow(df_var), speed_tbl = speed_table, irfdf = irf_df, adj = adj_plot))
+            if ("oilshock" %in% var_list){
+                ####
+                ## Historical Decomposition — Exchange Rate Contribution (manual, exogenous oil)
+                ####
+
+                endog_names  <- colnames(var_model$y)
+                fx_shock_col <- which(endog_names == imp)
+
+                # Date alignment: trim to match residuals after na.omit
+                resid_mat    <- residuals(var_model)
+                TT           <- nrow(resid_mat)
+                df_var_dates <- as.Date(sample$time_period[keep])
+                df_var_dates <- tail(df_var_dates, TT)
+
+                # Cholesky factor B from endogenous residual covariance (oil is exogenous, not in resid_mat)
+                K       <- ncol(resid_mat)
+                sigma_u <- crossprod(resid_mat) / (TT - K * as.integer(n_lags) - 1)
+                chol_B  <- t(chol(sigma_u))
+
+                # Structural shocks (endogenous only)
+                struct_shocks <- t(solve(chol_B) %*% t(resid_mat))
+                colnames(struct_shocks) <- endog_names
+
+                # MA coefficients for the endogenous system
+                Phi_list <- vars::Phi(var_model, nstep = TT - 1)
+
+                # Response variables
+                hd_vars <- c()
+                if (length(m_var)   > 0) hd_vars <- c(hd_vars, m_var)
+                if (length(ppi_var) > 0) hd_vars <- c(hd_vars, ppi_var)
+                hd_vars <- c(hd_vars, "cpi")
+
+                resp_labels <- c(
+                  cpi      = "Consumer Price Index",
+                  ppi      = "Producer Price Index",
+                  ppi_full = "Producer Price Index",
+                  m        = "Import Price Index",
+                  m_all    = "Import Price Index",
+                  m_manuf  = "Import Price Index",
+                  uvi34    = "Import Price Index"
+                )
+
+                hd_colours <- c(
+                  "Consumer Price Index" = "#C45E3E",
+                  "Producer Price Index" = "#2C6E8A",
+                  "Import Price Index"   = "#4A9A6F"
+                )
+
+                hd_fx_df <- lapply(hd_vars, function(rv) {
+                  rv_col  <- which(endog_names == rv)
+                  contrib <- numeric(TT)
+                  for (t in seq_len(TT)) {
+                    acc <- 0
+                    for (s in 0:(t - 1)) {
+                      phi_s <- Phi_list[rv_col, , s + 1]
+                      b_col <- chol_B[, fx_shock_col]
+                      acc   <- acc + sum(phi_s * b_col) * struct_shocks[t - s, fx_shock_col]
+                    }
+                    contrib[t] <- acc
+                  }
+                  data.frame(
+                    date         = df_var_dates,
+                    contribution = contrib,
+                    response     = unname(resp_labels[rv])
+                  )
+                }) %>%
+                  bind_rows()
+
+                hd_fx_plot <- ggplot(hd_fx_df,
+                                    aes(x = date, y = contribution,
+                                        colour = response)) +
+                  geom_hline(yintercept = 0, linetype = "dashed",
+                            colour = "grey40", linewidth = 0.4) +
+                  geom_line(linewidth = 0.8) +
+                  scale_colour_manual(values = hd_colours, name = NULL) +
+                  scale_x_date(date_breaks = "4 years", date_labels = "%Y") +
+                  labs(
+                    x     = NULL,
+                    y     = "Contribution (Percentage Points)",
+                    title = plot_title
+                  ) +
+                  theme_publication()
+
+                hd_fx_file <- paste0(gsub(" ", "", tolower(name)), "_hd_fx_p_", n_lags, ".png")
+                ggsave(
+                  filename = hd_fx_file,
+                  plot     = hd_fx_plot,
+                  path     = file.path(here::here(), "irf"),
+                  width    = 6,
+                  height   = 3,
+                  dpi      = 150,
+                  device   = "png"
+                )}
+                else {
+                  hd_fx_plot <- c()
+                }
+                                                  
+
+return(list(irfplot = irf_plot, 
+            table = pt_table,
+            model = summary(var_model), 
+            fevd = fevd_df, 
+            nobs = nrow(df_var), 
+            speed_tbl = speed_table, 
+            irfdf = irf_df, 
+            adj = adj_plot, 
+            hd_fx = hd_fx_plot))
 
 }
 
 
 
-View(speed_table)
-
-print(check$nobs)
-
-look_missing <- full_filtered %>%
-  select(time_period, oilshock, outputgap_dc, neer_sarb, m, ppi, cpi) %>%
-  filter(if_any(everything(), is.na)) %>%
-  select(time_period, everything())
-
-View(look_missing)
 
 sets <- c("full_filtered", "early", "low_inflation", "full_m", "early_m", "low_inflation_m")
-
+   
 irfplot <- list()
 tables <- list()
 
 decomp <- list()
 adjplot <- list()
+histplot <- list()
 
 #sapply(c("plots", "tables", "decomp", "speed"), function(x) x <- list())
 
@@ -524,12 +630,12 @@ for (set in sets){
   }
 
   if (grepl("_m$", set)) {
-  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
-  temp_resp <- c("m", "ppi", "cpi")
+  temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj")
+  temp_resp <- c("m", "ppi", "cpi_adj")
   with <- "with Import Prices "
   } else {
-  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "ppi", "cpi")
-  temp_resp <- c("ppi", "cpi")
+  temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "ppi", "cpi_adj")
+  temp_resp <- c("ppi", "cpi_adj")
   with <- ""
   } 
   if (grepl("^full", set)){
@@ -544,7 +650,7 @@ result <- plot_var(sample = get(set),
       var_list = temp_list,
       name = temp_name, 
       resp = temp_resp, 
-      n_lags = 12, 
+      n_lags = 6, 
       horizon = 18, 
       break_date = temp_break)
 
@@ -554,34 +660,43 @@ tables[[set]] <- result$table
 
 decomp[[set]] <- result$fevd
 adjplot[[set]] <- result$adj
+
+histplot[[set]] <- result$hd_fx
 }
 
 pacman::p_load(ragg, grid, gridExtra)
 
-plot_list  <- list(irf = irfplot, adj = adjplot)
+plot_list  <- list(irf = irfplot, adj = adjplot, hist = histplot)
 
-combined_plots <- function(filename_irf = "irf_12lags.png", 
-                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 12 lags.",
-                            filename_adj = "adj_12lags.png",
-                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by maximum PT for a given response.\nOil shocks entered as endogenous\nModel Calculated with 12 lags."){
-      for (type in c("irf", "adj")){
+combined_plots <- function(filename_irf = "irf_main.png", 
+                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 6 lags.",
+                            filename_adj = "adj_main.png",
+                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by 80th percentile PT for a given response.\nModel Calculated with 6 lags.",
+                            filename_hist = "hist_main.png", 
+                            capt_hist = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nModel Calculated with 6 lags."
+                            ){
+      for (type in c("irf", "adj", "hist")){
 
       if (type == "irf"){
         capt <- capt_irf
         filename <- filename_irf
         plots <- plot_list[["irf"]] 
-      } else {
+      } else if (type == "adj"){
         capt <- capt_adj
         filename <- filename_adj
         plots <- plot_list[["adj"]] 
+      } else {
+        capt <- capt_hist
+        filename <- filename_hist
+        plots <- plot_list[["hist"]] 
       }
 
       shared_legend <- cowplot::get_legend(
       plots[[4]] + theme(
-        legend.text = element_text(family = "source_serif", size = 22, colour = "grey20"),
+        legend.text = element_text(family = "source_serif", size = 20, colour = "grey20"),
         legend.key.width  = unit(30, "pt"),
         legend.key.height = unit(30, "pt"),
-        legend.spacing.x  = unit(85, "pt"),
+        legend.spacing.x  = unit(100, "pt"),
         guides(colour = guide_legend(ncol = 3))
 
         )
@@ -673,12 +788,10 @@ combined_plots()
 
 
 
-
-
 sets_table <- c("full_filtered", "early", "low_inflation", "full_m", "early_m", "low_inflation_m")
-sets_names <- c("1990 - 2023 ", "1990 - 2010 ", "2010 - 2023 ", "1990 - 2023", "1990 - 2010", "2010 - 2023")
+sets_names <- c("1990 - 2023", "1990 - 2010", "2010 - 2023", "1990 - 2023 ", "1990 - 2010 ", "2010 - 2023 ")
 
-combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, names = sets_names, horiz = 15){
+combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, names = sets_names, horiz = 18){
   hor         <- as.numeric(horiz)
   table_list  <- list(irf = irf, fevd = fevd)
 
@@ -687,11 +800,11 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
     # ── IRF branch ─────────────────────────────────────────────────────────────
     if (type == "irf"){
-      caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons with 12 lags"
+      caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons"
       general     <- c("{Note:} Cumulative impulse responses to a one percent exchange rate depreciation.",
                        "        Bootstrapped standard errors in parentheses (500 replications).")
-      kablab      <- "tab:erpt_p12"
-      file        <- "p12_results.txt"
+      kablab      <- "erpt_main"
+      file        <- "main_results.txt"
       resp_levels <- c("Import Price Index", "Producer Price Index", "Consumer Price Index", "Residual df")
 
       main <- lapply(seq_along(sets), function(i){
@@ -790,10 +903,10 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
     # ── FEVD branch ────────────────────────────────────────────────────────────
     } else {
-      caption      <- "Forecast Error Variance Decomposition at Selected Horizons with 12 lags"
+      caption      <- "Forecast Error Variance Decomposition at Selected Horizons"
       general      <- ""
-      kablab       <- "tab:fevd_p12"
-      file         <- "p12_fevd.txt"
+      kablab       <- "fevd_main"
+      file         <- "main_fevd.txt"
       resp_levels  <- c("Import Price Index", "Producer Price Index", "Consumer Price Index")
       horizons_seq <- seq(3, hor, by = 3)
       period_levels <- c("1990 - 2023", "1990 - 2010", "2010 - 2023")
@@ -869,6 +982,10 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
 combined_table(horiz = 18)
 
+
+names(tables)
+names(decomp)
+sets_table
 ##############################################################################################################################################################################
 
 ############################################################################## Linear Projections ##############################################################################
@@ -884,6 +1001,15 @@ plot_lp <- function(sample     = full,
                     resp       = c("ppi", "cpi"),
                     horizon    = 18,
                     break_date = NA) {
+
+  if ("cpi_adj" %in% var_list){
+                var_list <- gsub("cpi_adj", "cpi", var_list)
+                resp     <- gsub("cpi_adj", "cpi", resp)
+                sample   <- sample %>% 
+                  dplyr::select(-any_of("cpi")) %>%
+                  rename(any_of(c(cpi = "cpi_adj")))
+              }
+
 
   hor        <- as.numeric(horizon)
   name       <- as.character(name)
@@ -975,7 +1101,7 @@ plot_lp <- function(sample     = full,
       ests[h + 1]   <- beta * scale_fac * 100
       lowers[h + 1] <- (beta - 1.96 * se) * scale_fac * 100
       uppers[h + 1] <- (beta + 1.96 * se) * scale_fac * 100
-      dfs[h + 1] <- fit$df.residual
+      dfs <- fit$df.residual
     }
 
     rv_label <- if (!is.na(label_map[rv])) unname(label_map[rv]) else rv
@@ -1068,11 +1194,11 @@ for (set in sets){
   }
 
   if (grepl("_m$", set)) {
-  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
+  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj")
   temp_resp <- c("m", "ppi", "cpi")
   with <- "with Import Prices "
   } else {
-  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "ppi", "cpi")
+  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "ppi", "cpi_adj")
   temp_resp <- c("ppi", "cpi")
   with <- ""
   } 
@@ -1105,9 +1231,9 @@ pacman::p_load(ragg, grid, gridExtra)
 plot_list_lp  <- list(irf = irfplot_lp, adj = adjplot_lp)
 
 combined_plots_lp <- function(filename_irf = "irf_lp.png", 
-                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 9 lags using Linear Projections.",
+                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 6 lags using Linear Projections.",
                             filename_adj = "adj_lp.png",
-                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by maximum PT for a given response.\nModel Calculated with 9 lags using Linear Projections."){
+                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by maximum PT for a given response.\nModel Calculated with 6 lags using Linear Projections."){
       for (type in c("irf", "adj")){
 
       if (type == "irf"){
@@ -1228,7 +1354,7 @@ combined_table_lp <- function(irf = tables_lp, sets = sets_table, names = sets_n
       caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons using Linear Projections."
       general     <- c("{Note:} Cumulative impulse responses to a one percent exchange rate depreciation.",
                        "        Bootstrapped standard errors in parentheses (500 replications).")
-      kablab      <- "tab:erpt_lp"
+      kablab      <- "erpt_lp"
       file        <- "lp_results.txt"
       resp_levels <- c("Import Price Index", "Producer Price Index", "Consumer Price Index", "Residual df")
 
@@ -1248,7 +1374,7 @@ combined_table_lp <- function(irf = tables_lp, sets = sets_table, names = sets_n
         mutate(horizon = as.character(horizon))
 
       df_row <- lapply(seq_along(sets), function(i){
-        tibble(sample = names[i], display = as.character(tbl[[sets[i]]]$df[1]))
+        tibble(sample = names[i], display = as.character(tbl[[sets[i]]]$df))
       }) %>%
         bind_rows() %>%
         pivot_wider(names_from = sample, values_from = display) %>%

@@ -116,8 +116,17 @@ cpi <- read_dataset(id = "CPI_ANL_SERIES",
                         series_key = "CPS00000") %>%
                         as_tibble() %>%
                         rename(value = "CPS00000") %>%
-                        filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2012-12-01")) %>%
-                        mutate(cpi = log(value) - log(lag(value, n = 1)))
+                        filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2012-12-01")) 
+
+cpi_ts <- ts(cpi, start = c(1990, 1), frequency = 12) 
+
+cpi <- seasonal::seas(cpi_ts,
+   arima.model       = "(0 1 1)(0 1 1)12",
+   regression.aictest = NULL,
+   outlier            = NULL) %>%
+    mutate(cpi = log(value) - log(lag(value, n = 1)))
+
+
 
 ####
 ## Output Gap Indicators
@@ -615,6 +624,28 @@ repo <- readr::read_csv(here::here("data", "hist_prime.csv"), skip = 2) %>%
             filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2026-03-01"))
 
 
+
+cpi_full <- read_dataset(id = "CPI_ANL_SERIES", 
+                        series_key = "CPS00000") %>%
+                        as_tibble() %>%
+                        rename(value = "CPS00000") %>%
+                        filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2025-12-01")) 
+
+cpi_ts <- ts(cpi_full$value, start = c(1990, 1), frequency = 12) 
+
+cpi_list <- seasonal::seas(cpi_ts,
+   arima.model       = "(0 1 1)(0 1 1)12",
+   regression.aictest = NULL,
+   outlier            = NULL) 
+
+cpi_seas <- seasonal::final(cpi_list)
+
+cpi_adj <- data.frame(
+            time_period = seq(as.Date("1990-01-01"), by = "month", length.out = length(cpi_seas)),
+            value  = as.numeric(cpi_seas)
+                 ) %>%
+        mutate(cpi_adj = log(value) - log(lag(value, n = 1)))
+
 full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
     select(-c("neer_sarb", "uvi34", "uvi2", "uvi5")) %>%
     left_join(neer_full %>% select(-Value), by = "time_period") %>%
@@ -626,11 +657,15 @@ full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), hist
     mutate(m = case_when(time_period >= as.Date("2010-02-01") ~  uvi34,
                             time_period <= as.Date("2010-01-01") ~ m_hist),
                             uvi34_l = lag(uvi34, n = 1)) %>%
-    left_join(repo, by = "time_period")
+    left_join(repo, by = "time_period") %>%
+    left_join(cpi_adj %>% dplyr::select(-value), by = "time_period")
+
 
 filename <- file.path(here::here(), "data", "samples", "fullsample.csv")
 write.csv(full_sample, filename)
 
 
 View(full_sample)
+
+
 

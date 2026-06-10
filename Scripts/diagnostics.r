@@ -31,7 +31,9 @@ erpt_palette <- c(
     "m"             = "#009E73",   # teal green
     "ppi"           = "#0072B2",   # deep blue
     "ppi_manuf"     = "#0072B2",   # deep blue
-    "cpi"           = "#D55E00"    # vermillion
+    "cpi"           = "#D55E00",    # vermillion
+    "cpi_adj"           = "#D55E00" ,
+    "int_eff" = "purple"
 )
 
 
@@ -288,10 +290,10 @@ full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
 full_filtered <- full %>% filter(time_period < as.Date("2023-01-01"))
 
 
-low_inflation <- full_filtered %>% filter(time_period >= as.Date("2010-01-01"))
+low_inflation <- full_filtered %>% filter(time_period >= as.Date("2010-02-01"))
 
 
-early <- full_filtered %>% filter(time_period < as.Date("2010-01-01"))
+early <- full_filtered %>% filter(time_period < as.Date("2010-02-01"))
 
 
 ##############################################################################################################################################################################
@@ -398,6 +400,8 @@ cl_coef %>%
 
 
 lag <- 9
+var_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj")
+
 df_var_full <- full_filtered %>%
   mutate(d_imp = ifelse(time_period == break_date, 1L, 0L)) %>%
   dplyr::select(time_period, all_of(var_list), d_imp) 
@@ -421,11 +425,12 @@ var_model <- do.call(VAR, list(
   type   = "const",
   exogen = exog_mat
 ))
+
 resids <- cbind(residuals(var_model), oilshock = tail(full$oilshock, nrow(residuals(var_model))))
 
-
-new_names <- c("Oil Shock", "Demand", "Exchange Rate", "Import Price Index", "Producer Price Index", "Consumer Price Index")
-residcor <- cor(cbind(resids, oilshock = tail(df_var_full$oilshock[keep], nrow(resids)))) %>%        as.data.frame() %>%
+ #oilshock = tail(df_var_full$oilshock[keep], nrow(resids)))
+new_names <- c("Oil Shock", "Output Gap", "Exchange Rate", "Import Price Index", "Producer Price Index", "Consumer Price Index")
+residcor <- cor(resids) %>%     
         as.data.frame() %>%
         setNames(new_names)
 rownames(residcor) <- new_names
@@ -446,17 +451,18 @@ residcor_txt <- residcor %>%
           font_size     = 8
         )
 
-writeLines(residcor_txt, here::here("main", "residcor.txt"))
+writeLines(residcor_txt, here::here("main", "residcor_early.txt"))
 
 
 plot_acf <- function(resids, n_lags = 24, file_name = "acf_resids.png"){
   
   var_labels <- c(
-    "outputgap_dc" = "Demand",
+    "oilshock"          = "Oil Shock",
+    "outputgap_dc" = "Output Gap",
     "neer_sarb"    = "Exchange Rate",
     "m"            = "Import Price Index",
     "ppi"          = "Producer Price Index",
-    "cpi"          = "Consumer Price Index"
+    "cpi_adj"          = "Consumer Price Index"
   )
 
   acf_data <- lapply(colnames(resids), function(col){
@@ -508,9 +514,9 @@ plot_acf <- function(resids, n_lags = 24, file_name = "acf_resids.png"){
   return(acf_plot)
 }
 
-plot_acf(resids, n_lags = 24, file_name = "main_acf_early.png")
+plot_acf(resids, n_lags = 24, file_name = "acf_lowinf.png")
 
-cpi_box <- Box.test(resids[,"cpi"], lag = 12, type = "Ljung-Box") 
+cpi_box <- Box.test(resids[, "cpi"], lag = 12, type = "Ljung-Box") 
 
 ljung_box_tbl <- tibble(
   Variable = "cpi",
@@ -572,13 +578,13 @@ View(full_filtered)
 
 full <- readr::read_csv(here::here("data", "samples", "fullsample.csv")) %>%
        mutate(time_period = as.Date(time_period, format = "%Y-%m-%d")) %>%
-      filter(time_period <= as.Date("2022-012-01"), time_period >= as.Date("1988-01-01")) 
+      filter(time_period <= as.Date("2022-12-01", format = "%Y-%m-%d"), time_period >= as.Date("1988-01-01", format = "%Y-%m-%d")) 
 
-full_filtered <- full %>% filter(time_period < as.Date("2023-01-01"))
-var_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
+full_filtered <- full %>% filter(time_period < as.Date("2023-01-01", format = "%Y-%m-%d"))
+var_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj")
 
 
-break_date <- as.Date("2010-02-01")
+break_date <- as.Date("2010-02-01", format = "%Y-%m-%d")
 
 df_var_full <- full_filtered %>%
   mutate(d_imp = ifelse(time_period == break_date, 1L, 0L)) %>%
@@ -588,20 +594,23 @@ print(names(df_var_full))
 aic_var_df <- tibble(Lag = integer(), AIC = numeric(), BIC = numeric())
 
 for (lag in 1:24){
-  oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l))
+  oil_exog <- do.call(cbind, lapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l)))
   colnames(oil_exog) <- paste0("oil.l", 0:lag)
 
-  exog_mat <- cbind(oil_exog, d_imp = df_var_full$d_imp)
+  exog_mat_full <- cbind(oil_exog, d_imp = df_var_full$d_imp)
 
-  valid_rows <- complete.cases(exog_mat)
+  keep     <- df_var_full$time_period >= lubridate::ymd("1990-02-01")
+  df_var   <- df_var_full[keep, ] %>% dplyr::select(-time_period)
+  exog_mat <- exog_mat_full[keep, ]
 
-  keep <- df_var_full$time_period >= lubridate::ymd("1990-02-01")
-  exog_mat <- exog_mat[keep, ]
-  df_var <- df_var_full[keep, ] %>% dplyr::select(-time_period) %>% na.omit()
+  complete <- complete.cases(df_var) & complete.cases(exog_mat)
+  df_var   <- df_var[complete, ] %>% dplyr::select(-oilshock, -d_imp)
+  exog_mat <- exog_mat[complete, , drop = FALSE]  # force matrix
 
+  cat("lag:", lag, "| nrow df_var:", nrow(df_var), "| nrow exog_mat:", nrow(exog_mat), "\n")
 
   var_model <- do.call(VAR, list(
-    y      = df_var %>% dplyr::select(-oilshock, -d_imp),
+    y      = df_var,
     p      = as.integer(lag),
     type   = "const",
     exogen = exog_mat
@@ -614,8 +623,6 @@ for (lag in 1:24){
   ))
 }
 
-View(aic_var_df)
-View(residcor)
 
 oil_exog <- sapply(0:lag, function(l) dplyr::lag(df_var_full$oilshock, l))
 colnames(oil_exog) <- paste0("oil.l", 0:lag)
@@ -646,13 +653,15 @@ lag_selection_txt <- aic_var_df %>%
     booktabs  = TRUE,
     linesep   = "",
     caption   = "VAR Lag Length Selection Criteria",
-    label     = "tab:lag_selection",
+    label     = "lag_selection",
     escape    = FALSE,
-    col.names = c("Lag", "AIC", "BIC")
-  ) %>%
+    col.names = c("Lag", "AIC", "BIC")) %>%
+    column_spec(1, width = "2cm") %>%
+    column_spec(2, width = "4cm") %>%
+    column_spec(3, width = "4cm") %>%
   kable_styling(
     latex_options = c("HOLD_position"),
-    full_width    = TRUE,
+    full_width    = FALSE,
     font_size     = 8
   ) %>%
   footnote(
@@ -684,7 +693,7 @@ full <- full %>%
 ##############################################################################################################################################################################
 
 
-vars <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")
+vars <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj", "int_eff")
 export_adf_results <- function(data, vars, lags = 12,
                                 outfile = here::here("main", "adf_results.txt")) {
   library(urca)
@@ -693,7 +702,7 @@ export_adf_results <- function(data, vars, lags = 12,
   
   specs     <- c("trend", "drift", "none")
   tau_names <- c(trend = "tau3", drift = "tau2", none = "tau1")
-  spec_labels <- c(trend = "Trend", drift = "Drift", none = "None")
+  spec_labels <- c(trend = "Trend", drift = "Drift", none = "Non-Zero Mean")
   
   results <- lapply(vars, function(var) {
     lapply(specs, function(spec) {
@@ -704,10 +713,12 @@ export_adf_results <- function(data, vars, lags = 12,
       cv   <- s@cval[tau, ]
       data.frame(
         Variable   = case_when(var == "oilshock" ~ "Oil Shock",
-                                var == "outputgap_dc" ~ "Demand",
+                                var == "outputgap_dc" ~ "Output Gap",
                                 var == "neer_sarb" ~ "Exchange Rate",
                                 var == "m" ~ "Importer Price Index",
-                                var == "ppi" ~ "Producer Price Index",),
+                                var == "ppi" ~ "Producer Price Index",
+                                var == "cpi_adj" ~ "Consumer Price Index",
+                                var == "int_eff" ~ "Real Prime Rate"),
         Spec       = as.character(spec_labels[spec]),
         Statistic  = round(stat, 3),
         `1%`       = cv["1pct"],
@@ -726,24 +737,26 @@ export_adf_results <- function(data, vars, lags = 12,
         booktabs    = TRUE,
         linesep     = "",
         caption     = "Augmented Dickey-Fuller Unit Root Tests",
-        label       = "tab:adf",
+        label       = "adf",
         col.names   = c("Specification", "Statistic", "1\\%", "5\\%", "10\\%", "Reject"),
         escape      = FALSE,
         row.names = FALSE,
         table.envir = "table"
     ) %>%
     pack_rows("Oil Shock",             1, 3)  %>%
-    pack_rows("Demand",                4, 6)  %>%
+    pack_rows("Output Gap",                4, 6)  %>%
     pack_rows("Exchange Rate",         7, 9)  %>%
     pack_rows("Importer Price Index",   10, 12) %>%
     pack_rows("Producer Price Index", 13, 15) %>%
     pack_rows("Consumer Price Index", 16, 18) %>%
+    pack_rows("Real Prime Rate", 19, 21) %>%
     row_spec(3,  hline_after = TRUE) %>%
     row_spec(6,  hline_after = TRUE) %>%
     row_spec(9,  hline_after = TRUE) %>%
     row_spec(12, hline_after = TRUE) %>%
     row_spec(15, hline_after = TRUE) %>%
     row_spec(18, hline_after = TRUE) %>%
+    row_spec(21, hline_after = TRUE) %>%
     kable_styling(
         latex_options = c("HOLD_position"),
         font_size     = 8,
@@ -756,8 +769,8 @@ export_adf_results <- function(data, vars, lags = 12,
 
 export_adf_results(
   data = full_filtered,
-  vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi"),
-  lags = 12,
+  vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj", "int_eff"),
+  lags = 9,
   outfile = here::here("main", "adf_results.txt")
 )
 
@@ -778,16 +791,17 @@ for (i in 1:length(samples)){
         Sample <- tools::toTitleCase(sample)
   
     df <- df %>%
-        select(time_period, oilshock, outputgap_dc, neer_sarb, m, ppi, cpi) %>%
+        select(time_period, oilshock, outputgap_dc, neer_sarb, m, ppi, cpi_adj, int_eff) %>%
         mutate( 
-                oilshock = oilshock / 100) %>%
+                oilshock = oilshock / 100,
+                int_eff = int_eff / 10) %>%
         pivot_longer(-time_period, names_to = "type", values_to = "value") %>%
         mutate(time_period = as.Date(time_period, format = "%Y-%m-%d")) 
 
-    plot <- ggplot(data = df %>% filter(type %in% c("oilshock", "outputgap_dc", "neer_sarb", "m" ,"ppi", "cpi"), time_period <= as.Date("2025-06-01")), aes(x = time_period, y = value, colour = type)) +
+    plot <- ggplot(data = df %>% filter(type %in% c("oilshock", "outputgap_dc", "neer_sarb", "m" ,"ppi", "cpi_adj", "int_eff"), time_period <= as.Date("2025-06-01")), aes(x = time_period, y = value, colour = type)) +
     geom_line(linewidth = 0.6, alpha = 0.75) +
     scale_x_date(date_breaks = "4 years", date_labels = "%Y", expand = expansion(mult = 0.01)) +
-    scale_colour_manual(values = erpt_palette, labels = c("oilshock" = "Oil Shock ", "outputgap_dc" = "Demand", "neer_sarb" = "Exchange Rate", "m" = "Importer Price Index","ppi" = "Producer Price Index", "cpi" = "Consumer Price Index")) +
+    scale_colour_manual(values = erpt_palette, labels = c("oilshock" = "Oil Shock ", "outputgap_dc" = "Output Gap", "neer_sarb" = "Exchange Rate", "m" = "Importer Price Index", "ppi" = "Producer Price Index", "cpi_adj" = "Consumer Price Index", "int_eff" = "Real Prime Rate")) +
     scale_y_continuous(expand = expansion(mult = 0.03)) +
     labs(
         x        = NULL,
@@ -796,10 +810,10 @@ for (i in 1:length(samples)){
         title    = name
     ) +
     theme(
-      text         = element_text(family = "serif"),
-    plot.title   = element_text(family = "serif"),
-    axis.text    = element_text(family = "sans"),
-    legend.text  = element_text(family = "sans")
+      text         = element_text(family = "source_serif"),
+    plot.title   = element_text(family = "source_serif"),
+    axis.text    = element_text(family = "source_serif"),
+    legend.text  = element_text(family = "source_serif")
     ) +
     theme_publication(base_size = 11, base_family = "source_serif")
     
@@ -863,7 +877,7 @@ ggsave(
 ##############################################################################################################################################################################
 
 descriptive_table <- function(data, 
-vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
+vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj", "int_eff")) {
   
   p1 <- data %>% filter(time_period >= as.Date("1990-02-01") & time_period <= as.Date("2010-01-01"))
   p2 <- data %>% filter(time_period >= as.Date("2010-02-01") & time_period <= as.Date("2022-12-01"))
@@ -877,11 +891,12 @@ vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
                       `2010 - 2023` = character())
   for (var in vars){
       Variable   <- case_when(var == "oilshock" ~ "Oil Shock",
-                                var == "outputgap_dc" ~ "Demand",
+                                var == "outputgap_dc" ~ "Output Gap",
                                 var == "neer_sarb" ~ "Exchange Rate",
                                 var == "m" ~ "Importer Price Index",
                                 var == "ppi" ~ "Producer Price Index",
-                                var == "cpi" ~ "Consumer Price Index") 
+                                var == "cpi_adj" ~ "Consumer Price Index", 
+                                var == "int_eff" ~ "Real Prime Rate") 
       temp_row <- tibble(
   Variable      = as.character(Variable),
   `1990 - 2023` = as.character(fmt(data[[var]])),
@@ -898,7 +913,7 @@ vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
       booktabs = TRUE,
       linesep  = "\\addlinespace[6pt]",
       caption  = "Descriptive Statistics",
-      label    = "tab:desc_table"
+      label    = "desc_table"
     ) %>%
     kable_styling(
       latex_options = c("HOLD_position"),
@@ -916,7 +931,7 @@ vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
 writeLines(desc_txt, here::here("main", "desc_tbl.txt"))
 }
 
-desc <- descriptive_table(data = full_filtered, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi"))
+desc <- descriptive_table(data = full_filtered, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj", "int_eff"))
 View(desc)
 writexl::write_xlsx(desc, path = here::here("Tables", "descriptives.xlsx"))
 
@@ -927,7 +942,7 @@ writexl::write_xlsx(desc, path = here::here("Tables", "descriptives.xlsx"))
 
 ##############################################################################################################################################################################
 
-normality_test <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi")) {
+normality_test <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj", "int_eff")) {
   table <- tibble()
   for (var in vars){
     jb <- tseries::jarque.bera.test(na.omit(data[[var]]))
@@ -937,11 +952,12 @@ normality_test <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb
     row <- tibble(
       Variable = case_when(
         var == "oilshock"     ~ "Oil Shock",
-        var == "outputgap_dc" ~ "Demand",
+        var == "outputgap_dc" ~ "Output Gap",
         var == "neer_sarb"    ~ "Exchange Rate",
         var == "m"            ~ "Import Price Index",
         var == "ppi"          ~ "Producer Price Index",
-        var == "cpi"          ~ "Consumer Price Index",
+        var == "cpi_adj"          ~ "Consumer Price Index",
+        var == "int_eff" ~ "Real Prime Rate",
         TRUE                  ~ var
       ),
       Skewness  = round(moments::skewness(data[[var]], na.rm = TRUE), 3),
@@ -975,7 +991,7 @@ normality_test <- function(data, vars = c("oilshock", "outputgap_dc", "neer_sarb
   writeLines(results_txt, here::here("main", "normality.txt"))
   return(table)
 }
-norm <- normality_test(data = full_filtered)
+norm <- normality_test(data = full_filtered, vars = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj", "int_eff"))
 
 
 writexl::write_xlsx(norm, path = here::here("Tables", "normality.xlsx"))
@@ -1024,7 +1040,7 @@ writeLines(t_test, here::here("main", "uvi_sic_ttest.txt"))
 
 
 
-lag <- 9
+lag <- 6
 df_var_full <- full_filtered %>%
   mutate(d_imp = ifelse(time_period == break_date, 1L, 0L)) %>%
   dplyr::select(time_period, all_of(var_list), d_imp) 
@@ -1043,21 +1059,42 @@ df_var <- df_var_full[keep, ] %>% dplyr::select(-time_period) %>% na.omit()
 
 
 var_model_chow <- VAR(df_var %>% select(-oilshock, -d_imp), 
-                 p = 9, 
+                 p = 6, 
                  type = "const",
                  exogen = exog_mat)
 
 df_var_cropped <- df_var_full %>% filter(time_period >= as.Date("1990-02-01"))
 break_idx <- which(df_var_cropped$time_period >= break_date)[1] - lag  # adjust for lag consumption
 
+
+chow_results <- lapply(names(var_model_chow$varresult), function(eq) {
+  model   <- var_model_chow$varresult[[eq]]
+  y       <- as.vector(fitted(model) + residuals(model))
+  X       <- model.matrix(model)
+  n       <- nrow(X)
+  k       <- ncol(X)
+  
+  # break_idx must fall within the model's row space
+  bi <- min(break_idx, n - k - 1)
+  
+  rss_r   <- sum(residuals(model)^2)
+  rss_u   <- sum(lm.fit(X[seq_len(bi), ], y[seq_len(bi)])$residuals^2) +
+             sum(lm.fit(X[seq(bi + 1, n), ], y[seq(bi + 1, n)])$residuals^2)
+  F_stat  <- ((rss_r - rss_u) / k) / (rss_u / (n - 2 * k))
+  data.frame(equation = eq, F_stat = F_stat,
+             p_value  = pf(F_stat, k, n - 2 * k, lower.tail = FALSE))
+}) %>% bind_rows()
+
+
 chow_txt <- chow_results %>%
   mutate(
      equation = recode(equation,
-      "outputgap_dc" = "Demand",
+      "outputgap_dc" = "Output Gap",
       "neer_sarb"    = "Exchange Rate",
       "m"            = "Import Price Index",
       "ppi"          = "Producer Price Index",
-      "cpi"          = "Consumer Price Index"
+      "cpi"          = "Consumer Price Index",
+      "cpi_adj"      = "Consumer Price Index "
     ),
     F_stat   = round(F_stat, 3),
     p_value  = case_when(
@@ -1075,13 +1112,13 @@ chow_txt <- chow_results %>%
     booktabs  = TRUE,
     linesep   = "\\addlinespace",
     caption   = "Chow Test for Structural Break at 2010-02",
-    label     = "tab:chow_test",
+    label     = "chow_test",
     escape    = FALSE,
     col.names = c("Equation", "F-Statistic", "p-value")
   ) %>%
   kable_styling(
     latex_options = c("HOLD_position"),
-    full_width    = TRUE,
+    full_width    = FALSE,
     font_size     = 8
   ) %>%
   footnote(
