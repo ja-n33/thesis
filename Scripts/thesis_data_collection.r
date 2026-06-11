@@ -167,7 +167,7 @@ sarb_gdp <- read_dataset(id = "QB_NATLACC",
                         as_tibble() %>%
                         rename(gdp = "KBP6006D.Q.R.S.LA") %>%
                         mutate(lgdp = log(gdp)) %>%
-                        filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2012-12-01")) %>%
+                        filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2025-12-01")) %>%
                         mutate(detrended_gdp = gdp - lag(gdp)) 
 
 sarb_gdp_ts <- ts(sarb_gdp %>% select(lgdp), 
@@ -185,10 +185,10 @@ gdp_monthly_dc <- data.frame(
   dc_monthly = as.numeric(gdp_monthly_dc)
 )
 
-hp_dc <-  mFilter::hpfilter(gdp_monthly_dc$dc_monthly, freq = 14400, type = "lambda")
+hp_dc <-  mFilter::hpfilter(gdp_monthly_dc$dc_monthly, freq = 129600, type = "lambda")
 
 gdp_monthly_dc <- gdp_monthly_dc %>%
-  mutate(outputgap_dc = hp_dc$cycle)
+  mutate(outputgap_dc_i = hp_dc$cycle)
 
 model_cl <- tempdisagg::td(sarb_gdp_ts ~ bci_aligned,
     to = 12,
@@ -212,6 +212,10 @@ outputgap <- left_join(bci, left_join(gdp_monthly_cl, gdp_monthly_dc, by = "time
     select(time_period, outputgap_bci, outputgap_dc, outputgap_cl)
 
 
+print(sd(gdp_monthly_dc$outputgap_dc_i, na.rm = TRUE))
+print(sd(full_filtered$outputgap_dc, na.rm = TRUE))
+
+full <- left_join(full, gdp_monthly_dc %>% select(time_period, outputgap_dc_i), by = "time_period")
 ####
 ## Exchange Rate Data
 ####

@@ -142,6 +142,14 @@ plot_var <- function(sample = full,
                   rename(any_of(c(cpi = "cpi_adj")))
               }
 
+              if ("outputgap_dc_i" %in% var_list){
+                var_list <- gsub("outputgap_dc_i", "outputgap_dc", var_list)
+                sample   <- sample %>% 
+                  dplyr::select(-any_of("outputgap_dc")) %>%
+                  rename(any_of(c(outputgap_dc = "outputgap_dc_i")))
+              }
+
+
                 coefficients_m <- NULL
                 hor <- as.numeric(horizon)
                 name <- as.character(name)
@@ -448,7 +456,7 @@ plot_var <- function(sample = full,
                 speed_table <- irf_df %>%
                               group_by(response) %>%
                               mutate(
-                              speed_est = (estimate / quantile(estimate, 0.8) * 100)
+                              speed_est = (estimate / estimate[horizon == 12] * 100)
                               ) %>%
                               ungroup() %>%
                               mutate(estimate = estimate) %>%
@@ -630,11 +638,11 @@ for (set in sets){
   }
 
   if (grepl("_m$", set)) {
-  temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj")
+  temp_list <- c("oilshock", "outputgap_dc_i", "int_eff", "neer_sarb", "m", "ppi", "cpi_adj")
   temp_resp <- c("m", "ppi", "cpi_adj")
   with <- "with Import Prices "
   } else {
-  temp_list <- c("oilshock", "outputgap_dc", "neer_sarb", "ppi", "cpi_adj")
+  temp_list <- c("oilshock", "outputgap_dc_i", "int_eff", "neer_sarb", "ppi", "cpi_adj")
   temp_resp <- c("ppi", "cpi_adj")
   with <- ""
   } 
@@ -668,12 +676,12 @@ pacman::p_load(ragg, grid, gridExtra)
 
 plot_list  <- list(irf = irfplot, adj = adjplot, hist = histplot)
 
-combined_plots <- function(filename_irf = "irf_main.png", 
-                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 6 lags.",
-                            filename_adj = "adj_main.png",
-                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by 80th percentile PT for a given response.\nModel Calculated with 6 lags.",
-                            filename_hist = "hist_main.png", 
-                            capt_hist = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nModel Calculated with 6 lags."
+combined_plots <- function(filename_irf = "irf_monetary_policy.png", 
+                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nMonetary policy proxied using Real Prime Rates.\nModel Calculated with 6 lags.",
+                            filename_adj = "adj_monetary_policy.png",
+                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by the PT after 12 months.\nMonetary policy proxied using Real Prime Rates.\nModel Calculated with 12 lags.",
+                            filename_hist = "hist_monetary_policy.png", 
+                            capt_hist = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nModel Calculated with 12 lags."
                             ){
       for (type in c("irf", "adj", "hist")){
 
@@ -800,11 +808,11 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
     # ── IRF branch ─────────────────────────────────────────────────────────────
     if (type == "irf"){
-      caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons"
+      caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons with Real Prime Rates. "
       general     <- c("{Note:} Cumulative impulse responses to a one percent exchange rate depreciation.",
                        "        Bootstrapped standard errors in parentheses (500 replications).")
-      kablab      <- "erpt_main"
-      file        <- "main_results.txt"
+      kablab      <- "erpt_monetary"
+      file        <- "monetary_results.txt"
       resp_levels <- c("Import Price Index", "Producer Price Index", "Consumer Price Index", "Residual df")
 
       main <- lapply(seq_along(sets), function(i){
@@ -903,10 +911,10 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
     # ── FEVD branch ────────────────────────────────────────────────────────────
     } else {
-      caption      <- "Forecast Error Variance Decomposition at Selected Horizons"
+      caption      <- "Forecast Error Variance Decomposition at Selected Horizons with Real Prime Rates"
       general      <- ""
-      kablab       <- "fevd_main"
-      file         <- "main_fevd.txt"
+      kablab       <- "fevd_monetary"
+      file         <- "monetary_fevd.txt"
       resp_levels  <- c("Import Price Index", "Producer Price Index", "Consumer Price Index")
       horizons_seq <- seq(3, hor, by = 3)
       period_levels <- c("1990 - 2023", "1990 - 2010", "2010 - 2023")
@@ -994,13 +1002,21 @@ sets_table
 
 
 plot_lp <- function(sample     = full,
-                    var_list   = c("oilshock", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi"),
-                    n_lags     = 9,
+                    var_list   = c("oilshock", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi"),
+                    n_lags     = 6,
                     name       = "Full Sample",
                     imp        = "neer_sarb",
                     resp       = c("ppi", "cpi"),
                     horizon    = 18,
                     break_date = NA) {
+
+  
+  if ("outputgap_dc_i" %in% var_list){
+    var_list <- gsub("outputgap_dc_i", "outputgap_dc", var_list)
+    sample   <- sample %>% 
+      dplyr::select(-any_of("outputgap_dc")) %>%
+      rename(any_of(c(outputgap_dc = "outputgap_dc_i")))
+  }
 
   if ("cpi_adj" %in% var_list){
                 var_list <- gsub("cpi_adj", "cpi", var_list)
@@ -1188,17 +1204,17 @@ adjplot_lp <- list()
 
 for (set in sets){
   if (set == "full_m"){
-    temp_break  <- as.Date("2010-03-01")
+    temp_break  <- as.Date("2010-02-01")
   } else {
     temp_break = NA
   }
 
   if (grepl("_m$", set)) {
-  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "m", "ppi", "cpi_adj")
+  temp_list <- c("oil", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi_adj")
   temp_resp <- c("m", "ppi", "cpi")
   with <- "with Import Prices "
   } else {
-  temp_list <- c("oil", "outputgap_dc", "neer_sarb", "ppi", "cpi_adj")
+  temp_list <- c("oil", "outputgap_dc_i", "neer_sarb", "ppi", "cpi_adj")
   temp_resp <- c("ppi", "cpi")
   with <- ""
   } 
@@ -1215,7 +1231,7 @@ result <- plot_lp(sample = get(set),
       name = temp_name, 
       resp = temp_resp, 
       imp = "neer_sarb",
-      n_lags = 9, 
+      n_lags = 6, 
       horizon = 18, 
       break_date = temp_break)
 
