@@ -34,6 +34,16 @@
 \maketitle
 
 \vspace{-2.2em}
+
+\begin{abstract}
+
+\end{abstract}
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
 \section{Introduction}
 After over two decades of continuous depreciation, the South African Rand (ZAR) was buoyed by a weaker dollar, higher prices for commodities like gold and platinum-group metals and improved investors sentiment towards the end of 2025. 
 At around the same time, the National Treasury and the South African Reserve Bank (SARB) announced the move from the target range of 3\%-6\% to a 3\% target with a 1\% tolerance band. This change in monetary policy is aimed at bringing down expected and actual inflation as well as borrowing costs \parencite{sa_infl}.
@@ -64,9 +74,9 @@ In the seminal international macroeconomic models by \textcite{obstfeld1995excha
 
 As posited in \textcite{betts2000exchange} and \textcite{devereux2003monetary}, currency pricing decisions have implications for the frequency of price changes and degree of pass-through. A study of US import transactions by \textcite{gopinath2010currency} showed large differences in pass-through between goods priced in Dollars and non-Dollar currencies, with the latter showing higher responses to exchange rate changes even at long horizons. The authors find a strong positive correlation between the share of PCP imports from a partner and the country’s average bilateral pass-through into US import prices, and point to similar dynamics as those in \textcite{dornbusch1985exchange} and \textcite{krugman1986} to explain persistent differences in pass-through between LCP and PCP imports. 
 
-Empirical investigations into ERPT shows import invoicing to be a mix of PCP and LCP.  Across 25 OECD countries, \textcite{campa2005exchange} use a multivariate OLS controlling for costs and demand factors instead of simply measuring the effect of the change in the exchange rate on import prices. They found the average pass-through of exchange rate to import prices to be about 0.6 after a quarter and 0.75 after a year, although these values differ across countries. \textcite{colavecchio2019non} use linear projection models to investigate ERPT to import prices in the Euro area between 1997 and 2019, finding an average pass-through of 0.20 after one quarter and 0.33 after a year, with non-linear effects of magnitude found, but no difference in ERPT between appreciations and deprecations. A handful of studies have examined ERPT to import prices in South Africa, with \textcite{aronetal2012} employing the approach used by \textcite{campa2005exchange} along with single- and multi-equation error correction models, finding pass-through to import prices to be around 0.43-0.5 after a year, though this estimation was lower in the second part of the full sample. Other studies on South Africa employing single-equation error-correction models found very high pass-through coefficients to import prices between 0.75 and 0.93 \cite{Karoroetal2008, kabundi2016exchange}. 
+Empirical investigations into ERPT shows import invoicing to be a mix of PCP and LCP.  Across 25 OECD countries, \textcite{campa2005exchange} use a multivariate OLS controlling for costs and demand factors instead of simply measuring the effect of the change in the exchange rate on import prices. They found the average pass-through of exchange rate to import prices to be about 0.6 after a quarter and 0.75 after a year, although these values differ across countries. \textcite{colavecchio2019non} use linear projection models to investigate ERPT to import prices in the Euro area between 1997 and 2019, finding an average pass-through of 0.20 after one quarter and 0.33 after a year, with non-linear effects of magnitude found, but no difference in ERPT between appreciations and deprecations. A handful of studies have examined ERPT to import prices in South Africa, with \textcite{aronetal2012} employing the approach used by \textcite{campa2005exchange} along with single- and multi-equation error correction models, finding pass-through to import prices to be around 0.43-0.5 after a year, though this estimation was lower in the second part of the full sample. Other studies on South Africa employing single-equation error-correction models found very high pass-through coefficients to import prices between 0.75 and 0.93 \parencite{Karoroetal2008, kabundi2016exchange}. 
 
-\textcite{mccarthy1999} conceptualised a multi-equation model with a Cholesky decomposition to estimate ERPT. Using the residuals of exchange rate movement regressed on supply and demand surprises to remove some endogeneity, the ERPT onto import, PPI and CPI are subsequently measures one after the other.  The paper indicates shows decreases in import prices after a 1\% exchange rate depreciation, although this is found to decrease and become less precise after a year. A similar response of import prices to exchange rate changes among G-7 countries is reported in \textcite{choudhri2005explaining}, which finds strong initial responses of import prices, which decline after a year, creating a hump-shaped response curve. In a subsequent paper, \textcite{choudhri2015exchange} estimate first-quarter pass-through for a variety of countries including South Africa, finding ERPT to be 0.31, with estimates in the second half of the sample (1998- 2010) to be higher than in the preceding twelve years (0.38 vs 0.2). Studying ERPT into the Euro area using this methodology, \textcite{hahn2003} found non-oil import prices to be 20\% higher after one quarter and 50\% after three, with little change in subsequent quarters. \textcite{comunale2017erpt} augment the structure proposed by \textcite{mccarthy1999} with a Bayesian specification and sign restrictions based on \textcite{an2012exchange}, reporting 80\% pass-through to imports after a year using data from 1992 to 2016, although a richer model allows the authors to analyse the differences between different types of shocks. 
+\textcite{mccarthy1999} conceptualised a multi-equation model with a Cholesky decomposition to estimate ERPT. Using the residuals of exchange rate movement regressed on supply and demand surprises to remove some endogeneity, the ERPT onto import, PPI and CPI are subsequently measures one after the other.  The paper indicates shows decreases in import prices after a 1\% exchange rate appreciation, although this is found to decrease and become imprecise after a year. A similar response of import prices to exchange rate changes among G-7 countries is reported in \textcite{choudhri2005explaining}, which finds strong initial responses of import prices, which decline after a year, creating a hump-shaped response curve. In a subsequent paper, \textcite{choudhri2015exchange} estimate first-quarter pass-through for a variety of countries including South Africa, finding ERPT to be 0.31, with estimates in the second half of the sample (1998- 2010) to be higher than in the preceding twelve years (0.38 vs 0.2). Studying ERPT into the Euro area using this methodology, \textcite{hahn2003} found non-oil import prices to be 20\% higher after one quarter and 50\% after three, with little change in subsequent quarters. \textcite{comunale2017erpt} augment the structure proposed by \textcite{mccarthy1999} with a Bayesian specification and sign restrictions based on \textcite{an2012exchange}, reporting 80\% pass-through to imports after a year using data from 1992 to 2016, although a richer model allows the authors to analyse the differences between different types of shocks. 
 
 The use of such a methodology is advantageous not only in its incorporation of dynamic relationships between variables, but also because it allows for the analysis of how downstream prices are affected by exchange rate shocks. Local transaction and distribution costs as well as differences in market structures facing firms at each point in the distribution chain can cause deviations in final consumer price indices from exchange rate movements. \textcite{burstein2003distribution} showed substantial distribution margins  in the US and Argentina, while \textcite{goldberg2010sensitivity} found that distribution margins dampened the effect of exchange rates on consumer prices across a sample of advanced economies, with the distribution costs themselves a function of the input of imported goods into the non-tradeable distributive goods or services. \textcite{engel2002responsiveness} argues that producers face a sourcing problem between domestic and imported inputs, which influences the ability of importers to pass through price changes to producers of final goods. The disconnect between ERPT to import prices and consumer prices may also be the result of by the contribution of non-tradables to producer and consumer baskets \textcite{obstfeld2000new}. To the extent that two countries differ only in their degree of self-sufficiency, the more self-sufficient country will have lower pass-through to consumer prices. 
 
@@ -142,7 +152,7 @@ Additionally, forecast error variance decompositions are useful to capture how m
  where $\Theta_l$ represents the matrix of orthogonalized impulse response functions for all variables at horizon $l$. The contribution of an exchange rate shock to the variance of response variables over $h$ horizons is found in element $r$, $e$ in  $\Theta_l$. Formally, the relative cumulative contribution by exchange rate shock $e$ on prices $r$ at horizon $h$ can be found by:
  
 \begin{align} \label{eq:fevd_sum}
-    \text{FEV}_{e}^{r}(h) &= \theta_{ej, 0}^{2} + \cdots + \theta_{ej, h}^{2} \\ &= \sum_{l=0}^{h-1} \theta_{ej, l}^{2} / \text{MSPE}_{e}^{r}(h)
+    \text{FEV}_{e}^{r}(h) &= \theta_{ej, 0}^{2} + \cdots + \theta_{ej, h}^{2} \\ &= \sum_{l=0}^{h-1} \theta_{ej, l}^{2} / \text{MSPE}(h)
 \end{align}
 
 Finally, the actual impact of previous exchange rate shocks can be visualised by a time series plot of the historical contribution to the change in price indices. This is obtained as the cumulative effect of exchange rate shocks on the price variables up to $t$, holding all other shocks equal to zero. 
@@ -161,9 +171,9 @@ The second consideration is a practical one: South African import data are chara
 
  A limitation imposed by this approach is that the impact of oil (supply) shocks on prices cannot be recovered via forecast error variance decomposition. This is a non-trivial issue given the primacy of oil shocks on downstream economic variables,however despite the centrality of oil shocks to the economy, it does not form part of the central undertaking of this study. Nevertheless, a fully endogenised model is included as part of the sensitivity analysis. As mentioned, however, the series is exogenous by construction, particularly in relations to a small economy, thus endogenising the series risks miscalculating the size of the shock if parts of it are "explained" by spurious correlation with previous values of $Y_{t-j}$. While this leads to a deviation from previous literature, it decreases the bias that may result from spurious correlation with endogenous variables and increases the degrees of freedom in the estimation. 
 
-In order to estimate demand shocks, seasonally-adjusted quarterly Real GDP figures are interpolated to a monthly frequency using Denton-Cholette interpolation, which allows for temporal disaggregation in the absence of any suitable high-frequency indicator variables\footnote{Regression-based methods like Chow-Lin and indexed Denton-Cholette were not suitable as the Bureau of Economic Research's Business Cycle Index series was not found to be sufficiently correlated with GDP series. See \ref{Chow-Lin Disaggregation} in the Appendix.} through distributing quarterly values evenly across constituent months by minimizing period-to-period differences subject to the constraint that three-month values should sum to quarterly values. The Denton-Cholette method also avoids the starting point problem present in the original formulation by \textcite{denton1971}, which imposes no constraint on the first high-frequency point from the previous period, resulting in a potential discontinuity at the starting point as, unlike interior data points, there is only one low-frequency constraint \cite{DagumCholette2006}. Because this adjustment does not account for seasonal trends, instead distributing quarterly values smoothly, using seasonally-adjusted data means that seasonal variation that would be present in unadjusted series is not lost. A Hodrick-Prescott filter is applied with $\lambda = $ 129 600, as suggested by \textcite{ravn2002adjusting}, to the disaggregated and logged series, from which the cyclical component, or the deviation from trend, is recovered and used as the output gap. 
+In order to estimate demand shocks, seasonally-adjusted quarterly Real GDP figures are interpolated to a monthly frequency using Denton-Cholette interpolation, which allows for temporal disaggregation in the absence of any suitable high-frequency indicator variables\footnote{Regression-based methods like Chow-Lin and indexed Denton-Cholette were not suitable as the Bureau of Economic Research's Business Cycle Index series was not found to be sufficiently correlated with GDP series. See \ref{Chow-Lin Disaggregation} in the Appendix.} through distributing quarterly values evenly across constituent months by minimizing period-to-period differences subject to the constraint that three-month values should sum to quarterly values. The Denton-Cholette method also avoids the starting point problem present in the original formulation by \textcite{denton1971}, which imposes no constraint on the first high-frequency point from the previous period, resulting in a potential discontinuity at the starting point as, unlike interior data points, there is only one low-frequency constraint \cite{DagumCholette2006}. Because this adjustment does not account for seasonal trends, instead distributing quarterly values smoothly, using seasonally-adjusted data means that seasonal variation that would be present in unadjusted series is not lost. A Hodrick-Prescott filter is applied with $\lambda = $ 129 600, as suggested by \textcite{ravn2002adjusting}, to the disaggregated and logged series, from which the cyclical component, or the deviation from trend, is recovered and used as the output gap. Although other studies like \textcite{AnWang2011} used manufacturing indices to estimate the monthly output gaps, South Africa's manufacturing production and sales data only dates back to 1998. A comparison with the constructed Denton-Cholette series shows the two to track each other well, with a correlation of around 0.79 in their overlapping periods. 
 
-The SARB's Nominal Effective Exchange Rate\footnote{a detailed description of the methodology is available at https://www.resbank.co.za/content/dam/sarb/publications/quarterly-bulletins/quarterly-bulletin-publications/2020/10091/03Note-on-the-revision-of-South-Africas-nominal-and-real-effective-exchange-rate-indices.pdf}, which measures the external value of the Rand against a weighted basket of currencies is the preferred measure for the exchange rate. Although currencies are weighted by partners' shares of imports and exports, it is preferred to the Dollar given the importance of other major economies like China, the UK and the EU as trade partners and has precedents in previous studies\footnote{See \textcite{mccarthy1999}, \textcite{Karoroetal2008},   \textcite{aronetal2012},\textcite{choudri2015exchange}, \textcite{kabundi2016exchange} etc.}. Indexed values are log-differenced and flipped such that positive movements represent depreciations.
+The SARB's Nominal Effective Exchange Rate\footnote{a detailed description of the methodology is available at https://www.resbank.co.za/content/dam/sarb/publications/quarterly-bulletins/quarterly-bulletin-publications/2020/10091/03Note-on-the-revision-of-South-Africas-nominal-and-real-effective-exchange-rate-indices.pdf}, which measures the external value of the Rand against a weighted basket of currencies is the preferred measure for the exchange rate. Although currencies are weighted by partners' shares of imports and exports, it is preferred to the Dollar given the importance of other major economies like China, the UK and the EU as trade partners and has precedents in previous studies\footnote{See \textcite{mccarthy1999}, \textcite{Karoroetal2008},   \textcite{aronetal2012},\textcite{choudhri2015exchange}, \textcite{kabundi2016exchange} etc.}. Indexed values are log-differenced and flipped such that positive movements represent depreciations.
 
  For producer and consumer prices, headline PPI and CPI figures are used. Given that certain categories like rent, transport and education are surveyed in the same month on an annual basis\footnote{See Annexure 2 - Collection Methodology of StatsSA's CPI Sources and Methods available at: https://www.statssa.gov.za/publications/Report-01-41-01/Report-01-41-012025.pdf}, month-on-month seasonality is present in the raw headline series\footnote{See ref{sec:Correlations} in the Appendix}. The same pattern does not show up in the PPI series, and so only the headline CPI index is adjusted. The raw PPI and adjusted CPI indices are log-differenced. 
 
@@ -192,7 +202,7 @@ Figure \ref{fig:irf_main} provides a visual illustration of exchange rate pass-t
 
 The second row of panels in figure \ref{fig:irf_main}, import prices are included in the VAR model. Between 1990 and 2023, the pass-through of a 1 pp change in the exchange rate to import prices was 0.4 after a quarter and roughly the same after a year, although the interceding horizons do see spikes in the pass-through. Separating the full sample into the unanchored and stable inflationary periods, it is clear that the full sample estimates belie a great deal of intra-sample heterogeneity. While the effect of low inflation should lead to a lower pass-through estimate according to previous literature, the opposite is found to be the case, with initial pass-through two to three times as high over the first 12 months in the low inflation environment. Importantly, it does not follow from finding  that there was an increase in producer currency pricing relative to the less stable inflation period between 1990 and 2023, as the difference may be driven by the different measures of import prices used across the two periods. This highlights to a limitation in the fully-specified model, as intertemporal comparisons (ie comparing 1990 - 2010 to 2010 - 2023 estimates) may reflect differences in the way import price changes are measured. For this purpose, the model which excludes import prices is preferred. Nevertheless, estimates can still be useful to compare findings with other papers and to analyse pass-through along the pricing distribution. 
 
-The early sample's estimate for pass-through is a lot lower than the single-equation estimates of \textcite{Karororetal2008} and \textcite{kabundi2016exchange}, both of which estimating import PT to be above 0.75, while estimates by \textcite{aronetal2012} using a variety of specifications show PT after a year to be between 0.33 and 0.46 between 1995 and 2009. Although this places the 1990 - 2010 estimates at the lower end of estimates in South African studies, the 3-month PT of 0.33 is very close to the 0.31 reported for South Africa by \textcite{choudhri2015exchange}, which uses a similar model over the period from 1979-2010. The shape of the import price response curve also seems to differ significantly between the samples, with the early sample showing a reversal in pass-through after six months. This hump-shape was also reported in other studies of import prices by \textcite{mccarthy1999}, \textcite{hahn2003} and \textcite{AnWang2011}, however there is no evidence of a reversal in the 2010 - 2023 sample. Again, the series break complicates the investigation as it is not possible to discern whether this difference is due to changes in the way import prices are measured or whether there was less cost-switching after 2010. 
+The early sample's estimate for pass-through is a lot lower than the single-equation estimates of \textcite{Karoroetal2008} and \textcite{kabundi2016exchange}, both of which estimating import PT to be above 0.75, while estimates by \textcite{aronetal2012} using a variety of specifications show PT after a year to be between 0.33 and 0.46 between 1995 and 2009. Although this places the 1990 - 2010 estimates at the lower end of estimates in South African studies, the 3-month PT of 0.33 is very close to the 0.31 reported for South Africa by \textcite{choudhri2015exchange}, which uses a similar model over the period from 1979-2010. The shape of the import price response curve also seems to differ significantly between the samples, with the early sample showing a reversal in pass-through after six months. This hump-shape was also reported in other studies of import prices by \textcite{mccarthy1999}, \textcite{hahn2003} and \textcite{AnWang2011}, however there is no evidence of a reversal in the 2010 - 2023 sample. Again, the series break complicates the investigation as it is not possible to discern whether this difference is due to changes in the way import prices are measured or whether there was less cost-switching after 2010. 
 
 Across the three samples, there is consistent evidence of decreasing pass-through from importers price indices to PPI, followed by CPI. In the early sample, importers absorb 25\% of a 1\% change in the exchange rate over the course of a year,while for producers and consumers, the absorption is 19\% and 15\% respectively. While the discrepancy between importers and the latter two PT's is even greater in the low-inflation period, this is not necessarily evidence that would confirm the hypothesis that lower inflation leads to lower pass-through from import prices to consumer prices as the differences in measuring importers price changes across the samples may be driving this difference.
 
@@ -215,12 +225,16 @@ Another way of assessing the importance of exchange rate movements in determinin
 
 With the latter two prices, the contribution to CPI variance is slightly lower than for PPI variance across all samples and specifications, consistent with the idea that downstream noise resulting from distribution and other domestic costs dilutes the overall contribution of exchange rate shocks.  Additionally, the differences between the 1990 - 2010 and 2010 - 2023 samples are far less pronounced than the differences in the import prices across the two periods: after a year, the fully specified model shows exchange rate shocks to have accounted 13.4\% of the variation seen in PPI in the early sample and 15.8\% in the low-inflation period - a difference of around 2\%. For CPI, the difference is around 3\%. This indicates that the contribution of exchange rate shocks relative to other shocks in explaining PPI and CPI has remained relatively stable across the two periods. 
 
-
-
 \input{main_fevd.txt}
 
 \subsection{Historical Contributions}
 
+To see how orthogonal exchange rate shocks have materially affected inflation in South Africa since 1990, historical decompositions are plotted to demonstrate the disturbance to prices caused by exchange rate movements. Over the course of the 33 years in the sample, there are large positive spikes at a number of dates, particularly in early 2002 and 2008 as well as 2016. Each of these coincided with major economic and political developments which saw  large depreciations in the Rand. The most dramatic of these - late 2001 to early 2002 -  saw the value of the Rand depreciate by over thirty percent, trading at R8.05 on the Dollar in June 2001 to R11.38 by March 2002, with the September 11 attacks and a series of crises in developing and middle-income countries likely contributing to risk-off investor sentiment \parencite{sarb2002qb, sarb2001qb}. In contrast to the earlier negative shock to the Rand, the spikes in 2008 and 2016 coincided with domestic affairs The former happened in the wake of two major events: the defeat of the market-friendly faction of the ruling African National Congress at the party's 2007  congress and the first power outages by the national electricity utility while the politically-motivated appointment of a new finance minister in December 2015, an event that became known as "Nenegate" after the ousted minister Nhlanhla Nene,  alerted investors to the increasing loss of institutional independence. 
+
+The differing relationship between exchange rate shocks and domestic prices before and after 2010 is seen in the reaction to these events. Using the 1990 - 2010 covariance structure, the crises of late 2001 contributed to an elevation of producer prices by about a percentage point and half a percentage point for consumer prices, while the major event of the late sample - Nenegate - raised producer prices by under half a percentage point and consumer prices by around a quarter. Although early 2016 actually saw around the same level of inflation as early 2002 at around 6\%, the lower contribution is not necessarily evidence of the decline in PT to consumer prices across the two periods as the difference in magnitude of the shocks could be driving the difference. Nevertheless, whether by a decrease in the volatility around the exchange rate or through a partial decoupling of the structural relationship between exchange rate and prices, historical plots show that the contribution to inflation by exchange rate events has decreased. 
+
+
+ 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{hist_main.png}
@@ -233,27 +247,25 @@ With the latter two prices, the contribution to CPI variance is slightly lower t
 
 \section{Robustness Checks}
 
+The preceding results established the degree of pass-through from exchange rate shocks into South African prices and showed evidence of the declining responsiveness to these shocks. Within the recursive identification strategy first used in \textcite{mccarthy1999}, there are several  variations, including the modifications made in the previous section - namely entering oil supply as an exogenous variable and omitting the import price index. While there was little difference in PPI and CPI outcomes when import prices were omitted compared to when it was included, other specifications are explored in order to verify the robustness of the main results. Estimations using different lag lengths, endogenised oil supply, monetary policy and linear projections are analysed in turn. 
+
+\subsection{Lag Length}
+
+  The tendency of AIC to pick out more parsimonous models with shorter lag lengths risks longer-horizon dynamics being omitted. Oil shocks, for example, can have gradual or delayed impacts on economic variables, meaning that short lag lengths may miss these effects altogether \parencite{EDELSTEIN2009766, hamilton-herrera}. The possibility that these longer-term relationships may materially influence results are explored by running models using both 9 and 12 lags - the latter equal to the numbers chosen by \textcite{mccarthy1999} and \textcite{hahn2003}. Figure \ref{fig:irf_p9} and Table \ref{tab:erpy_p9} in Appendix A2 show the impulse responses and forecast error variance from 9 and 12 lags. Results from the 9-lag model are nearly identical across all samples and both specifications. Including 12 lags, the model estimates similar values for the first 12 months, however PT estimates do not converge and either continue to increase or fall over longer horizons. It is evident, particularly in the short sample, that extending the lags has considerable effects on the certainty of the estimates, with standard errors increasing particularly at longer horizons as more noise enters the model. Nevertheless, the in estimates across different lag lengths do not differ much over the first 12 months. 
+
+\subsection{Endogenous Oil Shocks}
+
+The exogeneous K\"anzig oil supply series is preferred as a better proxy for global supply conditions than crude spot prices, which may be a reflection of demand pressures in addition to supply conditions. Moreover, as a small economy, South Africa's domestic activity is unlikely to have any material effect on oil supply. Including oil supply in the endogenous system therefore risks distorting oil shocks due to spurious correlation with other variables in the system. Previous literature, however, typically predates the availability of oil supply series and have studied OECD countries which are more likely to have some impact on oil markets. These have typically opted to use Brent Crude spot prices entered endogenously. Entering the \cite{imf_pcps} Brent Crude spot price as was done by, among others, \textcite{mccarthy1999} and \textcite{AnWang2011}, there is little difference in our estimates evident in Appendix A3, with differences between corresponding estimates typically being 0.01 to 0.05\footnote{Note that the Brent Crude spot price index was only available from 1992, meaning the sample is shortened by 2 years.}. Table \ref{tab:fevd_oil} shows that the relative contribution of exchange rate shocks is similar regardless of how oil supply is entered into the model. 
+
+
 The recursive structure of the identification scheme from \eqref{eq:supply} - \eqref{eq:cpi} implies knowledge the form of the data generating process is held to be known. Through using a VAR model, dynamic interactions between variables can be more precisely estimated, however to the extent that the VAR dynamics diverge from reality, estimates may suffer from misspecification bias. To address this possibility, the main results from the SVAR are compared with results obtained from local projections as per \textcite{Jorda2005}. 
 
 This approach involves regressing our prices at each period across horizon $h$ on an initial exchange rate disturbance along with a set of controls reflecting the posited structural relationships between the variables using ordinary least squares. This regression yields less precise estimates that reflect additional uncertainty around the data generating process, however is less likely to suffer from misspecification bias as each period is regressed independently instead of using the recursive SVAR estimation. Using sufficiently informative lags in our SVAR model should, however, reduce this possibility, although using higher lag orders does come at a substantial cost to the degrees of freedom in the SVAR. 
 
 
 
-\subsection{Lag Length}
 
-  The tendency of AIC to pick out more parsimonous models with shorter lag lengths risks longer-horizon dynamics being omitted. Oil shocks, for example, can have gradual or delayed impacts on economic variables, meaning that short lag lengths may miss these effects altogether \cite{EDELSTEIN2009766, hamilton-herrera}. The possibility that these longer-term relationships may materially influence results are explored by running models using both 9 and 12 lags - the latter equal to the numbers chosen by \textcite{mccarthy1999} and \textcite{hahn2003}. 
   
-  
-  
-
-\subsection{Endogenous Oil Shocks}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{irf_oil.png}
-    \caption{Impulse Response Functions with Endogenous Oil Shocks}
-    \label{fig:irf_endog}
-\end{figure}
-
 
 \subsection{Monetary Policy}
 
@@ -264,12 +276,22 @@ This approach involves regressing our prices at each period across horizon $h$ o
 
 \pagebreak
 
-\section{Appendix}
+\section{Conclusion}
 
-\subsection{Results}
+
+
+\pagebreak
+\printbibliography
+\pagebreak
+
+\section*{Appendix}
+
+\subsection*{Appendix A - Results}
 
 \input{main_results.txt}
 
+
+\subsubsection*{A2 - Lag Selection}
 
 \begin{figure}[H]
     \centering
@@ -309,7 +331,6 @@ This approach involves regressing our prices at each period across horizon $h$ o
 
 \input{p12_fevd.txt}
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{irf_monetary_policy.png}
@@ -318,6 +339,14 @@ This approach involves regressing our prices at each period across horizon $h$ o
 \end{figure}
 
 \input{oil_results.txt}
+
+\subsubsection{A3 - Endogenous Oil}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{irf_oil.png}
+    \caption{Impulse Response Functions with Endogenous Oil Shocks}
+    \label{fig:irf_oil}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -328,6 +357,7 @@ This approach involves regressing our prices at each period across horizon $h$ o
 
 \input{oil_fevd.txt}
 
+\subsubsection{A4 - Monetary Policy}
 
 \begin{figure}[H]
     \centering
@@ -348,6 +378,8 @@ This approach involves regressing our prices at each period across horizon $h$ o
 
 \input{monetary_fevd.txt}
 
+\subsubsection{A5 - Linear Projections}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{irf_lp.png}
@@ -366,16 +398,18 @@ This approach involves regressing our prices at each period across horizon $h$ o
 \end{figure}
 
 
-\subsection{Diagnostics}
+\subsection*{Appendix B - Diagnostics}
 
-\subsection{Chow-Lin Disaggregation}
+\subsection*{B2 - Descriptives}
 
-\input{chow_lin.txt}
-
-\subsubsection{Stationarity}
 
 \input{desc_tbl.txt}
 
+\subsection*{B2 - Chow-Lin Disaggregation}
+
+\input{chow_lin.txt}
+
+\subsubsection*{B3 - Stationarity}
 
 \begin{figure}[H]
     \centering
@@ -390,14 +424,14 @@ This approach involves regressing our prices at each period across horizon $h$ o
 \textit{Note:} ADF test with lag length selected by AIC up to a maximum of 12 lags. H$_0$: series contains a unit root. Rejection at the 5\% level indicated.
 \end{minipage}
 
-\subsubsection{Normality}
+\subsubsection*{B4 - Normality}
 
 \input{normality.txt}
 
-\subsection{Lag Selection}
+\subsection*{B5 - Lag Selection}
 \input{lag_selection.txt}
 
-\subsection{Correlations}
+\subsection*{B6 - Independence}
 
 \input{residcor.txt}
 
@@ -424,9 +458,9 @@ This approach involves regressing our prices at each period across horizon $h$ o
 \end{figure}
 
 
-\subsection{Linking Tests}
+\subsection*{B7 - Linking Tests}
 
-\subsubsection{SIC and UVI (Arithmetic)}
+\subsubsection*{SIC and UVI (Arithmetic)}
 
 \input{uvi_sic_ttest.txt}
 
@@ -439,7 +473,7 @@ This approach involves regressing our prices at each period across horizon $h$ o
 
 \input{chow_test.txt}
 
-\subsubsection{UVI (Arithmetic) and UVI (Geometric)}
+\subsubsection*{UVI (Arithmetic) and UVI (Geometric)}
 
 
 \begin{figure}[H]

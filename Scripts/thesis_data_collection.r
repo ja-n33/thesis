@@ -245,13 +245,13 @@ neer <- readr::read_csv(here::here("data", "neer.csv"), skip = 2) %>%
 ## Brent Crude  Data
 ####
 
-oil <- fredr::fredr(series_id = "POILBREUSDM", 
+oil_spot <- fredr::fredr(series_id = "POILBREUSDM", 
                     observation_start = as.Date("1988-01-01"), 
-                    observation_end = as.Date("2012-12-31"),   
+                    observation_end = as.Date("2022-12-31"),   
                     frequency = "m") %>%
                     mutate(time_period = as.Date(paste0(stringr::str_sub(as.character(date), 1, 7), "-01"))) %>%
                     select(time_period, value) %>%
-                    mutate(oil = log(value) - log(lag(value, n = 1))) %>%
+                    mutate(oil_spot = log(value) - log(lag(value, n = 1))) %>%
                     select(-value)
 
 shock <- readxl::read_excel(here::here("data", "oilsupplynews", "oilSupplyNewsShocks_2025M06.xlsx"), sheet = "Monthly") %>%
@@ -618,6 +618,9 @@ m_hist <- m_hist %>%
     select(time_period, m_hist) %>%
     distinct(time_period, .keep_all = TRUE)
 
+####
+## Monetary Policy
+####
 
 repo <- readr::read_csv(here::here("data", "hist_prime.csv"), skip = 2) %>%
             mutate(time_period = lubridate::my(Date)) %>%
@@ -627,6 +630,9 @@ repo <- readr::read_csv(here::here("data", "hist_prime.csv"), skip = 2) %>%
             select(-Date, Value) %>%
             filter(time_period >= as.Date("1990-01-01") & time_period <= as.Date("2026-03-01"))
 
+####
+## CPI
+####
 
 
 cpi_full <- read_dataset(id = "CPI_ANL_SERIES", 
@@ -650,6 +656,24 @@ cpi_adj <- data.frame(
                  ) %>%
         mutate(cpi_adj = log(value) - log(lag(value, n = 1)))
 
+####
+## Brent Crude  Data
+####
+
+oil_spot <- fredr::fredr(series_id = "POILBREUSDM", 
+                    observation_start = as.Date("1988-01-01"), 
+                    observation_end = as.Date("2022-12-31"),   
+                    frequency = "m") %>%
+                    mutate(time_period = as.Date(paste0(stringr::str_sub(as.character(date), 1, 7), "-01"))) %>%
+                    select(time_period, value) %>%
+                    mutate(oil_spot = log(value) - log(lag(value, n = 1))) %>%
+                    select(-value)
+
+
+####
+## Assemble Data
+####
+
 full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), historical_sample) %>%
     select(-c("neer_sarb", "uvi34", "uvi2", "uvi5")) %>%
     left_join(neer_full %>% select(-Value), by = "time_period") %>%
@@ -662,7 +686,8 @@ full_sample <- bind_rows(new_sample %>% filter(time_period > "2012-12-01"), hist
                             time_period <= as.Date("2010-01-01") ~ m_hist),
                             uvi34_l = lag(uvi34, n = 1)) %>%
     left_join(repo, by = "time_period") %>%
-    left_join(cpi_adj %>% dplyr::select(-value), by = "time_period")
+    left_join(cpi_adj %>% dplyr::select(-value), by = "time_period") %>%
+    left_join(oil_spot, by = "time_period")
 
 
 filename <- file.path(here::here(), "data", "samples", "fullsample.csv")

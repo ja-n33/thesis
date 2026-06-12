@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Literature Review}{5}{section.2}%
+\contentsline {section}{\numberline {3}Methodology}{9}{section.3}%
+\contentsline {section}{\numberline {4}Data}{12}{section.4}%
+\contentsline {section}{\numberline {5}Main Results}{15}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Impulse Response Function}{15}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Variance Decompositions}{18}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Historical Contributions}{19}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Robustness Checks}{22}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Lag Length}{22}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Endogenous Oil Shocks}{22}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Monetary Policy}{23}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Linear Projections}{23}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Conclusion}{24}{section.7}%
+\contentsline {subsubsection}{\numberline {7.0.1}A3 - Endogenous Oil}{39}{subsubsection.7.0.1}%
+\contentsline {subsubsection}{\numberline {7.0.2}A4 - Monetary Policy}{42}{subsubsection.7.0.2}%
+\contentsline {subsubsection}{\numberline {7.0.3}A5 - Linear Projections}{46}{subsubsection.7.0.3}%

@@ -149,6 +149,14 @@ plot_var <- function(sample = full,
                   rename(any_of(c(outputgap_dc = "outputgap_dc_i")))
               }
 
+              if ("oil_spot" %in% var_list){
+                var_list <- gsub("oil_spot", "oil", var_list)
+                resp     <- gsub("oil_spot", "oil", resp)
+                sample   <- sample %>% 
+                  dplyr::select(-any_of("oil")) %>%
+                  rename(any_of(c(oil = "oil_spot")))
+              }
+
 
                 coefficients_m <- NULL
                 hor <- as.numeric(horizon)
@@ -177,7 +185,12 @@ plot_var <- function(sample = full,
                     dplyr::select(time_period, all_of(var_list))
                 }
 
-                keep <- df_var$time_period >= lubridate::ymd("1990-02-01")
+
+                if ("oil" %in% var_list){
+                    keep <- df_var$time_period >= lubridate::ymd("1992-02-01")
+                } else {
+                  keep <- df_var$time_period >= lubridate::ymd("1990-02-01")
+                }
 
 
                 oil_var <- var_list[1]
@@ -568,7 +581,7 @@ plot_var <- function(sample = full,
                   }
                   data.frame(
                     date         = df_var_dates,
-                    contribution = contrib,
+                    contribution = contrib * 100,
                     response     = unname(resp_labels[rv])
                   )
                 }) %>%
@@ -602,9 +615,20 @@ plot_var <- function(sample = full,
                 else {
                   hd_fx_plot <- c()
                 }
-                                                  
 
-return(list(irfplot = irf_plot, 
+                ####
+                ## View Shock Size
+                ####
+
+                if ("oilshock" %in% var_list){
+                struct_shocks <- t(solve(chol_B) %*% t(resid_mat))
+                colnames(struct_shocks) <- endog_names
+                }
+                
+
+                                                  
+if ("oilshock" %in% var_list){
+  return(list(irfplot = irf_plot, 
             table = pt_table,
             model = summary(var_model), 
             fevd = fevd_df, 
@@ -612,9 +636,23 @@ return(list(irfplot = irf_plot,
             speed_tbl = speed_table, 
             irfdf = irf_df, 
             adj = adj_plot, 
-            hd_fx = hd_fx_plot))
+            hd_fx = hd_fx_plot,
+            hd_df =hd_fx_df,
+            struct_shocks = struct_shocks))
+            }
+            else{
+              return(list(irfplot = irf_plot, 
+            table = pt_table,
+            model = summary(var_model), 
+            fevd = fevd_df, 
+            nobs = nrow(df_var), 
+            speed_tbl = speed_table, 
+            irfdf = irf_df, 
+            adj = adj_plot))
+            }
 
 }
+
 
 
 
@@ -627,7 +665,7 @@ tables <- list()
 decomp <- list()
 adjplot <- list()
 histplot <- list()
-
+hist_i <- list()
 #sapply(c("plots", "tables", "decomp", "speed"), function(x) x <- list())
 
 for (set in sets){
@@ -638,11 +676,11 @@ for (set in sets){
   }
 
   if (grepl("_m$", set)) {
-  temp_list <- c("oilshock", "outputgap_dc_i", "int_eff", "neer_sarb", "m", "ppi", "cpi_adj")
+  temp_list <- c("oil_spot", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi_adj")
   temp_resp <- c("m", "ppi", "cpi_adj")
   with <- "with Import Prices "
   } else {
-  temp_list <- c("oilshock", "outputgap_dc_i", "int_eff", "neer_sarb", "ppi", "cpi_adj")
+  temp_list <- c("oil_spot", "outputgap_dc_i","neer_sarb", "ppi", "cpi_adj")
   temp_resp <- c("ppi", "cpi_adj")
   with <- ""
   } 
@@ -670,18 +708,31 @@ decomp[[set]] <- result$fevd
 adjplot[[set]] <- result$adj
 
 histplot[[set]] <- result$hd_fx
+
+hist_i[[set]] <- result$hd_df
+
 }
+
+
+hist_decomp_df <- hist_i[["low_inflation"]] %>% as.data.frame() %>%
+  filter(response == "Consumer Price Index") %>%
+  arrange(desc(contribution)) %>%
+  head(14)
+
+print(hist_decomp_df)
 
 pacman::p_load(ragg, grid, gridExtra)
 
+
+
 plot_list  <- list(irf = irfplot, adj = adjplot, hist = histplot)
 
-combined_plots <- function(filename_irf = "irf_monetary_policy.png", 
-                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nMonetary policy proxied using Real Prime Rates.\nModel Calculated with 6 lags.",
-                            filename_adj = "adj_monetary_policy.png",
-                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by the PT after 12 months.\nMonetary policy proxied using Real Prime Rates.\nModel Calculated with 12 lags.",
-                            filename_hist = "hist_monetary_policy.png", 
-                            capt_hist = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nModel Calculated with 12 lags."
+combined_plots <- function(filename_irf = "irf_oil.png", 
+                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nBrent Crude spot prices entered endogenously.\nModel Calculated with 6 lags.",
+                            filename_adj = "adj_oil.png",
+                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nAdjustment speed equals the cumulative PT divided by the PT after 12 months.\nBrent Crude spot prices entered endogenously .\nModel Calculated with 6 lags.",
+                            filename_hist = "hist_oil.png", 
+                            capt_hist = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nModel Calculated with 6 lags."
                             ){
       for (type in c("irf", "adj", "hist")){
 
@@ -797,7 +848,7 @@ combined_plots()
 
 
 sets_table <- c("full_filtered", "early", "low_inflation", "full_m", "early_m", "low_inflation_m")
-sets_names <- c("1990 - 2023", "1990 - 2010", "2010 - 2023", "1990 - 2023 ", "1990 - 2010 ", "2010 - 2023 ")
+sets_names <- c("1990 - 2023", "1992 - 2010", "2010 - 2023", "1990 - 2023 ", "1990 - 2010 ", "2010 - 2023 ")
 
 combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, names = sets_names, horiz = 18){
   hor         <- as.numeric(horiz)
@@ -808,11 +859,12 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
     # ── IRF branch ─────────────────────────────────────────────────────────────
     if (type == "irf"){
-      caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons with Real Prime Rates. "
+      caption     <- "Cumulative Exchange Rate Pass-Through at Selected Horizons with Endogenous Oil Supply"
       general     <- c("{Note:} Cumulative impulse responses to a one percent exchange rate depreciation.",
-                       "        Bootstrapped standard errors in parentheses (500 replications).")
-      kablab      <- "erpt_monetary"
-      file        <- "monetary_results.txt"
+                       "        Bootstrapped standard errors in parentheses (500 replications).",
+                        "       Oil Supply measured using Brent Crude Spot prices")
+      kablab      <- "erpt_oil"
+      file        <- "oil_results.txt"
       resp_levels <- c("Import Price Index", "Producer Price Index", "Consumer Price Index", "Residual df")
 
       main <- lapply(seq_along(sets), function(i){
@@ -911,10 +963,10 @@ combined_table <- function(irf = tables, fevd  = decomp, sets = sets_table, name
 
     # ── FEVD branch ────────────────────────────────────────────────────────────
     } else {
-      caption      <- "Forecast Error Variance Decomposition at Selected Horizons with Real Prime Rates"
+      caption      <- "Forecast Error Variance Decomposition at Selected Horizons with Endogenous Oil Supply"
       general      <- ""
-      kablab       <- "fevd_monetary"
-      file         <- "monetary_fevd.txt"
+      kablab       <- "fevd_oil"
+      file         <- "oil_fevd.txt"
       resp_levels  <- c("Import Price Index", "Producer Price Index", "Consumer Price Index")
       horizons_seq <- seq(3, hor, by = 3)
       period_levels <- c("1990 - 2023", "1990 - 2010", "2010 - 2023")

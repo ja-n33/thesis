@@ -1257,3 +1257,63 @@ geom_arit <- uvi %>%
 ggsave(filename = "arit_geom.png", path = here::here("main"), width = 6, height = 6)
 
 
+
+##############################################################################################################################################################################
+
+########################################################################## Output Gap ####################################################################################
+
+##############################################################################################################################################################################
+
+
+
+manuf_idx <- readxl::read_excel(here::here("data", "manuf.xlsx")) %>%
+    filter(H05 == "Total manufacturing" 
+            & H04 == "INDICES OF PHYSICAL VOLUME PRODUCTION" 
+            & H16 == "Seasonally adjusted") %>%
+    select(-c(H01, H03, H04, H16, H17, H18, H25)) %>%
+    pivot_longer(-H05, names_to = "period", values_to = "value") %>%
+    mutate(
+      time_period = as.Date(paste0(stringr::str_sub(period, 5, 8), "-",
+                                   stringr::str_sub(period, 3, 4), "-01")),
+      manuf = as.numeric(value), 
+      manuf_diff = value - lag(value, n = 1)
+    ) %>%
+    select(time_period, manuf, manuf_diff) %>%
+    arrange(time_period)
+
+manuf_ts <- ts(manuf_idx %>% select(manuf), 
+    start = c(1998, 1), 
+    frequency = 12)
+
+hp_manuf <-  mFilter::hpfilter(manuf_ts, freq = 129600, type = "lambda")
+
+manuf_idx <- manuf_idx %>%
+      mutate(manuf_cycle = hp_manuf$cycle)
+
+
+sarb_gdp <- read_dataset(id = "QB_NATLACC", 
+                        series_key = "KBP6006D.Q.R.S.LA") %>%
+                        as_tibble() %>%
+                        rename(gdp = "KBP6006D.Q.R.S.LA") %>%
+                        mutate(lgdp = log(gdp)) %>%
+                        filter(time_period >= as.Date("1998-01-01") & time_period <= as.Date("2026-05-01")) %>%
+                        mutate(detrended_gdp = gdp - lag(gdp)) 
+
+
+sarb_gdp_ts <- ts(sarb_gdp %>% select(lgdp), 
+    start = c(1998, 1), 
+    frequency = 4)
+
+hp_sarb <-  mFilter::hpfilter(sarb_gdp_ts, freq = 1600, type = "lambda")
+
+sarb_gdp <- sarb_gdp %>%
+    mutate(sarb_cyclical = hp_sarb$cycle)
+
+
+demand <- left_join(manuf_idx, full_filtered %>% select(time_period, outputgap_dc_i), by = "time_period")
+
+demand <- left_join(demand, sarb_gdp, by = "time_period") %>%
+    filter(time_period <= as.Date("2022-12-01"))
+
+
+cor(as.numeric(demand$sarb_cyclical), as.numeric(demand$manuf_cycle), use = "complete.obs", method = "pearson")
