@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.2.24)  16 JUN 2026 18:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.2.24)  16 JUN 2026 18:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1560,8 +1560,14 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D5DC08263B0385196EFDD46A42047CED;1920.
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `main.out':
+(rerunfilecheck)             Before: D5DC08263B0385196EFDD46A42047CED;1920
+(rerunfilecheck)             After:  8A58602F42BCBEF7DC66221BD193AFBE;1925.
 
 Package biblatex Warning: Please (re)run Biber on the file:
 (biblatex)                main
@@ -1598,7 +1604,7 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/tex
 mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
 urw/times/utmri8a.pfb>
-Output written on main.pdf (60 pages, 12522232 bytes).
+Output written on main.pdf (60 pages, 12522228 bytes).
 PDF statistics:
  880 PDF objects out of 1000 (max. 8388607)
  740 compressed objects within 8 object streams
