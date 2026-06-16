@@ -1054,7 +1054,7 @@ sets_table
 
 
 plot_lp <- function(sample     = full,
-                    var_list   = c("oilshock", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi"),
+                    var_list   = c("oilshock", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi_adj"),
                     n_lags     = 6,
                     name       = "Full Sample",
                     imp        = "neer_sarb",
@@ -1141,9 +1141,12 @@ plot_lp <- function(sample     = full,
   scale_fac              <- 0.01 / sd(shock_vec, na.rm = TRUE)
 
   # ── Step 2: LP regressions ────────────────────────────────────────────────────
+
   label_map <- c(cpi = "Consumer Price Index",
                  ppi = "Producer Price Index",
                  m   = "Import Price Index")
+
+
 
   run_lp <- function(rv) {
     ests <- lowers <- uppers <- numeric(hor + 1)
@@ -1177,7 +1180,26 @@ plot_lp <- function(sample     = full,
                 df = dfs, response = rv_label)
   }
 
-  irf_df <- bind_rows(lapply(resp, run_lp))
+  neer_self_result <- run_lp("neer_sarb")
+  neer_self <- neer_self_result$estimate 
+
+  run_lp_elast <- function(rv){
+    base <- run_lp(rv)
+    ##Divide by NEER self-response
+    base$elasticity   <- base$estimate / neer_self
+    base$elast_lower  <- base$lower    / neer_self
+    base$elast_upper  <- base$upper    / neer_self
+    base
+  }
+
+  irf_df <- bind_rows(lapply(resp, run_lp_elast)) %>%
+  mutate(
+    estimate = elasticity,
+    lower    = elast_lower,
+    upper    = elast_upper
+  ) %>%
+  dplyr::select(-elasticity, -elast_lower, -elast_upper)
+
 
   # ── Plots (identical structure to plot_var) ───────────────────────────────────
   colour_vals <- c("Producer Price Index" = "#2C6E8A",
@@ -1195,7 +1217,7 @@ plot_lp <- function(sample     = full,
     scale_x_continuous(breaks = seq(0, hor, by = 3), limits = c(0, hor), expand = c(0, 0)) +
     scale_y_continuous(labels = scales::label_percent(scale = 1)) +
     coord_cartesian(ylim = c(y_min, NA)) +
-    labs(x = "Months after shock", y = "Cumulative Response (%)",
+    labs(x = "Months after shock", y = "Pass-Through Elasticity",
          title = plot_title, colour = NULL, fill = NULL) +
     guides(colour = guide_legend(title = NULL, override.aes = list(fill = NA, alpha = 1)),
            fill = "none") +
@@ -1209,12 +1231,12 @@ plot_lp <- function(sample     = full,
   pt_table <- irf_df %>%
     filter(horizon %in% horizons) %>%
     mutate(se = (upper - lower) / (2 * 1.96)) %>%
-    dplyr::select(horizon, response, estimate, se, lower, upper) %>%
+    dplyr::select(horizon, response, estimate, se, lower, upper, df) %>%
     arrange(response, horizon)
 
   speed_table <- irf_df %>%
     group_by(response) %>%
-    mutate(speed_est = estimate / max(estimate) * 100) %>%
+    mutate(speed_est = estimate / estimate[horizon == 12] * 100) %>%
     ungroup() %>%
     dplyr::select(horizon, response, speed_est, estimate) %>%
     arrange(response, horizon)
@@ -1299,9 +1321,9 @@ pacman::p_load(ragg, grid, gridExtra)
 plot_list_lp  <- list(irf = irfplot_lp, adj = adjplot_lp)
 
 combined_plots_lp <- function(filename_irf = "irf_lp.png", 
-                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 6 lags using Linear Projections.",
+                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect Newey-West 95% confidence intervals.\nModel Calculated with 6 lags using Linear Projections.",
                             filename_adj = "adj_lp.png",
-                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by maximum PT for a given response.\nModel Calculated with 6 lags using Linear Projections."){
+                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\n Adjustment speed equals the cumulative PT divided by the PT after 12 months..\nModel Calculated with 6 lags using Linear Projections."){
       for (type in c("irf", "adj")){
 
       if (type == "irf"){
@@ -1431,7 +1453,7 @@ combined_table_lp <- function(irf = tables_lp, sets = sets_table, names = sets_n
           filter(horizon %in% seq(3, hor, by = 3)) %>%
           mutate(
             sample  = names[i],
-            display = paste0(round(estimate / 100, 2), " (", round(se / 100, 2), ")")
+            display = paste0(round(estimate, 2), " (", round(se , 2), ")")
           ) %>%
           select(sample, response, horizon, display)
       }) %>%
@@ -1442,7 +1464,11 @@ combined_table_lp <- function(irf = tables_lp, sets = sets_table, names = sets_n
         mutate(horizon = as.character(horizon))
 
       df_row <- lapply(seq_along(sets), function(i){
-        tibble(sample = names[i], display = as.character(tbl[[sets[i]]]$df))
+        df_val <- tbl[[sets[i]]] %>%
+              pull(df) %>%
+              min(na.rm = TRUE) %>%
+              as.character()
+        tibble(sample = names[i], display = df_val)
       }) %>%
         bind_rows() %>%
         pivot_wider(names_from = sample, values_from = display) %>%
