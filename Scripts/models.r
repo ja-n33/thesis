@@ -657,6 +657,7 @@ if ("oilshock" %in% var_list){
 
 
 
+
 sets <- c("full_filtered", "early", "low_inflation", "full_m", "early_m", "low_inflation_m")
    
 irfplot <- list()
@@ -676,11 +677,11 @@ for (set in sets){
   }
 
   if (grepl("_m$", set)) {
-  temp_list <- c("oil_spot", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi_adj")
+  temp_list <- c("oilshock", "outputgap_dc_i", "neer_sarb", "m", "ppi", "cpi_adj")
   temp_resp <- c("m", "ppi", "cpi_adj")
   with <- "with Import Prices "
   } else {
-  temp_list <- c("oil_spot", "outputgap_dc_i","neer_sarb", "ppi", "cpi_adj")
+  temp_list <- c("oilshock", "outputgap_dc_i","neer_sarb", "ppi", "cpi_adj")
   temp_resp <- c("ppi", "cpi_adj")
   with <- ""
   } 
@@ -713,6 +714,10 @@ hist_i[[set]] <- result$hd_df
 
 }
 
+look adjplot
+
+range(hist_i[["low_inflation"]]$contribution)
+
 
 hist_decomp_df <- hist_i[["low_inflation"]] %>% as.data.frame() %>%
   filter(response == "Consumer Price Index") %>%
@@ -727,11 +732,11 @@ pacman::p_load(ragg, grid, gridExtra)
 
 plot_list  <- list(irf = irfplot, adj = adjplot, hist = histplot)
 
-combined_plots <- function(filename_irf = "irf_oil.png", 
-                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nBrent Crude spot prices entered endogenously.\nModel Calculated with 6 lags.",
-                            filename_adj = "adj_oil.png",
-                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nAdjustment speed equals the cumulative PT divided by the PT after 12 months.\nBrent Crude spot prices entered endogenously .\nModel Calculated with 6 lags.",
-                            filename_hist = "hist_oil.png", 
+combined_plots <- function(filename_irf = "irf_main.png", 
+                            capt_irf = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nShaded regions reflect bootstrapped 95% confidence intervals.\nModel Calculated with 6 lags.",
+                            filename_adj = "adj_main.png",
+                            capt_adj = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nAdjustment speed equals the cumulative PT divided by the PT after 12 months.\nModel Calculated with 6 lags.",
+                            filename_hist = "hist_main.png", 
                             capt_hist = "Exchange Rate Measure is the Nominal Effective Exchange Rate.\nModel Calculated with 6 lags."
                             ){
       for (type in c("irf", "adj", "hist")){

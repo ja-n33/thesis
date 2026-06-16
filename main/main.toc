@@ -6,12 +6,10 @@
 \contentsline {subsection}{\numberline {5.1}Impulse Response Function}{17}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Variance Decompositions}{20}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}Historical Decomposition}{21}{subsection.5.3}%
-\contentsline {section}{\numberline {6}Robustness Checks}{24}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Lag Length}{24}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Endogenous Oil Shocks}{24}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Monetary Policy}{25}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Linear Projections}{25}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Conclusion}{27}{section.7}%
-\contentsline {subsubsection}{\numberline {7.0.1}A3 - Endogenous Oil}{42}{subsubsection.7.0.1}%
-\contentsline {subsubsection}{\numberline {7.0.2}A4 - Monetary Policy}{45}{subsubsection.7.0.2}%
-\contentsline {subsubsection}{\numberline {7.0.3}A5 - Linear Projections}{49}{subsubsection.7.0.3}%
+\contentsline {section}{\numberline {6}Robustness Checks}{23}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Lag Length}{23}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Endogenous Oil Shocks}{23}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Monetary Policy}{24}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Linear Projections}{24}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Conclusion}{26}{section.7}%
+\contentsline {section}{\numberline {8}Appendix}{30}{section.8}%
