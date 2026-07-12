@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.2.24)  17 JUN 2026 17:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.2.24)  12 JUL 2026 13:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -870,7 +870,22 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
 
-(./main.bbl)
+(./main.bbl
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                schultz2007
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                taylor2000
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+)
 Package biblatex Info: Reference section=0 on input line 32.
 Package biblatex Info: Reference segment=0 on input line 32.
 
@@ -886,584 +901,19 @@ al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}] (./main.toc)
 
 [2]
 
-LaTeX Warning: Citation 'sa_infl' on page 3 undefined on input line 50.
-
-
-LaTeX Warning: Citation 'Hassan2015' on page 3 undefined on input line 50.
-
-LaTeX Font Info:    Trying to load font information for OML+ptm on input line 5
-0.
-(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/omlptm.fd
-File: omlptm.fd 
-)
-LaTeX Font Info:    Font shape `OML/ptm/b/n' in size <12> not available
-(Font)              Font shape `OML/cmm/b/it' tried instead on input line 50.
-
-
-LaTeX Warning: Citation '' on page 3 undefined on input line 50.
-
-
-LaTeX Warning: Citation 'kalemliozcan2019spillovers' on page 3 undefined on inp
-ut line 50.
-
-
-LaTeX Warning: Citation 'greenwoodNimmo2021' on page 3 undefined on input line 
-50.
-
-
-LaTeX Warning: Citation 'stern_ramkolowan' on page 3 undefined on input line 52
-.
-
-
-LaTeX Warning: Citation 'taylor2000low' on page 3 undefined on input line 52.
-
-
-LaTeX Warning: Citation '' on page 3 undefined on input line 52.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 3 undefined on input line 56.
-
-
-LaTeX Warning: Citation '' on page 3 undefined on input line 56.
-
-
-
 [3]
-
-LaTeX Warning: Citation 'taylor2000low' on page 4 undefined on input line 58.
-
-
-LaTeX Warning: Citation '' on page 4 undefined on input line 58.
-
-
-Overfull \hbox (8.59499pt too wide) in paragraph at lines 58--59
-\OT1/ptm/m/n/12 rower range, as pre-dicted by pre-vi-ous stud-ies, for ex-am-pl
-e by [][].
- []
-
-
-LaTeX Warning: Citation 'taylor2000low' on page 4 undefined on input line 62.
-
-
-LaTeX Warning: Citation 'burstein2003distribution' on page 4 undefined on input
- line 62.
-
-
 
 [4]
 
-LaTeX Warning: Citation 'Kanzig' on page 5 undefined on input line 66.
-
-
-LaTeX Warning: Citation '' on page 5 undefined on input line 66.
-
-
-
 [5]
-
-LaTeX Warning: Citation 'dornbusch1985exchange' on page 6 undefined on input li
-ne 72.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 72.
-
-
-LaTeX Warning: Citation 'krugman1986' on page 6 undefined on input line 72.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 72.
-
-
-LaTeX Warning: Citation 'marston1990pricing' on page 6 undefined on input line 
-74.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 74.
-
-
-LaTeX Warning: Citation 'bacchetta2005theory' on page 6 undefined on input line
- 74.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 74.
-
-
-LaTeX Warning: Citation 'friberg1998currency' on page 6 undefined on input line
- 76.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation 'engel-2006' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation 'devereux2004endogenous' on page 6 undefined on input l
-ine 76.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation 'taylor2000low' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation 'gagnon2004monetary' on page 6 undefined on input line 
-76.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation 'ozkan2015time' on page 6 undefined on input line 76.
-
-
-LaTeX Warning: Citation '' on page 6 undefined on input line 76.
-
-
-Overfull \hbox (93.39723pt too wide) in paragraph at lines 76--77
-\OT1/ptm/m/n/12 cord-ing to macroe-co-nomic fea-tures. In the par-tial equi-lib
--rium mod-els by [][]
- []
-
-
-Overfull \hbox (57.4587pt too wide) in paragraph at lines 76--77
-\OT1/ptm/m/n/12 ter-min-ing how ex-change rate changes are passed through. Ac-c
-ord-ing to [][],
- []
-
-
 
 [6]
 
-LaTeX Warning: Citation 'obstfeld1995exchange' on page 7 undefined on input lin
-e 78.
-
-
-LaTeX Warning: Citation 'obstfeld1998risk' on page 7 undefined on input line 78
-.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 78.
-
-
-LaTeX Warning: Citation 'goldberg1997causes' on page 7 undefined on input line 
-78.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 78.
-
-
-LaTeX Warning: Citation 'devereux2003monetary' on page 7 undefined on input lin
-e 78.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 78.
-
-
-LaTeX Warning: Citation 'devereux2004endogenous' on page 7 undefined on input l
-ine 78.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 78.
-
-
-LaTeX Warning: Citation 'betts2000exchange' on page 7 undefined on input line 7
-8.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 78.
-
-
-Overfull \hbox (109.59677pt too wide) in paragraph at lines 78--79
-[]\OT1/ptm/m/n/12 In the sem-i-nal in-ter-na-tional macroe-co-nomic mod-els by 
-[]; [][],
- []
-
-
-Overfull \hbox (93.95016pt too wide) in paragraph at lines 78--79
-\OT1/ptm/m/n/12 switching ben-e-fits of a float-ing ex-change rate, a point re-
-in-forced by [][].
- []
-
-
-LaTeX Warning: Citation 'betts2000exchange' on page 7 undefined on input line 8
-0.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 80.
-
-
-LaTeX Warning: Citation 'devereux2003monetary' on page 7 undefined on input lin
-e 80.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 80.
-
-
-LaTeX Warning: Citation 'gopinath2010currency' on page 7 undefined on input lin
-e 80.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 80.
-
-
-LaTeX Warning: Citation 'dornbusch1985exchange' on page 7 undefined on input li
-ne 80.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 80.
-
-
-LaTeX Warning: Citation 'krugman1986' on page 7 undefined on input line 80.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 80.
-
-
-Overfull \hbox (41.78543pt too wide) in paragraph at lines 80--81
-[]\OT1/ptm/m/n/12 As posited in [][] and [][],
- []
-
-
-Overfull \hbox (3.02518pt too wide) in paragraph at lines 80--81
-\OT1/ptm/m/n/12 pass-through. A study of US im-port trans-ac-tions by [][]
- []
-
-
-Overfull \hbox (74.14877pt too wide) in paragraph at lines 80--81
-\OT1/ptm/m/n/12 i-lar dy-nam-ics as those in [][] and [][]
- []
-
-
-LaTeX Warning: Citation 'campa2005exchange' on page 7 undefined on input line 8
-2.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 82.
-
-
-LaTeX Warning: Citation 'colavecchio2019non' on page 7 undefined on input line 
-82.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 82.
-
-
-LaTeX Warning: Citation 'aronetal2012' on page 7 undefined on input line 82.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 82.
-
-
-LaTeX Warning: Citation 'campa2005exchange' on page 7 undefined on input line 8
-2.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 82.
-
-
-LaTeX Warning: Citation 'Karoroetal2008' on page 7 undefined on input line 82.
-
-
-LaTeX Warning: Citation 'kabundi2016exchange' on page 7 undefined on input line
- 82.
-
-
-Overfull \hbox (66.57759pt too wide) in paragraph at lines 82--83
-[][] \OT1/ptm/m/n/12 em-ploy-ing the ap-proach used by [][]
- []
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation 'choudhri2005explaining' on page 7 undefined on input l
-ine 84.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation 'choudhri2015exchange' on page 7 undefined on input lin
-e 84.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation 'hahn2003' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation 'comunale2017erpt' on page 7 undefined on input line 84
-.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation 'AnWang2011' on page 7 undefined on input line 84.
-
-
-LaTeX Warning: Citation '' on page 7 undefined on input line 84.
-
-
-
 [7]
-
-LaTeX Warning: Citation 'burstein2003distribution' on page 8 undefined on input
- line 86.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 86.
-
-
-LaTeX Warning: Citation 'goldberg2010sensitivity' on page 8 undefined on input 
-line 86.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 86.
-
-
-LaTeX Warning: Citation 'engel2002responsiveness' on page 8 undefined on input 
-line 86.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 86.
-
-
-LaTeX Warning: Citation 'obstfeld2000new' on page 8 undefined on input line 86.
-
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 86.
-
-
-Overfull \hbox (44.05376pt too wide) in paragraph at lines 86--87
-\OT1/ptm/m/n/12 goods into the non-tradable dis-tribu-tive goods or ser-vices. 
-[][]
- []
-
-
-Overfull \hbox (33.6384pt too wide) in paragraph at lines 86--87
-\OT1/ptm/m/n/12 con-tri-bu-tion of non-tradables to pro-ducer and con-sumer bas
--kets [][].
- []
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'hahn2003' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'choudhri2005explaining' on page 8 undefined on input l
-ine 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'choudhri2015exchange' on page 8 undefined on input lin
-e 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'stulz2007' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'taylor2000low' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'gagnon2004monetary' on page 8 undefined on input line 
-88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation 'cazorzi2007' on page 8 undefined on input line 88.
-
-
-LaTeX Warning: Citation '' on page 8 undefined on input line 88.
-
-
-Overfull \hbox (44.47432pt too wide) in paragraph at lines 88--89
-\OT1/ptm/m/n/12 when in-fla-tion was high com-pared with more sta-ble years, su
-p-port-ing [][]
- []
-
-
 
 [8]
 
-LaTeX Warning: Citation 'clark1999responses' on page 9 undefined on input line 
-90.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation 'AnWang2011' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation 'forbes2018shocks' on page 9 undefined on input line 90
-.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation 'kabundi2016exchange' on page 9 undefined on input line
- 90.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation 'parsley2012exchange' on page 9 undefined on input line
- 90.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation 'jooste2014determinants' on page 9 undefined on input l
-ine 90.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-LaTeX Warning: Citation 'parsley2012exchange' on page 9 undefined on input line
- 90.
-
-
-LaTeX Warning: Citation '' on page 9 undefined on input line 90.
-
-
-Overfull \hbox (5.25896pt too wide) in paragraph at lines 90--91
-[][] \OT1/ptm/m/n/12 show de-creas-ing pass-through across the pric-ing chain a
-mong
- []
-
-
-Overfull \hbox (114.96196pt too wide) in paragraph at lines 90--91
-\OT1/ptm/m/n/12 across dif-fer-ent types of ex-change rate shocks for the UK. F
-or South Africa, [][]
- []
-
-
-Overfull \hbox (39.5056pt too wide) in paragraph at lines 90--91
-\OT1/ptm/m/n/12 first stage pass-through in their single-equation model, while 
-[][]
- []
-
-
-Overfull \hbox (153.08397pt too wide) in paragraph at lines 90--91
-\OT1/ptm/m/n/12 es-ti-mate ERPT to con-sumer prices at 14% to 27% in a panel sp
-ec-i-fi-ca-tion. Un-like [][],
- []
-
-
-
 [9]
-
-LaTeX Warning: Citation 'mccarthy1999' on page 10 undefined on input line 98.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 98.
-
-
-LaTeX Warning: Citation 'choudhri2015exchange' on page 10 undefined on input li
-ne 98.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 98.
-
-
-LaTeX Warning: Citation 'choudhri2005explaining' on page 10 undefined on input 
-line 98.
-
-
-LaTeX Warning: Citation 'kilian2009' on page 10 undefined on input line 98.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 98.
-
-
-LaTeX Warning: Citation 'Kanzig' on page 10 undefined on input line 98.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 98.
-
-
-Overfull \hbox (53.13739pt too wide) in paragraph at lines 98--99
-[][] \OT1/ptm/m/n/12 and sub-se-quently used by [][]
- []
-
-
-LaTeX Warning: Citation 'sims1980' on page 10 undefined on input line 122.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 122.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 10 undefined on input line 122.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 122.
-
-
-LaTeX Warning: Citation 'BlanchardWatson1986' on page 10 undefined on input lin
-e 122.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 122.
-
-
-LaTeX Warning: Citation 'sims1986forecasting' on page 10 undefined on input lin
-e 122.
-
-
-LaTeX Warning: Citation '' on page 10 undefined on input line 122.
-
-
 
 [10]
 
@@ -1473,149 +923,30 @@ LaTeX Warning: Citation '' on page 10 undefined on input line 122.
                                                   {E}\!\left [(y_{t+h} - \ha...
 l.157 \end{align}
                  
-? 
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
 ! Undefined control sequence.
 <argument> ...vd} \text {MSPE}(h) &\equiv \mathbb 
                                                   {E}\!\left [(y_{t+h} - \ha...
 l.157 \end{align}
                  
-? 
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-LaTeX Warning: Citation 'Kilian_LÃ¼tkepohl_ch4' on page 12 undefined on input l
-ine 159.
-
-Missing character: There is no Ã in font ptmb7t!
-Missing character: There is no ¼ in font ptmb7t!
 
 
 [12]
 
-LaTeX Warning: Citation 'Kilian_LÃ¼tkepohl_ch4' on page 13 undefined on input l
-ine 171.
-
-Missing character: There is no Ã in font ptmb7t!
-Missing character: There is no ¼ in font ptmb7t!
-
-
 [13]
 
-LaTeX Warning: Citation 'Burger2025' on page 14 undefined on input line 177.
-
-
-LaTeX Warning: Citation '' on page 14 undefined on input line 177.
-
-
-LaTeX Warning: Citation 'taylor2000low' on page 14 undefined on input line 177.
-
-
-LaTeX Font Info:    Font shape `OML/ptm/b/n' in size <10> not available
-(Font)              Font shape `OML/cmm/b/it' tried instead on input line 177.
-
-LaTeX Warning: Citation '' on page 14 undefined on input line 177.
-
-
-LaTeX Warning: Citation 'gagnon2004monetary' on page 14 undefined on input line
- 177.
-
-
-LaTeX Warning: Citation '' on page 14 undefined on input line 177.
-
-
-LaTeX Warning: Citation 'ozkan2015time' on page 14 undefined on input line 177.
-
-
-
-LaTeX Warning: Citation '' on page 14 undefined on input line 177.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 177--177
-[][][]\OT1/ptm/m/n/10 See [][], [][],
- []
-
-
-LaTeX Warning: Citation 'kabundischaling' on page 14 undefined on input line 17
-7.
-
-
-LaTeX Warning: Citation 'Burger2025' on page 14 undefined on input line 177.
-
-
-LaTeX Warning: Citation 'StatsSA2025XUVI' on page 14 undefined on input line 17
-9.
-
-
-LaTeX Warning: Reference `Linking Tests' on page 14 undefined on input line 181
-.
-
-
-
 [14]
-
-LaTeX Warning: Citation 'Kanzig' on page 15 undefined on input line 185.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 185.
-
-
-LaTeX Warning: Citation 'romer_romer' on page 15 undefined on input line 185.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 185.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 15 undefined on input line 185.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 185.
-
-
-Overfull \hbox (26.58247pt too wide) in paragraph at lines 185--186
-\OT1/ptm/m/n/12 shocks is neg-li-gi-ble, mak-ing it a su-pe-rior ap-proach to t
-hat used in [][],
- []
-
-
-LaTeX Warning: Citation 'denton1971' on page 15 undefined on input line 189.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 189.
-
-
-LaTeX Warning: Citation 'DagumCholette2006' on page 15 undefined on input line 
-189.
-
-
-LaTeX Warning: Citation 'ravn2002adjusting' on page 15 undefined on input line 
-189.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 189.
-
-
-Overfull \hbox (25.01167pt too wide) in paragraph at lines 189--190
-\OT1/ptm/m/n/12 point as, un-like in-te-rior data points, there is only one low
--frequency con-straint [].
- []
-
-
-Overfull \hbox (19.7366pt too wide) in paragraph at lines 189--190
-\OT1/ptm/m/n/12 Prescott fil-ter is ap-plied with $\OML/cmm/m/it/12 ^^U \OT1/cm
-r/m/n/12 =$ \OT1/ptm/m/n/12 129 600, as sug-gested by [][],
- []
-
-
-LaTeX Warning: Citation 'AnWang2011' on page 15 undefined on input line 191.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 191.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 15 undefined on input line 191.
-
-
-LaTeX Warning: Citation '' on page 15 undefined on input line 191.
-
-
 
 [15]
 Underfull \hbox (badness 10000) in paragraph at lines 194--194
@@ -1630,78 +961,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 194--194
  []
 
 
-LaTeX Warning: Citation 'mccarthy1999' on page 16 undefined on input line 194.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 194.
-
-
-LaTeX Warning: Citation 'Karoroetal2008' on page 16 undefined on input line 194
-.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 194.
-
-
-LaTeX Warning: Citation 'aronetal2012' on page 16 undefined on input line 194.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 194.
-
-
-LaTeX Warning: Citation 'choudhri2015exchange' on page 16 undefined on input li
-ne 194.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 194.
-
-
-LaTeX Warning: Citation 'kabundi2016exchange' on page 16 undefined on input lin
-e 194.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 194.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 194--194
-[][][]\OT1/ptm/m/n/10 See [][], [][],
- []
-
-
-Overfull \hbox (40.3845pt too wide) in paragraph at lines 194--194
-[][]\OT1/ptm/m/n/10 ,[][], [][]
- []
-
-
 Underfull \hbox (badness 2418) in paragraph at lines 196--196
 [][][]\OT1/ptm/m/n/10 See An-nex-ure 2 - Col-lec-tion Method-ol-ogy of StatsSA'
 s CPI Sources and Meth-ods avail-able at:
  []
 
 
-LaTeX Warning: Citation 'AnWang2011' on page 16 undefined on input line 200.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 200.
-
-
-LaTeX Warning: Citation 'forbes2018shocks' on page 16 undefined on input line 2
-00.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 200.
-
-
-LaTeX Warning: Citation 'comunale2017erpt' on page 16 undefined on input line 2
-00.
-
-
-LaTeX Warning: Citation '' on page 16 undefined on input line 200.
-
-
 
 [16]
-<irf_main.png, id=196, 4215.75pt x 3011.25pt>
+<irf_main.png, id=349, 4215.75pt x 3011.25pt>
 File: irf_main.png Graphic file (type png)
 <use irf_main.png>
 Package pdftex.def Info: irf_main.png  used on input line 213.
@@ -1716,128 +984,10 @@ s been already used, duplicate ignored
 l.219 
        <./irf_main.png>]
 
-LaTeX Warning: Citation 'Karoroetal2008' on page 18 undefined on input line 222
-.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation 'kabundi2016exchange' on page 18 undefined on input lin
-e 222.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation 'aronetal2012' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation 'choudhri2015exchange' on page 18 undefined on input li
-ne 222.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation 'hahn2003' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation 'AnWang2011' on page 18 undefined on input line 222.
-
-
-LaTeX Warning: Citation '' on page 18 undefined on input line 222.
-
-
-Overfull \hbox (15.44577pt too wide) in paragraph at lines 222--223
-\OT1/ptm/m/n/12 which es-ti-mat-ing im-port PT to be above 0.75, while es-ti-ma
-tes by [][]
- []
-
-
-Overfull \hbox (54.42062pt too wide) in paragraph at lines 222--223
-[][]\OT1/ptm/m/n/12 , [][] and [][],
- []
-
-
-
 [18]
 
-LaTeX Warning: Citation 'taylor2000low' on page 19 undefined on input line 226.
-
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 226.
-
-
-LaTeX Warning: Citation 'taylor2000low' on page 19 undefined on input line 228.
-
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 228.
-
-
-LaTeX Warning: Citation 'burstein2003distribution' on page 19 undefined on inpu
-t line 228.
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 228.
-
-
-LaTeX Warning: Citation 'goldberg2010sensitivity' on page 19 undefined on input
- line 228.
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 228.
-
-
-Overfull \hbox (9.4686pt too wide) in paragraph at lines 228--229
-[][] \OT1/ptm/m/n/12 and [][]. 
- []
-
-
-LaTeX Warning: Citation 'hahn2003' on page 19 undefined on input line 230.
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 230.
-
-
-LaTeX Warning: Citation 'comunale2017erpt' on page 19 undefined on input line 2
-30.
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 230.
-
-
-LaTeX Warning: Citation 'clark1999responses' on page 19 undefined on input line
- 230.
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 230.
-
-
-LaTeX Warning: Citation 'gopinath2010currency' on page 19 undefined on input li
-ne 230.
-
-
-LaTeX Warning: Citation '' on page 19 undefined on input line 230.
-
-
-
 [19]
-<adj_main.png, id=231, 4215.75pt x 3011.25pt>
+<adj_main.png, id=399, 4215.75pt x 3011.25pt>
 File: adj_main.png Graphic file (type png)
 <use adj_main.png>
 Package pdftex.def Info: adj_main.png  used on input line 236.
@@ -1852,13 +1002,6 @@ s been already used, duplicate ignored
 l.244 
        <./adj_main.png>] (./main_fevd.txt)
 
-LaTeX Warning: Citation 'sarb2002qb' on page 21 undefined on input line 251.
-
-
-LaTeX Warning: Citation 'sarb2001qb' on page 21 undefined on input line 251.
-
-
-
 [21
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
@@ -1866,7 +1009,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
                                                   \__shipout_drop_firstpage_...
 l.252 
       ]
-<hist_main.png, id=244, 4215.75pt x 3011.25pt>
+<hist_main.png, id=414, 4215.75pt x 3011.25pt>
 File: hist_main.png Graphic file (type png)
 <use hist_main.png>
 Package pdftex.def Info: hist_main.png  used on input line 257.
@@ -1883,104 +1026,21 @@ s been already used, duplicate ignored
 l.264 
        <./hist_main.png>]
 
-LaTeX Warning: Citation 'mccarthy1999' on page 24 undefined on input line 267.
-
-
-LaTeX Warning: Citation '' on page 24 undefined on input line 267.
-
-
-LaTeX Warning: Citation 'EDELSTEIN2009766' on page 24 undefined on input line 2
-71.
-
-
-LaTeX Warning: Citation 'hamilton-herrera' on page 24 undefined on input line 2
-71.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 24 undefined on input line 271.
-
-
-LaTeX Warning: Citation '' on page 24 undefined on input line 271.
-
-
-LaTeX Warning: Citation 'hahn2003' on page 24 undefined on input line 271.
-
-
-LaTeX Warning: Citation '' on page 24 undefined on input line 271.
-
-
-LaTeX Warning: Reference `tab:erpy_p9' on page 24 undefined on input line 271.
-
-
-LaTeX Warning: Citation 'imf_pcps' on page 24 undefined on input line 275.
-
-
-LaTeX Warning: Citation 'mccarthy1999' on page 24 undefined on input line 275.
-
-
-LaTeX Warning: Citation '' on page 24 undefined on input line 275.
-
-
-LaTeX Warning: Citation 'AnWang2011' on page 24 undefined on input line 275.
-
-
-LaTeX Warning: Citation '' on page 24 undefined on input line 275.
-
-
-
 [24]
-
-LaTeX Warning: Citation 'mccarthy1999' on page 25 undefined on input line 279.
-
-
-LaTeX Warning: Citation '' on page 25 undefined on input line 279.
-
-
-LaTeX Warning: Citation 'hahn2003' on page 25 undefined on input line 279.
-
-
-LaTeX Warning: Citation '' on page 25 undefined on input line 279.
-
-
-LaTeX Warning: Citation 'cazorzi2007' on page 25 undefined on input line 279.
-
-
-LaTeX Warning: Citation '' on page 25 undefined on input line 279.
-
-
-LaTeX Warning: Citation 'Jorda2005' on page 25 undefined on input line 287.
-
-
-LaTeX Warning: Citation '' on page 25 undefined on input line 287.
-
-
 
 [25]
 
-LaTeX Warning: Citation 'montielolea2025lp' on page 26 undefined on input line 
-291.
-
-
-LaTeX Warning: Citation '' on page 26 undefined on input line 291.
-
-
-
 [26]
-
-LaTeX Warning: Citation 'cazorzi2007' on page 27 undefined on input line 297.
-
-
-LaTeX Warning: Citation '' on page 27 undefined on input line 297.
-
 
 LaTeX Warning: Citation 'taylor2000' on page 27 undefined on input line 299.
 
-
-LaTeX Warning: Citation '' on page 27 undefined on input line 299.
-
-
-LaTeX Warning: Citation 'gagnon2004monetary' on page 27 undefined on input line
- 299.
+LaTeX Font Info:    Trying to load font information for OML+ptm on input line 2
+99.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/omlptm.fd
+File: omlptm.fd 
+)
+LaTeX Font Info:    Font shape `OML/ptm/b/n' in size <12> not available
+(Font)              Font shape `OML/cmm/b/it' tried instead on input line 299.
 
 
 LaTeX Warning: Citation '' on page 27 undefined on input line 299.
@@ -1992,34 +1052,51 @@ LaTeX Warning: Citation 'schultz2007' on page 27 undefined on input line 299.
 LaTeX Warning: Citation '' on page 27 undefined on input line 299.
 
 
-LaTeX Warning: Citation 'jooste2014determinants' on page 27 undefined on input 
-line 299.
-
-
-LaTeX Warning: Citation '' on page 27 undefined on input line 299.
-
-
-Overfull \hbox (47.38914pt too wide) in paragraph at lines 299--300
-[][]\OT1/ptm/m/n/12 , [][] and textci-teozkan2015time.
- []
-
-
 
 [27]
 
 [28]
+Overfull \hbox (12.90083pt too wide) in paragraph at lines 308--308
+\OT1/ptm/m/n/12 based on quadratic min-i-miza-tion. \OT1/ptm/m/it/12 Jour-nal o
+f the Amer-i-can Sta-tis-ti-cal As-so-ci-a-tion\OT1/ptm/m/n/12 , \OT1/ptm/m/it/
+12 66\OT1/ptm/m/n/12 (333),
+ []
 
-LaTeX Warning: Empty bibliography on input line 307.
 
-(./main_results.txt)
-<irf_p9.png, id=289, 4215.75pt x 3011.25pt>
+
+[29]
+Overfull \hbox (4.46799pt too wide) in paragraph at lines 308--308
+[][]\OT1/ptm/m/n/12 Hahn, E. (2003). \OT1/ptm/m/it/12 Pass-through of ex-ter-na
+l shocks to euro area in-fla-tion \OT1/ptm/m/n/12 (Work-ing Pa-per No. 243).
+ []
+
+
+
+[30]
+
+[31]
+Overfull \hbox (7.9705pt too wide) in paragraph at lines 308--308
+[][]\OT1/ptm/m/n/12 South African Re-serve Bank. (2001, Septem-ber). \OT1/ptm/m
+/it/12 Quar-terly bul-letin \OT1/ptm/m/n/12 (Quar-terly Bul-letin No. 221).
+ []
+
+
+Overfull \hbox (1.9425pt too wide) in paragraph at lines 308--308
+\OT1/ptm/m/n/12 South African Re-serve Bank. []$https : / / www . resbank . co 
+. za / content / dam / sarb / publications /
+ []
+
+
+
+[32] (./main_results.txt)
+<irf_p9.png, id=549, 4215.75pt x 3011.25pt>
 File: irf_p9.png Graphic file (type png)
 <use irf_p9.png>
 Package pdftex.def Info: irf_p9.png  used on input line 322.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[29
+[33
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2027,21 +1104,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
 l.326 
       ] (./p9_results.txt)
 
-[30
+[34
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.328 
        <./irf_p9.png>]
-<adj_p9.png, id=301, 4215.75pt x 3011.25pt>
+<adj_p9.png, id=561, 4215.75pt x 3011.25pt>
 File: adj_p9.png Graphic file (type png)
 <use adj_p9.png>
 Package pdftex.def Info: adj_p9.png  used on input line 331.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[31
+[35
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2049,21 +1126,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
 l.335 
       ] (./p9_fevd.txt)
 
-[32
+[36
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.337 
        <./adj_p9.png>]
-<irf_p12.png, id=314, 4215.75pt x 3011.25pt>
+<irf_p12.png, id=572, 4215.75pt x 3011.25pt>
 File: irf_p12.png Graphic file (type png)
 <use irf_p12.png>
 Package pdftex.def Info: irf_p12.png  used on input line 341.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[33
+[37
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2071,21 +1148,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
 l.345 
       ] (./p12_results.txt)
 
-[34
+[38
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.347 
        <./irf_p12.png>]
-<adj_p12.png, id=326, 4215.75pt x 3011.25pt>
+<adj_p12.png, id=585, 4215.75pt x 3011.25pt>
 File: adj_p12.png Graphic file (type png)
 <use adj_p12.png>
 Package pdftex.def Info: adj_p12.png  used on input line 351.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[35
+[39
 pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2093,21 +1170,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
 l.355 
       ] (./p12_fevd.txt)
 
-[36
+[40
 pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.357 
        <./adj_p12.png>]
-<irf_monetary_policy.png, id=338, 4215.75pt x 3011.25pt>
+<irf_monetary_policy.png, id=597, 4215.75pt x 3011.25pt>
 File: irf_monetary_policy.png Graphic file (type png)
 <use irf_monetary_policy.png>
 Package pdftex.def Info: irf_monetary_policy.png  used on input line 360.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[37
+[41
 pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2115,35 +1192,35 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
 l.364 
       ] (./oil_results.txt)
 
-[38
+[42
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.366 
        <./irf_monetary_policy.png>]
-<irf_oil.png, id=351, 4215.75pt x 3011.25pt>
+<irf_oil.png, id=610, 4215.75pt x 3011.25pt>
 File: irf_oil.png Graphic file (type png)
 <use irf_oil.png>
 Package pdftex.def Info: irf_oil.png  used on input line 370.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[39
+[43
 pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.374 
       ]
-<adj_oil.png, id=357, 4215.75pt x 3011.25pt>
+<adj_oil.png, id=617, 4215.75pt x 3011.25pt>
 File: adj_oil.png Graphic file (type png)
 <use adj_oil.png>
 Package pdftex.def Info: adj_oil.png  used on input line 377.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[40
+[44
 pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2151,7 +1228,7 @@ s been already used, duplicate ignored
 l.381 
        <./irf_oil.png>] (./oil_fevd.txt)
 
-[41
+[45
 pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2164,7 +1241,7 @@ Package pdftex.def Info: irf_monetary_policy.png  used on input line 388.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[42
+[46
 pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2172,21 +1249,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
 l.392 
       ] (./monetary_results.txt)
 
-[43
+[47
 pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.394 
       ]
-<adj_monetary_policy.png, id=382, 4215.75pt x 3011.25pt>
+<adj_monetary_policy.png, id=641, 4215.75pt x 3011.25pt>
 File: adj_monetary_policy.png Graphic file (type png)
 <use adj_monetary_policy.png>
 Package pdftex.def Info: adj_monetary_policy.png  used on input line 398.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[44
+[48
 pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2194,21 +1271,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
 l.402 
       ] (./monetary_fevd.txt)
 
-[45
+[49
 pdfTeX warning (ext4): destination with the same identifier (name{figure.12}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.404 
        <./adj_monetary_policy.png>]
-<irf_lp.png, id=394, 4215.75pt x 3011.25pt>
+<irf_lp.png, id=654, 4215.75pt x 3011.25pt>
 File: irf_lp.png Graphic file (type png)
 <use irf_lp.png>
 Package pdftex.def Info: irf_lp.png  used on input line 409.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[46
+[50
 pdfTeX warning (ext4): destination with the same identifier (name{table.10}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2216,21 +1293,21 @@ s been already used, duplicate ignored
 l.413 
       ] (./lp_results.txt)
 
-[47
+[51
 pdfTeX warning (ext4): destination with the same identifier (name{figure.13}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.415 
        <./irf_lp.png>]
-<adj_lp.png, id=406, 4215.75pt x 3011.25pt>
+<adj_lp.png, id=666, 4215.75pt x 3011.25pt>
 File: adj_lp.png Graphic file (type png)
 <use adj_lp.png>
 Package pdftex.def Info: adj_lp.png  used on input line 419.
 (pdftex.def)             Requested size: 452.96826pt x 323.51927pt.
 
 
-[48
+[52
 pdfTeX warning (ext4): destination with the same identifier (name{table.11}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2238,7 +1315,7 @@ s been already used, duplicate ignored
 l.423 
       ]
 
-[49
+[53
 pdfTeX warning (ext4): destination with the same identifier (name{figure.14}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2251,14 +1328,14 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 8
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ))
-<stationarity_combined.png, id=417, 722.7pt x 722.7pt>
+<stationarity_combined.png, id=676, 722.7pt x 722.7pt>
 File: stationarity_combined.png Graphic file (type png)
 <use stationarity_combined.png>
 Package pdftex.def Info: stationarity_combined.png  used on input line 440.
 (pdftex.def)             Requested size: 452.96826pt x 452.96558pt.
 
 
-[50
+[54
 pdfTeX warning (ext4): destination with the same identifier (name{table.12}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2272,7 +1349,7 @@ s been already used, duplicate ignored
 l.444 
       ] (./adf_results.txt)
 
-[51
+[55
 pdfTeX warning (ext4): destination with the same identifier (name{figure.15}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2281,7 +1358,7 @@ l.446 \begin{minipage}{\linewidth}
                                    <./stationarity_combined.png>]
 (./normality.txt) (./lag_selection.txt)
 
-[52
+[56
 pdfTeX warning (ext4): destination with the same identifier (name{table.14}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2294,14 +1371,14 @@ s been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.457 
       ] (./residcor.txt)
-<cpi_acf.png, id=442, 505.89pt x 289.08pt>
+<cpi_acf.png, id=700, 505.89pt x 289.08pt>
 File: cpi_acf.png Graphic file (type png)
 <use cpi_acf.png>
 Package pdftex.def Info: cpi_acf.png  used on input line 465.
 (pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
 
 
-[53
+[57
 pdfTeX warning (ext4): destination with the same identifier (name{table.16}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2314,19 +1391,19 @@ s been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.469 
       ]
-<acf_main.png, id=452, 505.89pt x 289.08pt>
+<acf_main.png, id=710, 505.89pt x 289.08pt>
 File: acf_main.png Graphic file (type png)
 <use acf_main.png>
 Package pdftex.def Info: acf_main.png  used on input line 473.
 (pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
-<acf_early.png, id=453, 505.89pt x 289.08pt>
+<acf_early.png, id=711, 505.89pt x 289.08pt>
 File: acf_early.png Graphic file (type png)
 <use acf_early.png>
 Package pdftex.def Info: acf_early.png  used on input line 481.
 (pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
 
 
-[54
+[58
 pdfTeX warning (ext4): destination with the same identifier (name{figure.16}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2339,14 +1416,14 @@ as been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.485 
        <./cpi_acf.png> <./acf_main.png>]
-<acf_lowinf.png, id=460, 505.89pt x 289.08pt>
+<acf_lowinf.png, id=718, 505.89pt x 289.08pt>
 File: acf_lowinf.png Graphic file (type png)
 <use acf_lowinf.png>
 Package pdftex.def Info: acf_lowinf.png  used on input line 488.
 (pdftex.def)             Requested size: 452.96826pt x 258.84187pt.
  (./uvi_sic_ttest.txt)
 
-[55
+[59
 pdfTeX warning (ext4): destination with the same identifier (name{figure.18}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2359,14 +1436,14 @@ as been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.499 
        <./acf_early.png> <./acf_lowinf.png>]
-<sic_uvi.png, id=468, 433.62pt x 433.62pt>
+<sic_uvi.png, id=725, 433.62pt x 433.62pt>
 File: sic_uvi.png Graphic file (type png)
 <use sic_uvi.png>
 Package pdftex.def Info: sic_uvi.png  used on input line 502.
 (pdftex.def)             Requested size: 452.96826pt x 452.99205pt.
  (./chow_test.txt)
 
-[56
+[60
 pdfTeX warning (ext4): destination with the same identifier (name{table.18}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2379,14 +1456,14 @@ as been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.508 
        <./sic_uvi.png>]
-<arit_geom.png, id=477, 433.62pt x 433.62pt>
+<arit_geom.png, id=734, 433.62pt x 433.62pt>
 File: arit_geom.png Graphic file (type png)
 <use arit_geom.png>
 Package pdftex.def Info: arit_geom.png  used on input line 514.
 (pdftex.def)             Requested size: 452.96826pt x 452.99205pt.
  (./arit_geom_ttest.txt)
 
-[57
+[61
 pdfTeX warning (ext4): destination with the same identifier (name{table.19}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2400,45 +1477,37 @@ as been already used, duplicate ignored
 l.520 
        <./arit_geom.png>]
 
-[58
+[62
 pdfTeX warning (ext4): destination with the same identifier (name{table.20}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.522 \newpage
-              ]
-
-LaTeX Warning: Empty bibliography on input line 523.
-
-(./main.aux)
+l.523 \end{document}
+                    ] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 69D09A28FAE99720AC04BA85106FDDD8;1841.
+(rerunfilecheck)             Checksum: 7342F304ACB0BE706857D771EE81CF0F;1836.
 
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                main
-(biblatex)                and rerun LaTeX afterwards.
+Package biblatex Warning: Please rerun LaTeX.
+(biblatex)                Page breaks have changed.
 
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 21272 strings out of 473190
- 368541 string characters out of 5715800
- 1348164 words of memory out of 5000000
- 44025 multiletter control sequences out of 15000+600000
- 588417 words of font info for 87 fonts, out of 8000000 for 9000
+ 21902 strings out of 473190
+ 387706 string characters out of 5715800
+ 1355482 words of memory out of 5000000
+ 44588 multiletter control sequences out of 15000+600000
+ 588117 words of font info for 86 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,16n,101p,2070b,5185s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
@@ -2460,10 +1529,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/tex
 mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
 urw/times/utmri8a.pfb>
-Output written on main.pdf (58 pages, 12551474 bytes).
+Output written on main.pdf (62 pages, 12582663 bytes).
 PDF statistics:
- 608 PDF objects out of 1000 (max. 8388607)
- 472 compressed objects within 5 object streams
- 162 named destinations out of 1000 (max. 500000)
+ 883 PDF objects out of 1000 (max. 8388607)
+ 740 compressed objects within 8 object streams
+ 229 named destinations out of 1000 (max. 500000)
  213 words of extra memory for PDF output out of 10000 (max. 10000000)
 

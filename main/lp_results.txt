@@ -1,6 +1,6 @@
 \begin{table}[H]
 \centering
-\caption{\label{tab:erpt_lp}Cumulative Exchange Rate Pass-Through at Selected Horizons using Linear Projections.}
+\caption{\label{tab:erpt_lp}Cumulative Exchange Rate Pass-Through at Selected Horizons using Local Projections.}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \fontsize{8}{10}\selectfont

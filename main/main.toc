@@ -10,5 +10,5 @@
 \contentsline {subsection}{\numberline {6.1}Lag Length}{24}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}Endogenous Oil Shocks}{24}{subsection.6.2}%
 \contentsline {subsection}{\numberline {6.3}Monetary Policy}{25}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Linear Projections}{25}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.4}Local Projections}{25}{subsection.6.4}%
 \contentsline {section}{\numberline {7}Conclusion}{27}{section.7}%
